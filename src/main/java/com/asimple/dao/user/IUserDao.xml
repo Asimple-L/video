@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asimple.dao.user.IUserDao">
+    <insert id="add" parameterType="User">
+        <selectKey keyProperty="id" resultType="String" order="BEFORE">
+            SELECT replace(uuid(), '-', '')
+        </selectKey>
+        INSERT INTO t_user(`id`, `userName`,`createDate`, `expireDate`, `userEmail`, `userPasswd`)
+          VALUES (#{id}, #{userName}, #{createDate}, #{expireDate}, #{userEmail}, #{userPasswd})
+    </insert>
+
+
+    <select id="findByCondition" resultType="User">
+        SELECT * FROM t_user
+        <where>
+            <if test="userName!=null and userName!=''">
+                AND userName = #{userName}
+            </if>
+            <if test="userEmail!=null and userEmail!=''">
+                AND userEmail = #{userEmail}
+            </if>
+        </where>
+    </select>
+</mapper>

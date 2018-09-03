@@ -1,0 +1,8 @@
+# robots.txt generated at http://tool.chinaz.com/robots/
+User-agent: *
+Disallow:
+Crawl-delay: 10
+Disallow: /list..html
+Disallow: /film.html
+Disallow: /cataLog.html
+Sitemap: http://domain.com/sitemap.xml

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asimple.dao.film.IFilmDao">
+    <sql id="filmChoose">
+        <if test="obj.name != null ">
+            AND `name` LIKE '%' #{obj.name} '%'
+        </if>
+        <if test="obj.actor != null">
+            AND `actor` LIKE '%' #{obj.actor} '%'
+        </if>
+        <if test="obj.cataLog_id != null">
+            AND `cataLog_id` = #{ obj.cataLog_id}
+        </if>
+        <if test="obj.subClass_id != null">
+            AND `subClass_id` = #{obj.subClass_id}
+        </if>
+        <if test="obj.onDecade != null">
+            AND `onDecade` = #{obj.onDecade}
+        </if>
+        <if test="obj.type_id != null">
+            AND `type_id` = #{obj.type_id}
+        </if>
+        <if test="obj.loc_id != null">
+            AND `loc_id` = #{obj.loc_id}
+        </if>
+        <if test="obj.evaluation != null and obj.evaluation!=0">
+            AND `evaluation`>#{obj.evaluation}
+        </if>
+    </sql>
+
+    <select id="listByCataLog_id" resultType="Film">
+        SELECT * FROM t_film WHERE `cataLog_id` = #{param1}
+        <if test="param2 != null">
+            LIMIT 0,#{param2}
+        </if>
+    </select>
+
+    <select id="load" resultType="Film">
+        SELECT * FROM t_film WHERE id=#{id}
+    </select>
+
+    <select id="listByEvaluation" resultType="Film">
+        SELECT * FROM t_film WHERE `isUse` = 1 AND cataLog_id =  #{param1} order by evaluation desc
+        <if test="param2 != null">
+            LIMIT 0,#{param2}
+        </if>
+    </select>
+
+    <select id="getTotalCount" resultType="Integer">
+        SELECT count(*) FROM t_film
+        <where>
+            <include refid="filmChoose" />
+        </where>
+        order by updateTime desc
+    </select>
+
+    <select id="getPage" resultType="Film">
+        SELECT * FROM t_film
+        <where>
+            <include refid="filmChoose"/>
+        </where>
+        LIMIT #{start},#{count}
+    </select>
+
+    <select id="listByTypeId" resultType="Film">
+        SELECT * FROM t_film WHERE type_id=#{param1}
+        <if test="param2 != null">
+            LIMIT 0,#{param2}
+        </if>
+    </select>
+
+    <update id="update" parameterType="Film">
+        UPDATE t_film SET `actor`=#{actor},`cataLogName`=#{cataLogName}, `cataLog_id`=#{cataLog_id},
+                          `evaluation`=#{evaluation},`image`=#{image},`isUse`=#{isUse},`locName`=#{locName},
+                          `loc_id`=#{loc_id},`name`=#{name},`onDecade`=#{onDecade},`plot`=#{plot},`resolution`=#{resolution},
+                          `status`=#{status},`subClassName`=#{subClassName},`subClass_id`=#{subClass_id},`typeName`=#{typeName},
+                          `type_id`=#{type_id},`updateTime`=#{updateTime},`isVip`=#{isVip}
+                          WHERE id=#{id}
+    </update>
+
+</mapper>

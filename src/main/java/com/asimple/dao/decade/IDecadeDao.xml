@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asimple.dao.decade.IDecadeDao">
+    <select id="findByIsUse" resultType="Decade">
+        SELECT * FROM t_decade WHERE isUse = 1 ORDER BY `name` DESC
+    </select>
+</mapper>
