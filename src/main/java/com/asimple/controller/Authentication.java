@@ -3,6 +3,7 @@ package com.asimple.controller;
 import com.asimple.entity.User;
 import com.asimple.service.IUserService;
 import com.asimple.util.MD5Auth;
+import com.asimple.util.Tools;
 import net.sf.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +23,7 @@ import java.util.List;
 @Controller
 public class Authentication {
     private final static String key = "a1s2i3m4p5l6e7";
-    public final static String USER_KEY = "u_skl";
+    private final static String USER_KEY = "u_skl";
     @Resource( name="userService")
     private IUserService userService;
     /**
@@ -80,4 +81,37 @@ public class Authentication {
     public String login() {
         return null;
     }
+    /**
+     * @Author Asimple
+     * @Description 登出
+     **/
+    @RequestMapping( value = "/logout.html")
+    @ResponseBody
+    public String logout(HttpSession session) {
+        JSONObject jsonObject = new JSONObject();
+        session.removeAttribute(USER_KEY);
+        jsonObject.put("code","1");
+        return jsonObject.toString();
+    }
+
+    // 检查用户登录信息是否正确
+    private void checkAccount(String password, HttpSession session, JSONObject jsonObject, List<User> users) {
+        User userDb = users.get(0);
+        System.err.println(userDb.getUserPasswd());
+        System.err.println(MD5Auth.MD5Encode(password+key, "UTF-8"));
+        if( MD5Auth.validatePassword(userDb.getUserPasswd(), password+key, "UTF-8")) {
+            jsonObject.put("code", "1");
+            /*进行VIP身份过期校验*/
+            if(userDb.getExpireDate().getTime()<=new Date().getTime()){
+                /*当前过期时间与当前的时间小，则表示已经过期*/
+                userDb.setIsVip(0);
+                userService.update(userDb);
+            }
+            session.setAttribute(USER_KEY,userDb);
+        } else {
+            jsonObject.put("code", "0");
+            jsonObject.put("error","用户或密码错误！");
+        }
+    }
+
 }

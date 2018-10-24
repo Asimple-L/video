@@ -30,4 +30,9 @@ public class UserServiceImpl implements IUserService {
         if( f == 1 ) return user;
         return null;
     }
+
+    @Override
+    public Boolean update(User userDb) {
+        return userDao.update(userDb);
+    }
 }

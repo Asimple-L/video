@@ -238,7 +238,7 @@
             height: 100%;
             width: 30px;
             display: inline-block;
-            background: #fff url("static/img/pub/nav.jpg") -144px -27px no-repeat; /*-143px -27px*/
+            background: #fff url("public/static/img/pub/nav.jpg") -144px -27px no-repeat; /*-143px -27px*/
         }
 
         .nav1-ul {

@@ -13,7 +13,14 @@
 	
 	<!-- 组件扫描器 -->
 	<context:component-scan base-package="com.asimple.controller"/>
-    <mvc:annotation-driven/>
+
+    <mvc:annotation-driven>
+		<mvc:message-converters register-defaults="true">
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<property name="supportedMediaTypes" value = "text/html;charset=UTF-8" />
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
 
 	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">
@@ -47,7 +54,16 @@
 		  class="org.springframework.web.multipart.commons.CommonsMultipartResolver" >
 		<property name="defaultEncoding" value="utf-8"/> <!-- 默认编码 (ISO-8859-1) -->
 		<property name="maxInMemorySize" value="10240"/> <!-- 最大内存大小 (10240)-->
-		<property name="uploadTempDir" value="/WEB-INF/upload"/> <!-- 上传后的目录名 (WebUtils#TEMP_DIR_CONTEXT_ATTRIBUTE) -->
+		<property name="uploadTempDir" value="/public/static/upload/filmFile"/> <!-- 上传后的目录名 (WebUtils#TEMP_DIR_CONTEXT_ATTRIBUTE) -->
 		<property name="maxUploadSize" value="-1"/> <!-- 最大文件大小，-1为无限止(-1) -->
 	</bean>
+
+	<!-- 配置后台登录权限拦截 -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/admin/*"/>
+			<bean class="com.asimple.interceptor.AdminUserInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
+
 </beans>

@@ -12,7 +12,7 @@
     <meta charset="UTF-8">
     <title>what?</title>
     <base href="<%=basePath%>">
-    <script src="public/static/js/download/base64.js?v=${version}"></script>
+    <script src="${proname}/public/static/js/download/base64.js?v=${version}"></script>
     <style>
         html,body{
             padding: 0px;
@@ -26,7 +26,7 @@
         }
     </style>
 <body>
-<script type="text/javascript" src="plugins/ckplayer/ckplayer.js?v=${version}"></script>
+<script type="text/javascript" src="${proname}/plugins/ckplayer/ckplayer.js?v=${version}"></script>
 <div id="video"></div>
 <script type="text/javascript">
     var videoObject = {

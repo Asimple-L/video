@@ -15,6 +15,7 @@ public class User {
     private Date createDate;// 用户创建时间
     private Date expireDate;// VIP失效时间
     private long isVip;// 是否是VIP
+    private int isManager;// 是否是管理员
 
     public User() {
     }
@@ -82,6 +83,14 @@ public class User {
 
     public void setIsVip(long isVip) {
         this.isVip = isVip;
+    }
+
+    public int getIsManager() {
+        return isManager;
+    }
+
+    public void setIsManager(int isManager) {
+        this.isManager = isManager;
     }
 
     @Override

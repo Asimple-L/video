@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CustomBeanRegistry">
+    <option name="map">
+      <map>
+        <entry key="&lt;mvc:annotation-driven xmlns:mvc=&quot;http://www.springframework.org/schema/mvc&quot; xmlns=&quot;http://www.springframework.org/schema/beans&quot;&gt;&#10;  &lt;mvc:message-converters register-defaults=&quot;true&quot;&gt;&#10;    &lt;bean class=&quot;org.springframework.http.converter.StringHttpMessageConverter&quot; lazy-init=&quot;default&quot; autowire=&quot;default&quot; autowire-candidate=&quot;default&quot;&gt;&#10;      &lt;property name=&quot;supportedMediaTypes&quot; value=&quot;text/html;charset=UTF-8&quot; /&gt;&#10;    &lt;/bean&gt;&#10;  &lt;/mvc:message-converters&gt;&#10;&lt;/mvc:annotation-driven&gt;">
+          <value>
+            <list>
+              <CustomBeanInfo>
+                <option name="beanName" value="mvcUriComponentsContributor" />
+                <option name="beanClassName" value="org.springframework.web.servlet.config.AnnotationDrivenBeanDefinitionParser$CompositeUriComponentsContributorFactoryBean" />
+              </CustomBeanInfo>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

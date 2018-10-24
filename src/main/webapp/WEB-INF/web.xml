@@ -10,10 +10,12 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath:spring-*.xml</param-value>
     </context-param>
+
     <!-- 注册ServletContext监听器 -->
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
+
     <!-- 配置字符编码过滤器 -->
     <!-- 字符编码过滤器必须配置在所有过滤器的最前面! -->
     <filter>

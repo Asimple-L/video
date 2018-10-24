@@ -24,4 +24,9 @@
             </if>
         </where>
     </select>
+
+    <update id="update" parameterType="User">
+        UPDATE t_user SET `isVip`=#{isVip},`expireDate`=#{expireDate} WHERE id=#{id}
+    </update>
+
 </mapper>

@@ -9,7 +9,7 @@ public class MD5Auth {
         //客户端传输数据的时候不传key
         //服务端用服务端手上的key和接收到的数据再生成一个MD5来对比 以此保证数据正确
         String str= "1";
-        String clientkey = "sw23klkj3nm23";
+        String clientkey = "a1s2i3m4p5l6e7";
         String clientstr = str + clientkey;
         //生成MD5
         String result = MD5Auth.MD5Encode(clientstr, "UTF-8").toUpperCase();
@@ -17,7 +17,7 @@ public class MD5Auth {
 
         //用接收到的数据生成一个新的MD5 与原来的MD5对比
         String checkstr = "1";
-        String serverkey = "sw23klkj3nm23";
+        String serverkey = "a1s2i3m4p5l6e7";
         String serverstr = checkstr + serverkey;
         System.out.print("验证密码是否正确:");    
         if(validatePassword(result, serverstr, "UTF-8")) {    
@@ -31,7 +31,8 @@ public class MD5Auth {
 
     //通过获取参数并且生成新的MD5校验码 然后和 获取到的MD5校验码 对比 以此验证传过来的数据是否被修改
     public static boolean validatePassword(String origin, String inputString, String charsetname){    
-        if(origin.equals(MD5Encode(inputString,charsetname).toUpperCase())){    
+        origin = origin.toUpperCase();
+        if(origin.equals(MD5Encode(inputString,charsetname).toUpperCase())){
             return true;    
         } else{    
             return false;    

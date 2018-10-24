@@ -124,7 +124,7 @@
                 dataType:"json",
                 data:$("#login_form").serialize(),
                 success:function (data) {
-                    data = JSON.parse(data);
+                    if ( typeof data == "string" ) data = JSON.parse(data);
                     if(data.code=="1"){
                         location.reload();
                     }else{
@@ -145,7 +145,7 @@
                 type:"POST",
                 dataType:"json",
                 success:function (data) {
-                    data = JSON.parse(data);
+                    if ( typeof data == "string" ) data = JSON.parse(data);
                     if(data.code=="1"){
                         location.reload();
                     }else{

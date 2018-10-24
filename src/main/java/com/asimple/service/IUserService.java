@@ -9,4 +9,6 @@ public interface IUserService {
     List<User> findByCondition(User user);
 
     User add(User user);
+
+    Boolean update(User userDb);
 }

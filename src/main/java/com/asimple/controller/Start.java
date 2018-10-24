@@ -65,6 +65,10 @@ public class Start {
         return "index/note";
     }
 
+    /**
+     * @Author Asimple
+     * @Description 错误页面
+     **/
     @RequestMapping("/error.html")
     public String error() {
         return "index/error";
