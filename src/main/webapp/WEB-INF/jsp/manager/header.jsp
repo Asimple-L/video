@@ -1,80 +1,27 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<nav class="navbar navbar-default navbar-fixed-top">
-    <div class="brand">
-        <a href="index.html"><img src="assets/img/logo-dark.png" alt="Klorofil Logo" class="img-responsive logo"></a>
-    </div>
+<nav role="navigation" class="navbar navbar-custom">
     <div class="container-fluid">
-        <div class="navbar-btn">
-            <button type="button" class="btn-toggle-fullwidth"><i class="lnr lnr-arrow-left-circle"></i></button>
+        <div class="navbar-header">
+            <button data-target="#bs-content-row-navbar-collapse-5" data-toggle="collapse" class="navbar-toggle" type="button">
+                <span class="sr-only">菜单</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="${pageContext.request.contextPath}/admin/index.html" class="navbar-brand">影音播放系统后台管理</a>
         </div>
-        <form class="navbar-form navbar-left">
-            <div class="input-group">
-                <input type="text" value="" class="form-control" placeholder="Search dashboard...">
-                <span class="input-group-btn"><button type="button" class="btn btn-primary">Go</button></span>
-            </div>
-        </form>
-        <div class="navbar-btn navbar-btn-right">
-            <a class="btn btn-success update-pro" href="#downloads/klorofil-pro-bootstrap-admin-dashboard-template/?utm_source=klorofil&utm_medium=template&utm_campaign=KlorofilPro" title="Upgrade to Pro" target="_blank"><i class="fa fa-rocket"></i> <span>UPGRADE TO PRO</span></a>
-        </div>
-        <div id="navbar-menu">
+
+        <div id="bs-content-row-navbar-collapse-5" class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle icon-menu" data-toggle="dropdown">
-                        <i class="lnr lnr-alarm"></i>
-                        <span class="badge bg-danger">5</span>
-                    </a>
-                    <ul class="dropdown-menu notifications">
-                        <li><a href="#" class="notification-item"><span class="dot bg-warning"></span>System space is almost full</a></li>
-                        <li><a href="#" class="notification-item"><span class="dot bg-danger"></span>You have 9 unfinished tasks</a></li>
-                        <li><a href="#" class="notification-item"><span class="dot bg-success"></span>Monthly report is available</a></li>
-                        <li><a href="#" class="notification-item"><span class="dot bg-warning"></span>Weekly meeting in 1 hour</a></li>
-                        <li><a href="#" class="notification-item"><span class="dot bg-success"></span>Your request has been approved</a></li>
-                        <li><a href="#" class="more">See all notifications</a></li>
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">${sessionScope.adminUser.userName}<b class="caret"></b></a>
+                    <ul role="menu" class="dropdown-menu">
+                        <li class="dropdown-header">菜单</li>
+                        <li><a href="#">个人中心</a></li>
+                        <li id="logout"><a href="javascript:void(0);">退出登录</a></li>
                     </ul>
                 </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="lnr lnr-question-circle"></i> <span>Help</span> <i class="icon-submenu lnr lnr-chevron-down"></i></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Basic Use</a></li>
-                        <li><a href="#">Working With Data</a></li>
-                        <li><a href="#">Security</a></li>
-                        <li><a href="#">Troubleshooting</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="assets/img/user.png" class="img-circle" alt="Avatar"> <span>Samuel</span> <i class="icon-submenu lnr lnr-chevron-down"></i></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#"><i class="lnr lnr-user"></i> <span>My Profile</span></a></li>
-                        <li><a href="#"><i class="lnr lnr-envelope"></i> <span>Message</span></a></li>
-                        <li><a href="#"><i class="lnr lnr-cog"></i> <span>Settings</span></a></li>
-                        <li><a href="#"><i class="lnr lnr-exit"></i> <span>Logout</span></a></li>
-                    </ul>
-                </li>
-                <!-- <li>
-                    <a class="update-pro" href="#downloads/klorofil-pro-bootstrap-admin-dashboard-template/?utm_source=klorofil&utm_medium=template&utm_campaign=KlorofilPro" title="Upgrade to Pro" target="_blank"><i class="fa fa-rocket"></i> <span>UPGRADE TO PRO</span></a>
-                </li> -->
             </ul>
         </div>
     </div>
 </nav>
-<script>
-    $("#logout").onclick(function () {
-        $.ajax({
-            url: "logout.html",
-            type: "POST",
-            dataType: "json",
-            success: function(data) {
-                data = JSON.parse(data);
-                if( data.code == "1" ) {
-                    // 退出登录成功，跳转都后台登录页面
-                    window.location.href("/admin/login.html");
-                } else {
-                    alert("系统繁忙");
-                }
-            },
-            error: function() {
-                alert("系统繁忙");
-            }
-        })
-    });
-</script>

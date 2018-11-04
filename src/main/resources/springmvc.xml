@@ -59,11 +59,11 @@
 	</bean>
 
 	<!-- 配置后台登录权限拦截 -->
-	<mvc:interceptors>
-		<mvc:interceptor>
-			<mvc:mapping path="/admin/*"/>
-			<bean class="com.asimple.interceptor.AdminUserInterceptor"/>
-		</mvc:interceptor>
-	</mvc:interceptors>
+	<!--<mvc:interceptors>-->
+		<!--<mvc:interceptor>-->
+			<!--<mvc:mapping path="/admin/*"/>-->
+			<!--<bean class="com.asimple.interceptor.AdminUserInterceptor"/>-->
+		<!--</mvc:interceptor>-->
+	<!--</mvc:interceptors>-->
 
 </beans>

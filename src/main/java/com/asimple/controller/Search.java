@@ -28,7 +28,7 @@ import java.util.*;
 
 @Controller
 @RequestMapping("/xl")
-public class search {
+public class Search {
 
     @Resource
     private IFilmService filmService;

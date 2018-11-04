@@ -6,4 +6,9 @@
     <select id="getListByFilmId" resultType="Res">
         SELECT * FROM t_res WHERE film_id=#{id}
     </select>
+
+    <insert id="add" parameterType="Res">
+        INSERT INTO `t_res`(`id`, `episodes`, `name`, `link`, `linkType`, `updateTime`, `isUse`, `film_id`)
+          VALUES (#{id}, #{episodes}, #{name}, #{link}, #{linkType}, #{updateTime}, #{isUse}, #{film.id})
+    </insert>
 </mapper>

@@ -203,14 +203,9 @@
             </ul>
         </div>
         <div style="width:80%;margin: 100px auto;height: auto;overflow: hidden;">
-            <!--
-
-                需要修改 1 处地方
-
-            -->
             <c:if test="${pb.tr!=0}">
                 <p style="text-align: center;">
-                    <c:set var="pageurl" value="list.html"/>   <!--1.修改-->
+                    <c:set var="pageurl" value="admin/list.html"/>
                     <script type="text/javascript">
                         function _change() {
                             var select = document.getElementById("select");
@@ -228,11 +223,7 @@
                         <a href="javascript:;">上一页</a>
                     </c:if>
 
-
-                        <%------------------------------------ --%>
-                        <%-- 页码列表的长度自己定，10个长 --%>
                     <c:choose>
-                        <%-- 第一条：如果总页数<=10，那么页码列表为1 ~ tp --%>
                         <c:when test="${pb.tp <= 10 }">
                             <c:set var="begin" value="1"/>
                             <c:set var="end" value="${pb.tp }"/>

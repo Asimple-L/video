@@ -24,4 +24,6 @@ public interface IFilmService {
     Film load(String film_id);
 
     boolean update(Film film);
+    
+    String save(Film film);
 }

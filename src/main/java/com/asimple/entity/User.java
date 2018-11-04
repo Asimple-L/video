@@ -103,6 +103,7 @@ public class User {
                 ", createDate=" + createDate +
                 ", expireDate=" + expireDate +
                 ", isVip=" + isVip +
+                ", isManager=" + isManager +
                 '}';
     }
 }

@@ -23,7 +23,7 @@ import java.util.List;
 @Controller
 public class Authentication {
     private final static String key = "a1s2i3m4p5l6e7";
-    private final static String USER_KEY = "u_skl";
+    public final static String USER_KEY = "u_skl";
     @Resource( name="userService")
     private IUserService userService;
     /**
@@ -78,8 +78,30 @@ public class Authentication {
      * @Author Asimple
      * @Description 用户登录
      **/
-    public String login() {
-        return null;
+    @RequestMapping(value = "/login.html")
+    @ResponseBody
+    public String login(String account_l, String password_l, HttpSession session) {
+        JSONObject jsonObject = new JSONObject();
+        User user = new User();
+        List<User> users = null;
+        // 用户登录可以是邮箱或者用户名，需要进行两次匹配
+        if ( Tools.notEmpty(account_l) ) {
+            user.setUserName(account_l);
+            users = userService.findByCondition(user);
+        }
+        if ( users!=null && users.size()>0 ) {
+            checkAccount(password_l, session, jsonObject, users);
+        } else {
+            user.setUserEmail(account_l);
+            users = userService.findByCondition(user);
+            if( users!=null && users.size()>0 ) {
+                checkAccount(password_l, session, jsonObject, users);
+            } else {
+                jsonObject.put("code", "0");
+                jsonObject.put("error","登录失败，用户不存在或密码错误！");
+            }
+        }
+        return jsonObject.toString();
     }
     /**
      * @Author Asimple
@@ -97,8 +119,6 @@ public class Authentication {
     // 检查用户登录信息是否正确
     private void checkAccount(String password, HttpSession session, JSONObject jsonObject, List<User> users) {
         User userDb = users.get(0);
-        System.err.println(userDb.getUserPasswd());
-        System.err.println(MD5Auth.MD5Encode(password+key, "UTF-8"));
         if( MD5Auth.validatePassword(userDb.getUserPasswd(), password+key, "UTF-8")) {
             jsonObject.put("code", "1");
             /*进行VIP身份过期校验*/

@@ -1,9 +1,13 @@
 package com.asimple.service.Impl;
 
 import com.asimple.dao.film.IFilmDao;
+import com.asimple.dao.type.ITypeDao;
 import com.asimple.entity.Film;
+import com.asimple.entity.Type;
 import com.asimple.service.IFilmService;
+import com.asimple.util.DateUtil;
 import com.asimple.util.PageBean;
+import com.asimple.util.Tools;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -21,10 +25,8 @@ public class FilmServiceImpl implements IFilmService  {
     @Resource(name="IFilmDao")
     private IFilmDao filmDao;
 
-    // 添加set方法，为了变成xml配置开发的时候不会报错
-    public void setFilmDao(IFilmDao filmDao) {
-        this.filmDao = filmDao;
-    }
+    @Resource(name="ITypeDao")
+    private ITypeDao typeDao;
 
     @Override
     public List<Film> listByType_id(String type_id) {
@@ -93,4 +95,33 @@ public class FilmServiceImpl implements IFilmService  {
         return filmDao.update(film);
     }
 
+    @Override
+    public String save(Film film) {
+        // 初始化参数
+        film.setIsUse(1);
+        film.setUpdateTime(DateUtil.getTime());
+        film.setEvaluation(0);
+        film.setId(Tools.UUID());
+
+        // 查询出类型
+        Type type = typeDao.load(film.getType_id());
+        film.setSubClass_id(type.getSubClass().getId());
+        film.setSubClassName(type.getSubClass().getName());
+        film.setCataLog_id(type.getSubClass().getCataLog().getId());
+        film.setCataLogName(type.getSubClass().getCataLog().getName());
+
+        return filmDao.add(film)!=0?film.getId():"0";
+    }
+
+
+
+
+    // 添加set方法，为了变成xml配置开发的时候不会报错
+    public void setFilmDao(IFilmDao filmDao) {
+        this.filmDao = filmDao;
+    }
+
+    public void setTypeDao(ITypeDao typeDao) {
+        this.typeDao = typeDao;
+    }
 }

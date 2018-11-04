@@ -20,8 +20,7 @@ public class JSONUtil {
     /***
      * 将List对象序列化为JSON文本
      */
-    public static <T> String toJSONString(List<T> list)
-    {
+    public static <T> String toJSONString(List<T> list) {
     	
         JSONArray jsonArray = JSONArray.fromObject(list);
 
@@ -33,19 +32,17 @@ public class JSONUtil {
      * @param object
      * @return
      */
-    public static String toJSONString(Object object)
-    {
+    public static String toJSONString(Object object) {
         JSONArray jsonArray = JSONArray.fromObject(object);
 
         return jsonArray.toString();
     }
 
     public static Map<String,Object> toStringForMap(String jsonString){
-        HashMap<String, Object> data = new HashMap<String, Object>();
+        HashMap<String, Object> data = new HashMap<>();
         JSONObject jsonObject = JSONUtil.toJSONObject(jsonString);
         Iterator it = jsonObject.keys();
-        while (it.hasNext())
-        {
+        while (it.hasNext()) {
             String key = String.valueOf(it.next());
             Object value = jsonObject.get(key);
             data.put(key, value);
@@ -79,15 +76,13 @@ public class JSONUtil {
      * @param object
      * @return
      */
-    public static List toArrayList(Object object)
-    {
+    public static List toArrayList(Object object) {
         List arrayList = new ArrayList();
 
         JSONArray jsonArray = JSONArray.fromObject(object);
 
         Iterator it = jsonArray.iterator();
-        while (it.hasNext())
-        {
+        while (it.hasNext()) {
             JSONObject jsonObject = (JSONObject) it.next();
 
             Iterator keys = jsonObject.keys();
@@ -107,8 +102,7 @@ public class JSONUtil {
      * @param object
      * @return
      */
-	public static Collection toCollection(Object object)
-    {
+	public static Collection toCollection(Object object) {
         JSONArray jsonArray = JSONArray.fromObject(object);
 
         return JSONArray.toCollection(jsonArray);
@@ -142,13 +136,11 @@ public class JSONUtil {
      * @param object
      * @return
      */
-    public static HashMap toHashMap(Object object)
-    {
-        HashMap<String, Object> data = new HashMap<String, Object>();
+    public static HashMap toHashMap(Object object) {
+        HashMap<String, Object> data = new HashMap<>();
         JSONObject jsonObject = JSONUtil.toJSONObject(object);
         Iterator it = jsonObject.keys();
-        while (it.hasNext())
-        {
+        while (it.hasNext()) {
             String key = String.valueOf(it.next());
             Object value = jsonObject.get(key);
             data.put(key, value);
@@ -163,17 +155,15 @@ public class JSONUtil {
      * @return
      */
     // 返回非实体类型(Map)的List
-    public static List<Map<String, Object>> toList(Object object)
-    {
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+    public static List<Map<String, Object>> toList(Object object) {
+        List<Map<String, Object>> list = new ArrayList<>();
         JSONArray jsonArray = JSONArray.fromObject(object);
         for (Object obj : jsonArray)
         {
             JSONObject jsonObject = (JSONObject) obj;
-            Map<String, Object> map = new HashMap<String, Object>();
+            Map<String, Object> map = new HashMap<>();
             Iterator it = jsonObject.keys();
-            while (it.hasNext())
-            {
+            while (it.hasNext()) {
                 String key = (String) it.next();
                 Object value = jsonObject.get(key);
                 map.put((String) key, value);

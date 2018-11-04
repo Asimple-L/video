@@ -81,4 +81,15 @@
                           WHERE id=#{id}
     </update>
 
+    <insert id="add" parameterType="Film">
+        INSERT INTO `t_film`(`id`, `actor`, `cataLogName`, `cataLog_id`,
+                `evaluation`, `image`, `isUse`, `locName`, `loc_id`,
+                `name`, `onDecade`, `plot`, `resolution`, `status`,
+                `subClassName`, `subClass_id`, `typeName`, `type_id`,
+                `updateTime`, `isVip`) VALUES (#{id}, #{actor}, #{cataLogName},
+                 #{cataLog_id}, #{evaluation}, #{image}, #{isUse}, #{locName},
+                 #{loc_id}, #{name}, #{onDecade}, #{plot}, #{resolution}, #{status},
+                 #{subClassName}, #{subClass_id}, #{typeName}, #{type_id}, #{updateTime}, #{isVip})
+    </insert>
+
 </mapper>

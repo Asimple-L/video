@@ -3,20 +3,50 @@
 <!DOCTYPE html>
 <html lang="en" class="fullscreen-bg">
 <head>
-    <jsp:include page="/WEB-INF/jsp/pub/head_meta.jsp"/>
-    <link rel="shortcut icon" href="<f:message key='pageIcon'/>">
     <title>登录</title>
+    <jsp:include page="/WEB-INF/jsp/pub/head_meta.jsp"/>
+    <jsp:include page="/WEB-INF/jsp/pub/head_script.jsp"/>
+    <link rel="shortcut icon" href="<f:message key='pageIcon'/>">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/plugins/bootstrap4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/plugins/linearicons/style.css">
     <!-- MAIN CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/public/static/css/manager/main.css">
-    <!-- FOR DEMO PURPOSES ONLY. You should remove this in your project -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/public/static/css/manager/demo.css">
     <!-- GOOGLE FONTS -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
+    <script src="${pageContext.request.contextPath}/public/static/js/jquery.cookie.js"></script>
+    <script src="${pageContext.request.contextPath}/public/static/js/jquery.base64.js"></script>
+    <script language="javascript" type="text/javascript">
+        function setCookie() { //设置cookie
+            var loginCode = $("#username").val(); //获取用户名信息
+            var pwd = $("#password").val(); //获取登陆密码信息
+            var checked = $("input[type='checkbox']").is(':checked');//获取“是否记住密码”复选框
+            if (checked) { //判断是否选中了“记住密码”复选框
+                $.cookie("username", loginCode);//调用jquery.cookie.js中的方法设置cookie中的用户名
+                $.cookie("pwd", $.base64.encode(pwd));//调用jquery.cookie.js中的方法设置cookie中的登陆密码，并使用base64（jquery.base64.js）进行加密
+            } else {
+                $.cookie("pwd", null);
+            }
+            return (loginCode.trim()!=="" && pwd.trim()!=="");
+        }
+        function getCookie() { //获取cookie
+            var loginCode = $.cookie("username"); //获取cookie中的用户名
+            var pwd = $.cookie("pwd"); //获取cookie中的登陆密码
+            var pwdlength = $.base64.decode(pwd).length;
+            if (pwdlength != 0) {//密码存在的话把“记住用户名和密码”复选框勾选住
+                //alert("123");
+                $("[type='checkbox']").attr("checked", "true");
+            }
+            if (loginCode) {//用户名存在的话把用户名填充到用户名文本框
+                $("#username").val(loginCode);
+            }
+            if (pwd) {//密码存在的话把密码填充到密码文本框
+                $("#password").val($.base64.decode(pwd));
+            }
+        }
+    </script>
 </head>
-<body style="height: 100%;">
+<body style="height: 100%;" onload="getCookie();">
     <div id="wrapper" style="height: 100%;">
         <div class="vertical-align-wrap">
             <div class="vertical-align-middle">
@@ -24,17 +54,17 @@
                     <div class="left">
                         <div class="content">
                             <div class="header">
-                                <div class="logo text-center"><img src="assets/img/logo-dark.png" alt="Klorofil Logo"></div>
-                                <p class="lead">Login to your account</p>
+                                <div class="logo text-center" style="color: red;">${requestScope.msg}</div>
+                                <p class="lead">账号登录</p>
                             </div>
-                            <form class="form-auth-small" action="/admin/login.html" method="post">
+                            <form class="form-auth-small" method="POST" action="${pageContext.request.contextPath}/admin/login.html" onsubmit="return setCookie()">
                                 <div class="form-group">
-                                    <label for="signin-email" class="control-label sr-only">登录名</label>
-                                    <input type="email" class="form-control" id="signin-email" value="samuel.gold@domain.com" placeholder="username">
+                                    <label for="username" class="control-label sr-only">登录名</label>
+                                    <input type="text" class="form-control" name="username" id="username" placeholder="登录账号">
                                 </div>
                                 <div class="form-group">
-                                    <label for="signin-password" class="control-label sr-only">密码</label>
-                                    <input type="password" class="form-control" id="signin-password" value="thisisthepassword" placeholder="Password">
+                                    <label for="password" class="control-label sr-only">密码</label>
+                                    <input type="password" class="form-control" name="password" id="password" placeholder="Password">
                                 </div>
                                 <div class="form-group clearfix">
                                     <label class="fancy-checkbox element-left">

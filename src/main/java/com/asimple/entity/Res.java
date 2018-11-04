@@ -1,7 +1,5 @@
 package com.asimple.entity;
 
-import java.util.Date;
-
 /**
  * @ProjectName video
  * @Description: 资源实体类
@@ -13,14 +11,14 @@ public class Res {
     private String name; // 资源名称
     private String link; // 资源链接
     private String linkType; // 资源类型
-    private Date updateTime; // 更新时间
+    private String updateTime; // 更新时间
     private int isUse; // 是否有用
     private Film film;
 
     public Res() {
     }
 
-    public Res(int episodes, String name, String link, String linkType, Date updateTime, int isUse, Film film) {
+    public Res(int episodes, String name, String link, String linkType, String updateTime, int isUse, Film film) {
         this.episodes = episodes;
         this.name = name;
         this.link = link;
@@ -70,11 +68,11 @@ public class Res {
         this.linkType = linkType;
     }
 
-    public Date getUpdateTime() {
+    public String getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
     }
 

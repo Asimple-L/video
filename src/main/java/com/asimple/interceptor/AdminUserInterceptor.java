@@ -20,7 +20,7 @@ public class AdminUserInterceptor implements HandlerInterceptor {
             return true;
         }
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
+        User user = (User) session.getAttribute("adminUser");
         if( user!=null && user.getIsManager()==1 ) return true;
         request.setAttribute("msg", "请登录正确的管理员账号");
         request.getRequestDispatcher("/WEB-INF/jsp/manager/login.jsp").forward(request, response);
