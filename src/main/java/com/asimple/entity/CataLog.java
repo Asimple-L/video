@@ -1,5 +1,7 @@
 package com.asimple.entity;
 
+import java.util.List;
+
 /**
  * @ProjectName video
  * @Description: 一级分类实体类
@@ -10,7 +12,7 @@ public class CataLog {
     private String name; // 名称
     private int isUse;  // 是否在使用
     // 二级分类
-
+    private List<SubClass> subClassList;
 
     public String getId() {
         return id;
@@ -34,6 +36,14 @@ public class CataLog {
 
     public void setIsUse(int isUse) {
         this.isUse = isUse;
+    }
+
+    public List<SubClass> getSubClassList() {
+        return subClassList;
+    }
+
+    public void setSubClassList(List<SubClass> subClassList) {
+        this.subClassList = subClassList;
     }
 
     @Override

@@ -36,4 +36,8 @@
         SELECT * FROM `t_catalog` WHERE `id` = #{catalog_id}
     </select>
 
+    <insert id="add" parameterType="Type">
+        INSERT INTO `t_type` (`id`,`isUse`,`name`,`subclass_id`) VALUES (#{id},#{isUse},#{name},#{subClass.id})
+    </insert>
+
 </mapper>

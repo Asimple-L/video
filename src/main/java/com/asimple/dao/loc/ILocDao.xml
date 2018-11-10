@@ -7,4 +7,9 @@
     <select id="findByIsUse" resultType="Loc">
         SELECT * FROM t_loc WHERE isUse = 1
     </select>
+
+    <insert id="add" parameterType="Loc">
+        INSERT INTO `t_loc` (`id`, `isUse`, `name`) VALUES (#{id}, #{isUse}, #{name})
+    </insert>
+
 </mapper>

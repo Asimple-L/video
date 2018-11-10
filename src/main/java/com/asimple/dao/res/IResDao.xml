@@ -3,13 +3,25 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.asimple.dao.res.IResDao">
+
+    <!-- 级联 -->
     <resultMap id="myRes" type="Res">
         <id column="id" property="id"></id>
-
+        <result column="episodes" property="episodes"></result>
+        <result column="isUse" property="isUse"></result>
+        <result column="link" property="link"></result>
+        <result column="linkType" property="linkType"></result>
+        <result column="name" property="name"></result>
+        <result column="updateTime" property="updateTime"></result>
+        <association column="film_id" property="film" select="selectFilm"></association>
     </resultMap>
 
-    <select id="load" resultType="Res">
+    <select id="load" resultMap="myRes">
         SELECT * FROM `t_res` WHERE `id`=#{id}
+    </select>
+
+    <select id="selectFilm" resultType="Film">
+        SELECT * FROM `t_film` WHERE id=#{film_id}
     </select>
 
     <select id="getListByFilmId" resultType="Res">

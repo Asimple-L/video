@@ -2,10 +2,7 @@ package com.asimple.controller;
 
 import com.asimple.entity.*;
 import com.asimple.service.*;
-import com.asimple.util.DateUtil;
-import com.asimple.util.MD5Auth;
-import com.asimple.util.PageBean;
-import com.asimple.util.Tools;
+import com.asimple.util.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
@@ -60,6 +57,10 @@ public class Manager {
         return "manager/login";
     }
 
+    /**
+     * @Author Asimple
+     * @Description 管理员登录
+     **/
     @RequestMapping(value = "/login.html", method = { RequestMethod.POST })
     public String adminLogin(String username, String password, ModelMap map, HttpSession session) {
         // 用户名或者邮箱登录
@@ -214,6 +215,10 @@ public class Manager {
         return jsonObject.toString();
     }
 
+    /**
+     * @Author Asimple
+     * @Description 更改在离线状态
+     **/
     @RequestMapping( value = "/updateIsUse.html")
     @ResponseBody
     public String updateIsUse(String res_id) {
@@ -222,6 +227,158 @@ public class Manager {
         if( resService.updateIsUse(res_id) ) jsonObject.put("code", "1");
         else jsonObject.put("code", "0");
         return jsonObject.toString();
+    }
+
+    /**
+     * @Author Asimple
+     * @Description 更新影片信息
+     **/
+    @RequestMapping( value = "/updateFilmInfo.html")
+    @ResponseBody
+    public String updateFilmInfo(String film_id, String val, String key, HttpSession session) {
+        JSONObject jsonObject = new JSONObject();
+        Film film = filmService.load(film_id);
+        switch ( key ) {
+            case "name":
+                film.setName(val);
+                break;
+            case "image":
+                System.err.println(session.getServletContext().getRealPath(film.getImage()));
+                FileOperate.delFile(session.getServletContext().getRealPath(film.getImage()));
+                film.setImage(val);
+                break;
+            case "onDecade":
+                film.setOnDecade(val);
+                break;
+            case "status":
+                film.setStatus(val);
+                break;
+            case "resolution":
+                film.setResolution(val);
+                break;
+            case "typeName":
+                film.setTypeName(val);
+                break;
+            case "type_id":
+                film.setType_id(val);
+                Type type = typeService.load(val);
+                film.setSubClass_id(type.getSubClass().getId());
+                film.setSubClassName(type.getSubClass().getName());
+                film.setCataLog_id(type.getSubClass().getCataLog().getId());
+                film.setCataLogName(type.getSubClass().getCataLog().getName());
+                break;
+            case "actor":
+                film.setActor(val);
+                break;
+            case "loc_id":
+                film.setLoc_id(val);
+                break;
+            case "plot":
+                film.setPlot(val);
+                break;
+            case "isVip":
+                film.setIsVip(Integer.valueOf(val));
+                break;
+        }
+        if( filmService.update(film) ) jsonObject.put("code", "1");
+        else jsonObject.put("code", "0");
+        return jsonObject.toString();
+    }
+
+    /**
+     * @Author Asimple
+     * @Description 目录管理
+     **/
+    @RequestMapping( value = "/catalog.html")
+    public String catalog(ModelMap map) {
+        getCatalog(map);
+        return "manager/catalog";
+    }
+
+    /**
+     * @Author Asimple
+     * @Description 目录查看与修改
+     **/
+    @RequestMapping( value = "/editCatalog.html")
+    public String editCatalog(ModelMap map) {
+        getCatalog(map);
+        return "manager/editCatalog";
+    }
+
+    /**
+     * @Author Asimple
+     * @Description 添加年列表
+     **/
+    @RequestMapping( value = "addDecade.html")
+    @ResponseBody
+    public String addDecade(Decade decade) {
+        decade.setIsUse(1);
+        String id = decadeService.add(decade);
+        return addReturned(id);
+    }
+
+    /*
+     * @Author Asimple
+     * @Description 添加级别
+     **/
+    @RequestMapping( value = "/addLevel.html")
+    @ResponseBody
+    public String addLevel(Level level) {
+        level.setIsUse(1);
+        String id = levelService.add(level);
+        return addReturned(id);
+    }
+
+    /*
+     * @Author Asimple
+     * @Description 添加地区
+     **/
+    @RequestMapping( value = "/addLoc.html")
+    @ResponseBody
+    public String addLoc(Loc loc) {
+        loc.setIsUse(1);
+        String id = locService.add(loc);
+        return addReturned(id);
+    }
+
+    /**
+     * @Author Asimple
+     * @Description 添加一级分类
+     **/
+    @RequestMapping(value = "/addCataLog.html")
+    @ResponseBody
+    public String addCataLog(CataLog cataLog) {
+        cataLog.setIsUse(1);
+        String id = cataLogService.add(cataLog);
+        return addReturned(id);
+    }
+
+    /**
+     * @Author Asimple
+     * @Description 添加二级分类
+     **/
+    @RequestMapping(value = "/addSubClass.html")
+    @ResponseBody
+    public String addSubClass(SubClass subClass, String cataLog_id) {
+        subClass.setIsUse(1);
+        CataLog cataLog = cataLogService.load(cataLog_id);
+        subClass.setCataLog(cataLog);
+        String id = subClassService.add(subClass);
+        return addReturned(id);
+    }
+
+    /**
+     * @Author Asimple
+     * @Description 添加类型
+     **/
+    @RequestMapping(value = "/addType.html")
+    @ResponseBody
+    public String addType(Type type,String subClass_id) {
+        type.setIsUse(1);
+        SubClass subClass = subClassService.load(subClass_id);
+        type.setSubClass(subClass);
+        String id = typeService.add(type);
+        return addReturned(id);
     }
 
     /**
@@ -309,6 +466,12 @@ public class Manager {
         PageBean<Film> pageBean = filmService.getPage(ob, pc, ps);
         pageBean.setUrl(url);
         map.addAttribute("pb", pageBean);
+    }
+
+    private String addReturned(String id){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("code", id);
+        return jsonObject.toString();
     }
 
 }

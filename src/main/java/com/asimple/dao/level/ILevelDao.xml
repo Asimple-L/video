@@ -7,4 +7,9 @@
     <select id="findByIsUse" resultType="Level">
         SELECT * FROM t_level WHERE isUse = 1
     </select>
+
+    <insert id="add" parameterType="Level">
+        INSERT INTO `t_level` (`id`, `isUse`, `name`) VALUES (#{id}, #{isUse}, #{name})
+    </insert>
+
 </mapper>

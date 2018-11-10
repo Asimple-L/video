@@ -1,0 +1,121 @@
+*{
+    margin: 0px;
+    padding: 0px;
+    zoom: 1;
+    font-size: 12px;
+    font-family: '微软雅黑';
+}
+a{
+    text-decoration: none;
+    color:#444;
+}
+.catalog_name {
+    width: 200px;
+    height: 25px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background: #C3DDEC;
+    padding-left: 10px;
+    line-height: 25px;
+    outline: none;
+}
+
+.subClass_name {
+    width: 200px;
+    height: 25px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background: #C3DDEC;
+    padding-left: 10px;
+    line-height: 25px;
+    outline: none;
+}
+
+.type_name {
+    width: 200px;
+    height: 25px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background: #C3DDEC;
+    padding-left: 10px;
+    line-height: 25px;
+    outline: none;
+}
+
+.loc_name {
+    width: 200px;
+    height: 25px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background: #C3DDEC;
+    padding-left: 10px;
+    line-height: 25px;
+    outline: none;
+}
+
+.level_name {
+    width: 200px;
+    height: 25px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background: #C3DDEC;
+    padding-left: 10px;
+    line-height: 25px;
+    outline: none;
+}
+
+.decade_name {
+    width: 200px;
+    height: 25px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background: #C3DDEC;
+    padding-left: 10px;
+    line-height: 25px;
+    outline: none;
+}
+/*box框架*/
+.box{
+    width: 1190px;
+    height:auto;
+    overflow: hidden;
+    margin: 0px auto;
+}
+.box-left{
+    width: 290px;
+    height: auto;
+    float: left;
+    overflow: hidden;
+}
+.box-right{
+    width: 900px;
+    height: auto;
+    float: right;
+    overflow: hidden;
+}
+/*box框架*/
+/*按钮*/
+.btn{
+    padding: 4px 8px;
+    border-radius:4px;
+    background: #efefef;
+    border:1px solid #cccccc;
+    text-decoration: none;
+    color:#444;
+    margin-right: 10px;
+    display: inline-block;
+}
+.btn:hover{
+    background: #1d94ff;
+    border:1px solid #1d94ff;
+    color:white;
+}
+/*按钮*/
+select {
+    padding: 5px;
+    border: none;
+}
+div.subClass_name,div.catalog_name,div.type_name,div.loc_name,div.level_name,div.decade_name{
+    height: 30px;
+    border-radius: 15px;
+}

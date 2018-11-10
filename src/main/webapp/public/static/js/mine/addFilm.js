@@ -88,12 +88,13 @@
 
     function updateFilmInfo(f_id, key, val, t) {
         $.ajax({
-            url: "updateFilmInfo.html",
+            url: "admin/updateFilmInfo.html",
             type: "post",
             dataType: "json",
             data: "film_id=" + f_id + "&key=" + key + "&val=" + val,
             success: function (data) {
-                if (data == "1") {
+                if( typeof data == "string" ) data = JSON.parse(data);
+                if (data.code == "1") {
                     $(t).parent().parent().find(".label-input").hide();
                     if (key == "image") {
                         $(t).parent().parent().find(".label").show().find("div img").attr("src", val);
@@ -111,6 +112,7 @@
                             $(t).parent().parent().find(".label").show().find(".show").text(val);
                         }
                     }
+                    location.reload();
                 } else {
                     alert("更改失败");
                 }

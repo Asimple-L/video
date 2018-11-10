@@ -7,4 +7,13 @@
     <select id="listIsUse" resultType="SubClass">
         SELECT * FROM t_subclass WHERE catalog_id = #{id} AND isUse=1
     </select>
+
+    <insert id="add" parameterType="SubClass">
+        INSERT INTO `t_subclass` (`id`,`isUse`,`name`,`catalog_id`) VALUES (#{id},#{isUse},#{name},#{cataLog.id})
+    </insert>
+
+    <select id="load" resultType="SubClass">
+        SELECT * FROM `t_subclass` WHERE id=#{subClass_id}
+    </select>
+
 </mapper>

@@ -7,4 +7,9 @@
     <select id="findByIsUse" resultType="Decade">
         SELECT * FROM t_decade WHERE isUse = 1 ORDER BY `name` DESC
     </select>
+
+    <insert id="add" parameterType="Decade">
+        INSERT INTO `t_decade` (`id`, `isUse`, `name`) VALUES (#{id}, #{isUse}, #{name})
+    </insert>
+
 </mapper>

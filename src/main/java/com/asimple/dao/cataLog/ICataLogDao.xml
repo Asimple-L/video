@@ -4,7 +4,25 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.asimple.dao.cataLog.ICataLogDao">
-    <select id="findByIsUse" resultType="CataLog">
+    <resultMap id="myCataLog" type="CataLog">
+        <id column="id" property="id"></id>
+        <result column="isUse" property="isUse"></result>
+        <result column="name" property="name"></result>
+        <result column="sort" property="sort"></result>
+        <result column="isVip" property="isVip"></result>
+        <collection property="subClassList" column="id" select="selectSubclass"></collection>
+    </resultMap>
+
+    <select id="findByIsUse" resultMap="myCataLog">
         SELECT `id`,`name`,`isUse` FROM t_catalog WHERE `isUse`=1
     </select>
+
+    <select id="selectSubclass" resultType="SubClass">
+        SELECT * FROM `t_subclass` WHERE `catalog_id`=#{id}
+    </select>
+
+    <select id="load" resultType="CataLog">
+        SELECT * FROM `t_catalog` WHERE `id`=#{cataLog_id}
+    </select>
+
 </mapper>
