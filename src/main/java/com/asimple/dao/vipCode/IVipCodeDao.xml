@@ -4,5 +4,20 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.asimple.dao.vipCode.IVipCodeDao">
+    <resultMap id="myVipCode" type="VipCode">
+        <id column="id" property="id"></id>
+        <result column="code" property="code"></result>
+        <result column="is_use" property="isUse"></result>
+        <result column="create_time" property="create_time"></result>
+        <result column="expire_time" property="expire_time"></result>
+    </resultMap>
+
+    <select id="findByIsUse" resultMap="myVipCode">
+        SELECT * FROM `t_vipcode` WHERE `is_use`=1
+    </select>
+
+    <insert id="add" parameterType="VipCode">
+        INSERT INTO `t_vipcode` (`id`,`code`,`is_use`,`create_time`,`expire_time`) VALUES (#{id},#{code},#{isUse},#{create_time},#{expire_time})
+    </insert>
 
 </mapper>

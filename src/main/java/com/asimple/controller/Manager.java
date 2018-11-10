@@ -7,6 +7,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 import net.sf.json.util.PropertyFilter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -46,7 +49,7 @@ public class Manager {
     @Resource
     private ITypeService typeService;
     @Resource
-    private IRatyService ratyService;
+    private IVipCodeService vipCodeService;
 
     /**
      * @Author Asimple
@@ -399,6 +402,56 @@ public class Manager {
         });
         JSONArray jsonArray = JSONArray.fromObject(subClasses, jsonConfig);
         return jsonArray.toString();
+    }
+
+    /**
+     * @Author Asimple
+     * @Description VIP管理
+     **/
+    @RequestMapping(value = "/vipCode.html")
+    public String vipCode(ModelMap map) {
+        getCatalog(map);
+        List<VipCode> list = vipCodeService.listIsUse();
+        map.addAttribute("vip_codes",list);
+        return "manager/vipManager";
+    }
+
+    /**
+     * @Author Asimple
+     * @Description 创建VIP卡号
+     **/
+    @RequestMapping(value = "/createVipCode.html", method = RequestMethod.POST)
+    @ResponseBody
+    public String createVipCode(String num) {
+        JSONObject jsonObject = new JSONObject();
+        if( StringUtils.isNoneBlank(num) ) {
+            int n = Integer.parseInt(num);
+            VipCode vipCode;
+            List<VipCode> vipCodes = new ArrayList<>();
+            for(int i=0; i<n; i++) {
+                vipCode = new VipCode();
+                vipCode.setId(Tools.UUID());
+                vipCode.setCreate_time(new Date());
+                vipCode.setExpire_time(new Date());
+                vipCode.setCode(Tools.UUID());
+                vipCode.setIsUse(1);
+                vipCodes.add(vipCode);
+            }
+            int cnt = vipCodeService.saveAll(vipCodes);
+            if( cnt == n ) {
+                jsonObject.put("code", "1");
+                jsonObject.put("data", vipCodes);
+            } else jsonObject.put("code", "0");
+        } else jsonObject.put("code", "0");
+        return jsonObject.toString();
+    }
+
+    @RequestMapping(value = "/vipCode2.html")
+    public String vipCode2(ModelMap map){
+        getCatalog(map);
+        List<VipCode> list = vipCodeService.listIsUse();
+        map.addAttribute("vip_codes",list);
+        return "manager/vipManager2";
     }
 
     /**

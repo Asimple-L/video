@@ -19,8 +19,8 @@
         <li>
             <a href="#user_set" class="list-group-item " data-toggle="collapse"><i class="glyphicon glyphicon-user"></i>用户管理<span class="glyphicon glyphicon-chevron-right"></span></a>
             <li class="collapse" id="user_set">
-                <a href="javascript:void(0);" class="list-group-item">所有用户</a>
-                <a href="javascript:void(0);" class="list-group-item">VIP管理</a>
+                <a href="/video/admin/userList.html" class="list-group-item">所有用户</a>
+                <a href="/vide/admin/vipCode.html" class="list-group-item">VIP管理</a>
             </li>
         </li>
     </ul>
