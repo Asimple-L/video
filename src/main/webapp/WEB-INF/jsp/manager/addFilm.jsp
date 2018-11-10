@@ -10,7 +10,14 @@
 <html>
 <head>
     <base href="<%=basePath%>">
-    <title>新增资源</title>
+    <title>
+        <c:if test="${film==null}">
+            新增资源
+        </c:if>
+        <c:if test="${film!=null}">
+            修改资源
+        </c:if>
+    </title>
     <link rel="shortcut icon" href="<f:message key='pageIcon'/>">
     <link rel="stylesheet" href="${proname}/public/static/css/manager/addFilm.css">
     <link rel="stylesheet" href="${proname}/plugins/bootflat-admin/css/site.min.css">
@@ -20,11 +27,6 @@
     <link rel="stylesheet" href="${proname}/plugins/uploadify/uploadify.css" type="text/css">
     <!--=====================JS_Link===========================-->
     <script type="text/javascript" src="${proname}/plugins/uploadify/jquery.uploadify.min.js"></script>
-    <style>
-        #actor {
-            width: 60%;
-        }
-    </style>
 </head>
 <body>
 <jsp:include page="header.jsp"/>
@@ -38,7 +40,12 @@
                     <h3 class="panel-title">
                         <a href="javascript:void(0);" class="toggle-sidebar"><span class="fa fa-angle-double-left" data-toggle="offcanvas" title="Maximize Panel"></span>
                         </a>
-                        影视资源添加
+                        <c:if test="${film==null}">
+                            影视资源添加
+                        </c:if>
+                        <c:if test="${film!=null}">
+                            影视资源信息修改
+                        </c:if>
                     </h3>
                 </div>
                 <div class="panel-body">
@@ -50,16 +57,28 @@
                             <div style="width:100%; height: auto;overflow:hidden;margin: 0px auto;">
                                 <ul class="film-info">
                                     <li class="title">
-                                        <div class="left-con">添加影片</div>
-                                        <div class="right-con"></div>
+                                        <div class="left-con">
+                                            <c:if test="${film==null}">
+                                                添加影片
+                                            </c:if>
+                                            <c:if test="${film!=null}">
+                                                影片修改
+
+                                            </c:if>
+                                        </div>
+                                        <div class="right-con">
+                                            <c:if test="${film!=null}">
+                                                <a href="javascript:void(0);" class="btn btn-danger del-film-btn" style="color: #FFF;" film_id="${film.id}">删除影片</a>
+                                            </c:if>
+                                        </div>
                                     </li>
                                     <li>
                                         <div class="left-con">片名:</div>
                                         <div class="right-con">
                                             <c:if test="${film!=null}">
                                                 <div class="update">
-                                                    <div class="label">
-                                                        <a class="show" href="javascript:;">${film.name}</a>
+                                                    <div class="label my-label">
+                                                        <a class="showInfo" href="javascript:;">${film.name}</a>
                                                         <a href="javascript:;" class="btn edit">编辑</a>
                                                     </div>
                                                     <div class="label-input">
@@ -82,7 +101,7 @@
                                         <div class="right-con">
                                             <c:if test="${film!=null}">
                                                 <div class="update">
-                                                    <div class="label">
+                                                    <div class="label my-label">
                                                         <div class="update-pre">
                                                             <div><img src="${film.image}"/></div>
                                                         </div>
@@ -108,8 +127,8 @@
                                         <div class="right-con">
                                             <c:if test="${film!=null}">
                                                 <div class="update">
-                                                    <div class="label">
-                                                        <a class="show" href="javascript:;">${film.onDecade}</a>
+                                                    <div class="label my-label">
+                                                        <a class="showInfo" href="javascript:;">${film.onDecade}</a>
                                                         <a href="javascript:;" class="btn edit">编辑</a>
                                                     </div>
                                                     <div class="label-input">
@@ -139,8 +158,8 @@
                                         <div class="right-con">
                                             <c:if test="${film!=null}">
                                                 <div class="update">
-                                                    <div class="label">
-                                                        <a class="show" href="javascript:;">${film.status}</a>
+                                                    <div class="label my-label">
+                                                        <a class="showInfo" href="javascript:;">${film.status}</a>
                                                         <a href="javascript:;" class="btn edit">编辑</a>
                                                     </div>
                                                     <div class="label-input">
@@ -164,8 +183,8 @@
                                         <div class="right-con">
                                             <c:if test="${film!=null}">
                                                 <div class="update">
-                                                    <div class="label">
-                                                        <a class="show" href="javascript:;">${film.resolution}</a>
+                                                    <div class="label my-label">
+                                                        <a class="showInfo" href="javascript:;">${film.resolution}</a>
                                                         <a href="javascript:;" class="btn edit">编辑</a>
                                                     </div>
                                                     <div class="label-input">
@@ -197,8 +216,8 @@
                                         <div class="right-con">
                                             <c:if test="${film!=null}">
                                                 <div class="update">
-                                                    <div class="label">
-                                                        <a class="show" href="javascript:;">${film.typeName}</a>
+                                                    <div class="label my-label">
+                                                        <a class="showInfo" href="javascript:;">${film.typeName}</a>
                                                         <a href="javascript:;" class="btn edit">编辑</a>
                                                     </div>
                                                     <div class="label-input">
@@ -235,8 +254,8 @@
                                         <div class="right-con">
                                             <c:if test="${film!=null}">
                                                 <div class="update">
-                                                    <div class="label">
-                                                        <a class="show" href="javascript:;">${film.actor}</a>
+                                                    <div class="label my-label">
+                                                        <a class="showInfo" href="javascript:;">${film.actor}</a>
                                                         <a href="javascript:;" class="btn edit">编辑</a>
                                                     </div>
                                                     <div class="label-input">
@@ -260,8 +279,8 @@
 
                                             <c:if test="${film!=null}">
                                                 <div class="update">
-                                                    <div class="label">
-                                                        <a class="show" href="javascript:;">${film.locName}</a>
+                                                    <div class="label my-label">
+                                                        <a class="showInfo" href="javascript:;">${film.locName}</a>
                                                         <a href="javascript:;" class="btn edit">编辑</a>
                                                     </div>
                                                     <div class="label-input">
@@ -293,8 +312,8 @@
                                         <div class="right-con">
                                             <c:if test="${film!=null}">
                                                 <div class="update">
-                                                    <div class="label">
-                                                        <a class="show" href="javascript:;">${film.plot}</a>
+                                                    <div class="label my-label">
+                                                        <a class="showInfo" href="javascript:;">${film.plot}</a>
                                                         <a href="javascript:;" class="btn edit">编辑</a>
                                                     </div>
                                                     <div class="label-input">
@@ -318,8 +337,8 @@
                                         <div class="right-con">
                                             <c:if test="${film!=null}">
                                                 <div class="update">
-                                                    <div class="label">
-                                                        <a class="show" href="javascript:;">
+                                                    <div class="label my-label">
+                                                        <a class="showInfo" href="javascript:;">
                                                             <c:if test="${film.isVip=='1'}">是</c:if>
                                                             <c:if test="${film.isVip=='0'}">否</c:if>
                                                         </a>

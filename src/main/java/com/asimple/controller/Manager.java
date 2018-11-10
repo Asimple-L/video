@@ -48,6 +48,8 @@ public class Manager {
     private ISubClassService subClassService;
     @Resource
     private ITypeService typeService;
+    @Resource
+    private IRatyService ratyService;
 
     /**
      * @Author Asimple
@@ -114,16 +116,14 @@ public class Manager {
         return "manager/addFilm";
     }
 
+    /**
+     * @Author Asimple
+     * @Description 查看所有影视信息
+     **/
     @RequestMapping(value = "/list.html")
     public String filmList(ModelMap map, HttpServletRequest request) {
         getFilmList(map, request, 0);
         return "manager/allFilm";
-    }
-
-    @RequestMapping(value = "/list2.html")
-    public String filmList2(ModelMap map, HttpServletRequest request) {
-        getFilmList(map, request, 0);
-        return "manager/list";
     }
 
     /**
@@ -141,9 +141,25 @@ public class Manager {
 
     /**
      * @Author Asimple
+     * @Description 删除影片
+     **/
+    @RequestMapping( value = "/delFilm.html")
+    @ResponseBody
+    public String delFilm(String film_id) {
+        System.err.println(film_id);
+        JSONObject jsonObject = new JSONObject();
+        if ( filmService.deleteById(film_id) ) jsonObject.put("code", "1");
+        else jsonObject.put("code", "0");
+        return jsonObject.toString();
+    }
+
+
+    /**
+     * @Author Asimple
      * @Description 添加资源
      **/
     @RequestMapping(value = "/addRes.html")
+    @ResponseBody
     public String addRes(Res res, String film_id) {
         JSONObject jsonObject = new JSONObject();
         // 初始化
@@ -173,6 +189,7 @@ public class Manager {
                for(int i=begin; i<=end; i++) {
                    res.setName(name.replace("@@", ""));
                    res.setEpisodes(i);
+                   if( "Flh".equals(res.getLinkType()) ) flag = "";
                    res.setLink(flag+res_links[i-cz-1]);
                    id = resService.add(res);
                }
@@ -181,6 +198,29 @@ public class Manager {
         film.setUpdateTime(DateUtil.getTime());
         filmService.update(film);
         jsonObject.put("id", id);
+        return jsonObject.toString();
+    }
+
+    /**
+     * @Author Asimple
+     * @Description 删除资源
+     **/
+    @RequestMapping( value = "/delRes.html")
+    @ResponseBody
+    public String delRes(String res_id) {
+        JSONObject jsonObject = new JSONObject();
+        if( resService.delete(res_id) ) jsonObject.put("code", "1");
+        else jsonObject.put("code", "0");
+        return jsonObject.toString();
+    }
+
+    @RequestMapping( value = "/updateIsUse.html")
+    @ResponseBody
+    public String updateIsUse(String res_id) {
+        JSONObject jsonObject = new JSONObject();
+        System.err.println(res_id);
+        if( resService.updateIsUse(res_id) ) jsonObject.put("code", "1");
+        else jsonObject.put("code", "0");
         return jsonObject.toString();
     }
 

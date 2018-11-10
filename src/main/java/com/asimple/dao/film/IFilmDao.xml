@@ -92,4 +92,8 @@
                  #{subClassName}, #{subClass_id}, #{typeName}, #{type_id}, #{updateTime}, #{isVip})
     </insert>
 
+    <delete id="deleteById" parameterType="String">
+        DELETE FROM `t_film` WHERE `id`=#{id}
+    </delete>
+
 </mapper>

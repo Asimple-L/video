@@ -26,4 +26,7 @@ public interface IFilmService {
     boolean update(Film film);
     
     String save(Film film);
+
+    boolean deleteById(String film_id);
+
 }

@@ -7,9 +7,9 @@ import java.util.List;
 public interface IBaseDao<T> {
     // 增删改方法以及查询所有
     int add(T t);
-    boolean delete(T t);
-    boolean delete(String id);
-    boolean update(T t);
+    int delete(T t);
+    int deleteById(String id);
+    int update(T t);
     T load(String id);
     List<T> getAll();
     List<T> findByCondition(T t);

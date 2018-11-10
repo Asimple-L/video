@@ -7,7 +7,7 @@
 
 a {
     text-decoration: none;
-    color: #444;
+    /* color: #444;*/
 }
 
 /*影片列表*/
@@ -58,7 +58,7 @@ a {
     width: 100%;
     height: auto;
     text-align: right;
-    margin: 70px auto 0px auto;
+    /* margin: 70px auto 0px auto; */
 }
 
 /*box框架*/

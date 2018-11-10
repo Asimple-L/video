@@ -29,7 +29,7 @@
 
             $.ajax({
                 type: "post",
-                url: "delFile.html",
+                url: "/video/delFile.html",
                 cache: false,
                 data: "picsPath=" + filepath,
                 dataType: 'json',     //接受数据格式
@@ -359,12 +359,13 @@ $(function () {
      */
     $(".updateIsUse").click(function () {
         $.ajax({
-            url: "updateIsUse.html",
+            url: "admin/updateIsUse.html",
             type: "post",
             dataType: "json",
             data: "res_id=" + $(this).attr("res_id"),
             success: function (data) {
-                if ("1" == data) {
+                if( typeof data == "string" ) data = JSON.parse(data);
+                if ("1" == data.code) {
                     alert("修改成功");
                     location.reload();
                 } else {
@@ -382,12 +383,13 @@ $(function () {
         var isEnsure = confirm("确定删除?");
         if (isEnsure) {
             $.ajax({
-                url: "delRes.html",
+                url: "admin/delRes.html",
                 type: "post",
                 dataType: "json",
                 data: "res_id=" + $(this).attr("res_id"),
                 success: function (data) {
-                    if (data == "1") {
+                    if( typeof data == "string" ) data = JSON.parse(data);
+                    if (data.code == "1") {
                         alert("删除成功");
                         location.reload();
                     }
@@ -398,6 +400,34 @@ $(function () {
             });
         }
     })
+
+    /**
+     * 删除影片
+     */
+    $(".del-film-btn").click(function () {
+        var film_id = $(this).attr("film_id");
+        var isEnsure = confirm("确定删除?");
+        if( isEnsure ) {
+            $.ajax({
+                url:"admin/delFilm.html",
+                type:"POST",
+                data:{"film_id": film_id},
+                success: function(data){
+                    console.log(data);
+                    if( typeof data == "string" ) data = JSON.parse(data);
+                    if( data.code == "1" ) {
+                        location.assign("/video/admin/list.html");
+                    } else {
+                        alert("删除失败！");
+                    }
+                },
+                error: function () {
+                    alert("删除失败！");
+                }
+            })
+        }
+    })
+
 
 })
 
@@ -464,7 +494,7 @@ $("#file_upload_src").uploadify({
     'cancelImg': 'plugins/uploadify/uploadify.swf',// 取消按钮图片路径
     'removeTimeout': 1,
     'method': 'post',
-    'fileTypeExts': '*',
+    'fileTypeExts': '*.flv; *.f4v; *.mp4; *.m3u8',
     'simUploadLimit': 1,
     'auto': true,// 当选中文件后是否自动提交
     'uploadLimit': 0,
@@ -495,7 +525,6 @@ function uploadFileFinish(file, data) {
 }
 
 function uploadFinish(file, data) {
-    console.log(data);
     if( typeof data == "string" ) data = JSON.parse(data);
     // var file_info = JSON.parse(JSON.parse(data))[0].filePath;
     var file_info = data[0].filePath;

@@ -9,4 +9,7 @@ public interface IRatyDao extends IBaseDao<Raty> {
     int getCountByFilm_id(String film_id);
 
     List<Raty> listByFilmId(String film_id);
+
+    int deleteByFilmId(String film_id);
+
 }

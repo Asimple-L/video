@@ -33,6 +33,6 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public Boolean update(User userDb) {
-        return userDao.update(userDb);
+        return userDao.update(userDb)==1;
     }
 }

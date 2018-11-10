@@ -20,4 +20,8 @@
         SELECT * FROM t_raty WHERE film_id=#{id}
     </select>
 
+    <delete id="deleteByFilmId" parameterType="String">
+        DELETE FROM `t_raty` WHERE `film_id`=#{film_id}
+    </delete>
+
 </mapper>
