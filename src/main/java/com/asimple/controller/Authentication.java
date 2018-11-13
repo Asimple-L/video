@@ -1,7 +1,9 @@
 package com.asimple.controller;
 
 import com.asimple.entity.User;
+import com.asimple.entity.VipCode;
 import com.asimple.service.IUserService;
+import com.asimple.service.IVipCodeService;
 import com.asimple.util.MD5Auth;
 import com.asimple.util.Tools;
 import net.sf.json.JSONObject;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +29,10 @@ public class Authentication {
     public final static String USER_KEY = "u_skl";
     @Resource( name="userService")
     private IUserService userService;
+    @Resource( name = "vipCodeService")
+    private IVipCodeService vipCodeService;
+
+
     /**
      * @Author Asimple
      * @Description 进入注册页面
@@ -113,6 +120,62 @@ public class Authentication {
         JSONObject jsonObject = new JSONObject();
         session.removeAttribute(USER_KEY);
         jsonObject.put("code","1");
+        return jsonObject.toString();
+    }
+
+    /**
+     * @Author Asimple
+     * @Description 使用VIP卡号
+     **/
+    @RequestMapping( value = "/vipCodeVerification.html")
+    @ResponseBody
+    public String vipCodeVerification(String vip_code, HttpSession session) {
+        JSONObject jsonObject = new JSONObject();
+        VipCode vipCode = vipCodeService.findByVipCode(vip_code);
+        if( vip_code != null ) {// 卡是不为空
+            User user_temp = (User) session.getAttribute(USER_KEY);
+            User user = userService.load(user_temp.getId());
+            if( user != null ) {// 用户不为空
+                // 判断当前改用户的到期时间是否比当前时间大
+                Date expireTime = user.getExpireDate();
+                Date expireTimeTemp = expireTime;
+                long isVip = user.getIsVip();
+                // 使用Calendar类操作时间会简洁很多
+                Calendar rightNow = Calendar.getInstance();
+                if( expireTime.getTime() > new Date().getTime() ) rightNow.setTime(expireTime);
+                // 添加一个月的时间
+                rightNow.add(Calendar.MONTH,1);
+                expireTime = rightNow.getTime();
+                // 重新设置VIP到期时间
+                user.setExpireDate(expireTime);
+                user.setIsVip(1);
+                if( userService.update(user) ) { // 更新用户信息成功
+                    // 设置VIP卡为不可用
+                    vipCode.setExpire_time(new Date());
+                    vipCode.setIsUse(0);
+                    if( vipCodeService.update(vipCode) ) {
+                        jsonObject.put("code", "1");
+                    } else {
+                        user.setExpireDate(expireTimeTemp);
+                        user.setIsVip(isVip);
+                        userService.update(user);
+                        jsonObject.put("code", "0");
+                        jsonObject.put("error", "系统繁忙，请稍后重试！");
+                    }
+                    session.setAttribute(USER_KEY, user);
+                } else {
+                    jsonObject.put("code", "0");
+                    jsonObject.put("error", "加油失败，请稍后重试！");
+                }
+            } else {
+                jsonObject.put("code","0");
+                jsonObject.put("error","用户信息错误！");
+            }
+        } else {
+            jsonObject.put("code", "0");
+            jsonObject.put("error", "VIP加油卡号不存在");
+        }
+
         return jsonObject.toString();
     }
 

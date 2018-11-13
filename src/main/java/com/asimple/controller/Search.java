@@ -49,6 +49,10 @@ public class Search {
     @Resource
     private IResService resService;
 
+    /**
+     * @Author Asimple
+     * @Description 查询页面
+     **/
     @RequestMapping("/1.html")
     public String index(ModelMap model, HttpServletRequest request) {
         getFilm(model, request);
@@ -67,6 +71,10 @@ public class Search {
         return "index/1";
     }
 
+    /**
+     * @Author Asimple
+     * @Description 影片详情
+     **/
     @RequestMapping("/detail.html")
     public String detail(ModelMap map, String film_id, String src, String j, HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) {
         if (film_id == null) return "index/error";
@@ -83,7 +91,7 @@ public class Search {
                     return "redirect:" + referer;
                 }
             } else {
-                redirectAttributes.addFlashAttribute("error_info", "未登陆，请先登录");
+                redirectAttributes.addFlashAttribute("error_info", "VIP资源，请登录后观看");
                 return "redirect:" + referer;
             }
         }
@@ -170,6 +178,10 @@ public class Search {
         return "index/detail";
     }
 
+    /**
+     * @Author Asimple
+     * @Description 添加评分
+     **/
     @RequestMapping("/addRaty.html")
     @ResponseBody
     public String addRaty(Raty raty) {
@@ -198,6 +210,10 @@ public class Search {
         return jsonObject.toString();
     }
 
+    /**
+     * @Author Asimple
+     * @Description 播放器
+     **/
     @RequestMapping(value = "/pc.html")
     public String pc(ModelMap map, HttpServletRequest request) {
         return "index/pc";

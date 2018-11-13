@@ -58,6 +58,10 @@ public class Start {
         return "index/index";
     }
 
+    /**
+     * @Author Asimple
+     * @Description 联系我们
+     **/
     @RequestMapping("/note.html")
     public String note(ModelMap map) {
         List<CataLog> cataLogList = cataLogService.listIsUse();

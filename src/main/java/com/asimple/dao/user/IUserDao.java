@@ -7,10 +7,8 @@ import java.util.List;
 
 /**
  * @ProjectName video
- * @Description: TODO
+ * @Description: 用户Dao层代码
  * @author: Asimple
- * @date: 2018/8/27 11:17
- * @version: 1.0
  */
 public interface IUserDao extends IBaseDao<User> {
 

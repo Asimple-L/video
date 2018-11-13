@@ -29,7 +29,7 @@
     <script src="public/static/js/detail/jquery.raty.min.js?v=${version}" type="text/javascript"></script>
     <link rel="stylesheet" type="text/css" href="public/static/css/index/detail.css?v=${version}">
 
-
+    <script> var error_info = '${error_info}'; </script>
     <script type="text/javascript">
         window.prourl = "${prourl}";
         window.filmId = "${film.id}";
@@ -45,6 +45,9 @@
         }
 
         $(document).ready(function(){
+            if( error_info != null && error_info != '' ) {
+                alert(error_info);
+            }
             updateFilmSize();
             $(window).resize(function(){
                 updateFilmSize();

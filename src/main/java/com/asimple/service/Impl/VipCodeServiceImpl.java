@@ -38,4 +38,22 @@ public class VipCodeServiceImpl implements IVipCodeService {
         }
         return count;
     }
+
+    /**
+     * @Author Asimple
+     * @Description 通过VIP卡号查找VIPCODE对象
+     **/
+    @Override
+    public VipCode findByVipCode(String vip_code) {
+        return vipCodeDao.findByVipCode(vip_code);
+    }
+
+    /**
+     * @Author Asimple
+     * @Description 更新VIPCODE信息
+     **/
+    @Override
+    public boolean update(VipCode vipCode) {
+        return vipCodeDao.update(vipCode)==1;
+    }
 }

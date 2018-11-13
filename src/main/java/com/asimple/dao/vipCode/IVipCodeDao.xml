@@ -20,4 +20,12 @@
         INSERT INTO `t_vipcode` (`id`,`code`,`is_use`,`create_time`,`expire_time`) VALUES (#{id},#{code},#{isUse},#{create_time},#{expire_time})
     </insert>
 
+    <select id="findByVipCode" resultMap="myVipCode">
+        SELECT * FROM `t_vipcode` WHERE `code`=#{vip_code}
+    </select>
+
+    <update id="update" parameterMap="myVipCode">
+        UPDATE `t_vipcode` SET `code`=#{code}, `is_use`=#{isUse}, `create_time`=#{create_time},`expire_time`=#{expire_time} WHERE `id`=#{id}
+    </update>
+
 </mapper>

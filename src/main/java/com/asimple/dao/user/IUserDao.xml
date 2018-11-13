@@ -12,7 +12,6 @@
           VALUES (#{id}, #{userName}, #{createDate}, #{expireDate}, #{userEmail}, #{userPasswd})
     </insert>
 
-
     <select id="findByCondition" resultType="User">
         SELECT * FROM t_user
         <where>
@@ -28,5 +27,9 @@
     <update id="update" parameterType="User">
         UPDATE t_user SET `isVip`=#{isVip},`expireDate`=#{expireDate} WHERE id=#{id}
     </update>
+
+    <select id="load" resultType="User">
+        SELECT * FROM `t_user` WHERE `id`=#{id}
+    </select>
 
 </mapper>

@@ -81,10 +81,8 @@ public class Manager {
             user.setUserEmail(username);
             users = userService.findByCondition(user);
             if( users!=null && users.size()>0 ) {
-                System.err.println(2);
                 flag = checkAccount(password, users, session, map);
             } else {
-                System.err.println(3);
                 map.addAttribute("msg", "请登录正确的管理员账号！");
             }
         }

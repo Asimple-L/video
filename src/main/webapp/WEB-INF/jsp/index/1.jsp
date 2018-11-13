@@ -18,7 +18,7 @@
     <jsp:include page="/WEB-INF/jsp/pub/head_script.jsp"/>
     <!--=====================CSS_Link===========================-->
     <link rel="stylesheet" type="text/css" href="public/static/css/index/1.css?v=${version}">
-
+    <script> var error_info = '${error_info}'; </script>
     <!--=====================JS_Link===========================-->
     <script>
         $(function(){
@@ -36,6 +36,9 @@
     </script>
     <script>
         $(document).ready(function(){
+            if( error_info != null && error_info != '' ) {
+                alert(error_info);
+            }
             $('.weixinshowPic').hover(function() {
                 $(this).addClass('weixinshowPic-hover');
             }, function() {
