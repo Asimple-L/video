@@ -446,14 +446,6 @@ public class Manager {
         return jsonObject.toString();
     }
 
-    @RequestMapping(value = "/vipCode2.html")
-    public String vipCode2(ModelMap map){
-        getCatalog(map);
-        List<VipCode> list = vipCodeService.listIsUse();
-        map.addAttribute("vip_codes",list);
-        return "manager/vipManager2";
-    }
-
     /**
      * @Author Asimple
      * @Description 获取类型
