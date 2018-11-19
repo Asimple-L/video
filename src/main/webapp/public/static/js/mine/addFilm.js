@@ -79,7 +79,8 @@
             if (key1 != "") {
                 setTimeout(function () {
                     updateFilmInfo(film_id, key1, val1, this);
-                }, 3000);
+                    location.reload();
+                }, 500);
             }
         } else {
             alert("信息不完整");
@@ -112,7 +113,7 @@
                             $(t).parent().parent().find(".label").show().find(".show").text(val);
                         }
                     }
-                    location.reload();
+                    // location.reload();
                 } else {
                     alert("更改失败");
                 }

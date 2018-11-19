@@ -29,7 +29,7 @@ import java.util.*;
 @Controller
 @RequestMapping("/xl")
 public class Search {
-
+    private final static String USER_KEY = "u_skl";
     @Resource
     private IFilmService filmService;
     @Resource
@@ -82,16 +82,16 @@ public class Search {
         film.setResList(resService.getListByFilmId(film_id));
         // VIP资源校验
         if (film.getIsVip() == 1) {
-            User u_sk1 = (User) session.getAttribute(Authentication.USER_KEY);
+            User u_sk1 = (User) session.getAttribute(USER_KEY);
             // 得到发送请求的页面
             String referer = request.getHeader("referer");
             if (u_sk1 != null) {
                 if (u_sk1.getIsVip() == 0) {
-                    redirectAttributes.addFlashAttribute("error_info", "用户不是VIP，不能访问");
+                    redirectAttributes.addFlashAttribute("error_info", "not_vip");
                     return "redirect:" + referer;
                 }
             } else {
-                redirectAttributes.addFlashAttribute("error_info", "VIP资源，请登录后观看");
+                redirectAttributes.addFlashAttribute("error_info", "not_login");
                 return "redirect:" + referer;
             }
         }

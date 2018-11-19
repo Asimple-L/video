@@ -19,7 +19,6 @@
     <%--右侧排行推荐--%>
     <link href="plugins/paihang/css/lanrenzhijia.css" type="text/css" rel="stylesheet" />
     <link href="public/static/css/index/index.css?v=${version}" type="text/css" rel="stylesheet" />
-    <script> var error_info = '${error_info}'; </script>
     <!--=====================JS_Link===========================-->
     <script type="text/javascript">
         function updateFilmSize() {
@@ -44,9 +43,6 @@
         }
 
         $(document).ready(function(){
-            if( error_info != null && error_info != '' ) {
-                alert(error_info);
-            }
             $(".case ul li a").each(function(i){
                 $(this).hover(function(){
                     $(this).parent().find(".tips").addClass("hover");

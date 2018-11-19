@@ -3,6 +3,7 @@ package com.asimple.service.Impl;
 import com.asimple.dao.user.IUserDao;
 import com.asimple.entity.User;
 import com.asimple.service.IUserService;
+import com.asimple.util.PageBean;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -55,5 +56,21 @@ public class UserServiceImpl implements IUserService {
     @Override
     public User load(String id) {
         return userDao.load(id);
+    }
+
+    /**
+     * @Author Asimple
+     * @Description 带分页查询所有用户
+     **/
+    @Override
+    public PageBean<User> getPage(User user, int pc, int pageSize) {
+        PageBean<User> pageBean = new PageBean<>();
+        pageBean.setPc(pc);
+        pageBean.setPs(pageSize);
+        // 设置总数
+        pageBean.setTr(userDao.getTotalCount(user));
+        // 最开始的条数
+        pageBean.setBeanList(userDao.getPage(user, (pc-1)*pageSize, pageSize));
+        return pageBean;
     }
 }

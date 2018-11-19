@@ -26,7 +26,7 @@ import java.util.List;
 @Controller
 public class Authentication {
     private final static String key = "a1s2i3m4p5l6e7";
-    public final static String USER_KEY = "u_skl";
+    private final static String USER_KEY = "u_skl";
     @Resource( name="userService")
     private IUserService userService;
     @Resource( name = "vipCodeService")

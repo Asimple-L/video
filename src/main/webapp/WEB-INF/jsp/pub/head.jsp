@@ -172,7 +172,7 @@
                     vip_code:vip_code
                 },
                 success:function (data) {
-                    data = JSON.parse(data);
+                    if( typeof data == "string" ) data = JSON.parse(data);
                     if(data.code=="1"){
                         alert("加油成功，继续前行");
                         location.reload();

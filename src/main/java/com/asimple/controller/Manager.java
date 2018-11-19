@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.tools.Tool;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -130,6 +131,42 @@ public class Manager {
 
     /**
      * @Author Asimple
+     * @Description 用户管理
+     **/
+    @RequestMapping( value = "/userList.html")
+    public String userList(String page, ModelMap map) {
+        if( Tools.isEmpty(page) ) page = "1";
+        int pc = Integer.parseInt(page);
+        // 设置每页的条数
+        int pageSize = 10;
+        PageBean<User> pageBean = userService.getPage(null, pc, pageSize);
+        map.addAttribute("pb", pageBean);
+        return "manager/userList";
+    }
+
+    /**
+     * @Author Asimple
+     * @Description 更新用户信息
+     **/
+    @RequestMapping( value = "/updateUser.html", method = RequestMethod.POST)
+    @ResponseBody
+    public String updateUser(String uid, String key) {
+        JSONObject jsonObject = new JSONObject();
+        User user = userService.load(uid);
+        if( "manager".equals(key) ) {
+            int isManager = user.getIsManager();
+            user.setIsManager(1-isManager);
+        } else {
+            long isVip = user.getIsVip();
+            user.setIsVip(1L-isVip);
+        }
+        if( userService.update(user) ) jsonObject.put("code", "1");
+        else jsonObject.put("code", "0");
+        return jsonObject.toString();
+    }
+
+    /**
+     * @Author Asimple
      * @Description 添加影片
      **/
     @RequestMapping( value = "/addFilm.html", produces = "text/html;charset=UTF-8")
@@ -175,8 +212,6 @@ public class Manager {
         if ( res.getName().contains("@@") ) {
             //  xxxx@@集##集数开始##集数结束##分割符号
            String resName[] = res.getName().trim().split("##");
-           System.err.println(res.getName());
-           System.err.println(resName.length);
            // 视频名称
            String name = resName[0];
            // 开始集数与结束集数
@@ -192,7 +227,7 @@ public class Manager {
                    res.setName(name.replace("@@", ""));
                    res.setEpisodes(i);
                    if( "Flh".equals(res.getLinkType()) ) flag = "";
-                   res.setLink(flag+res_links[i-cz-1]);
+                   res.setLink(flag+res_links[i-cz]);
                    id = resService.add(res);
                }
            }
@@ -239,12 +274,13 @@ public class Manager {
     public String updateFilmInfo(String film_id, String val, String key, HttpSession session) {
         JSONObject jsonObject = new JSONObject();
         Film film = filmService.load(film_id);
+        System.err.println(key);
+        System.err.println(val);
         switch ( key ) {
             case "name":
                 film.setName(val);
                 break;
             case "image":
-                System.err.println(session.getServletContext().getRealPath(film.getImage()));
                 FileOperate.delFile(session.getServletContext().getRealPath(film.getImage()));
                 film.setImage(val);
                 break;
@@ -263,6 +299,7 @@ public class Manager {
             case "type_id":
                 film.setType_id(val);
                 Type type = typeService.load(val);
+                System.err.println(type);
                 film.setSubClass_id(type.getSubClass().getId());
                 film.setSubClassName(type.getSubClass().getName());
                 film.setCataLog_id(type.getSubClass().getCataLog().getId());
@@ -281,6 +318,7 @@ public class Manager {
                 film.setIsVip(Integer.valueOf(val));
                 break;
         }
+        System.err.println(film);
         if( filmService.update(film) ) jsonObject.put("code", "1");
         else jsonObject.put("code", "0");
         return jsonObject.toString();

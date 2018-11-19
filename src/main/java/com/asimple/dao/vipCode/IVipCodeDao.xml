@@ -24,7 +24,7 @@
         SELECT * FROM `t_vipcode` WHERE `code`=#{vip_code}
     </select>
 
-    <update id="update" parameterMap="myVipCode">
+    <update id="update" parameterType="VipCode">
         UPDATE `t_vipcode` SET `code`=#{code}, `is_use`=#{isUse}, `create_time`=#{create_time},`expire_time`=#{expire_time} WHERE `id`=#{id}
     </update>
 

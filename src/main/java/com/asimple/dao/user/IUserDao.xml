@@ -4,6 +4,24 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.asimple.dao.user.IUserDao">
+
+    <sql id="choose">
+        <if test="obj != null">
+            <if test="obj.userName != null ">
+                AND `userName` LIKE '%' #{obj.userName} '%'
+            </if>
+            <if test="obj.userEmail != null">
+                AND `userEmail`=#{obj.userEmail}
+            </if>
+            <if test="obj.isManager != null">
+                AND `isManager`=#{obj.isManager}
+            </if>
+            <if test="obj.isVip != null">
+                AND `isVip`=#{obj.isVip}
+            </if>
+        </if>
+    </sql>
+
     <insert id="add" parameterType="User">
         <selectKey keyProperty="id" resultType="String" order="BEFORE">
             SELECT replace(uuid(), '-', '')
@@ -25,11 +43,23 @@
     </select>
 
     <update id="update" parameterType="User">
-        UPDATE t_user SET `isVip`=#{isVip},`expireDate`=#{expireDate} WHERE id=#{id}
+        UPDATE t_user SET `isVip`=#{isVip},`expireDate`=#{expireDate},`isManager`=#{isManager} WHERE id=#{id}
     </update>
 
     <select id="load" resultType="User">
         SELECT * FROM `t_user` WHERE `id`=#{id}
+    </select>
+
+    <select id="getPage" resultType="User">
+        SELECT * FROM `t_user`
+        <where>
+            <include refid="choose"></include>
+        </where>
+        LIMIT #{start},#{count}
+    </select>
+
+    <select id="getTotalCount" resultType="Integer">
+        SELECT COUNT(*) FROM `t_user`
     </select>
 
 </mapper>

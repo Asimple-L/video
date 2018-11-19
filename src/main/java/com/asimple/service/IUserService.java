@@ -1,6 +1,7 @@
 package com.asimple.service;
 
 import com.asimple.entity.User;
+import com.asimple.util.PageBean;
 
 import java.util.List;
 
@@ -13,4 +14,6 @@ public interface IUserService {
     Boolean update(User userDb);
     // 加载用户
     User load(String id);
+    // 带分页查询
+    PageBean<User> getPage(User user, int pc, int pageSize);
 }
