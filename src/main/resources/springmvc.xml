@@ -58,12 +58,12 @@
 		<property name="maxUploadSize" value="-1"/> <!-- 最大文件大小，-1为无限止(-1) -->
 	</bean>
 
-	<!-- 配置后台登录权限拦截 -->
-	<!--<mvc:interceptors>-->
-		<!--<mvc:interceptor>-->
-			<!--<mvc:mapping path="/admin/*"/>-->
-			<!--<bean class="com.asimple.interceptor.AdminUserInterceptor"/>-->
-		<!--</mvc:interceptor>-->
-	<!--</mvc:interceptors>-->
+	 <!--配置后台登录权限拦截-->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/admin/*"/>
+			<bean class="com.asimple.interceptor.AdminUserInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
 
 </beans>

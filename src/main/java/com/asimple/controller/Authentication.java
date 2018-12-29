@@ -119,6 +119,7 @@ public class Authentication {
     public String logout(HttpSession session) {
         JSONObject jsonObject = new JSONObject();
         session.removeAttribute(USER_KEY);
+        session.removeAttribute("adminUser");
         jsonObject.put("code","1");
         return jsonObject.toString();
     }
