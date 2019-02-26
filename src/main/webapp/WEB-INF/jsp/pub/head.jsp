@@ -38,7 +38,7 @@
                         </li>
                     </c:if>
                     <li class="nav-item">
-                        <a class="nav-link" href="https://w.url.cn/s/Axllwhs"  target="_blank">加点油</a>
+                        <a class="nav-link" href="<f:message key="sales_link"/>"  target="_blank">加点油</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" onclick="fuelFilling()"  href="javascript:;">使用加油卡</a>
