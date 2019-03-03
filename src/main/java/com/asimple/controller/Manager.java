@@ -107,7 +107,7 @@ public class Manager {
      **/
     @RequestMapping(value = "/film.html")
     public String film(ModelMap map, String film_id) {
-        if ( film_id != null && !"".equals(film_id) ) {// 如果有id，则是编辑
+        if ( film_id != null && !"".equals(film_id.trim()) ) {// 如果有id，则是编辑
             // 获取电影信息
             map.addAttribute("film", filmService.load(film_id));
             // 获取资源信息

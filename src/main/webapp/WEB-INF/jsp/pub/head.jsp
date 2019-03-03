@@ -16,12 +16,9 @@
         </button>
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
             <ul class="nav navbar-nav navbar-right" >
-
-
-                <%--<li class="nav-item">
-                    <a class="nav-link" href="note.html">留言</a>
-                </li>--%>
-
+                <li class="nav-item">
+                    <a class="nav-link" href="/video/note.html">留言</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" onclick="alert('请点击Ctrl+D收藏')" href="#">收藏网站</a>
                 </li>
@@ -42,6 +39,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" onclick="fuelFilling()"  href="javascript:;">使用加油卡</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"  href="javascript:;">视频分享</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" id="globalLoginBtn_loginOut" href="javascript:;">退出</a>

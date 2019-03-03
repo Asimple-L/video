@@ -191,7 +191,7 @@
                 </ul>
             </c:if>
             <c:if test="${pb.tr==0}">
-                <ul class="mlist">对不起，没有找到任何记录,<a target="_blank" href="note.html"><font color="red"><b>请您在此留言</b></font></a>，我们尽快为你添加喜欢的数据<div class="cr"></div></ul>
+                <ul class="mlist">对不起，没有找到任何记录,<a target="_blank" href="/video/note.html"><font color="red"><b>请您在此留言</b></font></a>，我们尽快为你添加喜欢的数据<div class="cr"></div></ul>
             </c:if>
             <div style="width:100%;margin: 5px auto;height: auto;overflow: hidden;">
                 <c:if test="${pb.tr!=0}">
