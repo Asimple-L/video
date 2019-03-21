@@ -1,12 +1,14 @@
 package com.asimple.entity;
 
 
+import java.io.Serializable;
+
 /**
  * @ProjectName video
  * @Description: 类型实体
  * @author: Asimple
  */
-public class Type {
+public class Type implements Serializable {
     private String id;
     private String name;
     private int isUse;

@@ -1,11 +1,13 @@
 package com.asimple.entity;
 
+import java.io.Serializable;
+
 /**
  * @ProjectName video
  * @Description: 评分实体类
  * @author: Asimple
  */
-public class Raty {
+public class Raty implements Serializable {
     private String id;//主键id
     private String film_id;//影片id
     private String score;//评分

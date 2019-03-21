@@ -1,11 +1,13 @@
 package com.asimple.entity;
 
+import java.io.Serializable;
+
 /**
  * @ProjectName video
  * @Description: 地区分类实体
  * @author: Asimple
  */
-public class Loc {
+public class Loc implements Serializable {
     private String id; // 主键id
     private int isUse; // 是否在使用
     private String name; // 名称

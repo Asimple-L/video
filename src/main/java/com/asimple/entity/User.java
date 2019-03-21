@@ -1,5 +1,6 @@
 package com.asimple.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -7,7 +8,7 @@ import java.util.Date;
  * @Description: 用户实体类
  * @author: Asimple
  */
-public class User {
+public class User implements Serializable {
     private String id;// 主键
     private String userName;// 用户名
     private String userPasswd;// 用户密码

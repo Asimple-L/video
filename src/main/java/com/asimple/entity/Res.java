@@ -1,11 +1,13 @@
 package com.asimple.entity;
 
+import java.io.Serializable;
+
 /**
  * @ProjectName video
  * @Description: 资源实体类
  * @author: Asimple
  */
-public class Res {
+public class Res implements Serializable {
     private String id; // 主键id
     private int episodes; // 集
     private String name; // 资源名称

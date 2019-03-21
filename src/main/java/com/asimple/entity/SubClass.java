@@ -1,5 +1,6 @@
 package com.asimple.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -8,7 +9,7 @@ import java.util.List;
  * @author: Asimple
  */
 
-public class SubClass {
+public class SubClass implements Serializable {
     private String id;
     private String name;
     private int isUse;

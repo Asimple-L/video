@@ -1,5 +1,6 @@
 package com.asimple.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -7,7 +8,7 @@ import java.util.Date;
  * @Description: VIP码
  * @author: Asimple
  */
-public class VipCode {
+public class VipCode implements Serializable {
     private String id; // 主键id
     private String code; // VIP卡码
     private int isUse; // 是否使用

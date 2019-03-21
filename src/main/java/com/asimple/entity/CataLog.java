@@ -1,5 +1,6 @@
 package com.asimple.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,7 +8,7 @@ import java.util.List;
  * @Description: 一级分类实体类
  * @author: Asimple
  */
-public class CataLog {
+public class CataLog implements Serializable {
     private String id; // 主键id
     private String name; // 名称
     private int isUse;  // 是否在使用

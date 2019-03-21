@@ -1,11 +1,13 @@
 package com.asimple.entity;
 
+import java.io.Serializable;
+
 /**
  * @ProjectName video
  * @Description: 级别实体
  * @author: Asimple
  */
-public class Level {
+public class Level implements Serializable {
     private String id; // 主键id
     private int isUse; // 是否在使用
     private String name; // 名称

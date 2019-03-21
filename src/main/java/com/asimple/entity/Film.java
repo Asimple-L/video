@@ -1,5 +1,6 @@
 package com.asimple.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,7 +8,7 @@ import java.util.List;
  * @Description: 电影实体
  * @author: Asimple
  */
-public class Film {
+public class Film implements Serializable {
     private String id;// 主键
     private String name;// 片名
     private String image;// 海报图
