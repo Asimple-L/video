@@ -38,6 +38,11 @@ public class FilmServiceImpl implements IFilmService  {
     private IResDao resDao;
 
 
+    @Override
+    public List<Film> findAll() {
+        return filmDao.getAll();
+    }
+
     /**
      * @Author Asimple
      * @Description 通过类型查找电影

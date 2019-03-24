@@ -31,6 +31,10 @@
         </if>
     </sql>
 
+    <select id="getAll" resultType="Film">
+        SELECT * FROM `t_film`
+    </select>
+
     <select id="listByCataLog_id" resultType="Film">
         SELECT * FROM t_film WHERE `cataLog_id` = #{param1}
         <if test="param2 != null">

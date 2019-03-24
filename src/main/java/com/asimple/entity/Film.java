@@ -1,5 +1,7 @@
 package com.asimple.entity;
 
+import org.apache.solr.client.solrj.beans.Field;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -9,21 +11,28 @@ import java.util.List;
  * @author: Asimple
  */
 public class Film implements Serializable {
+    @Field
     private String id;// 主键
+    @Field("video_film_name")
     private String name;// 片名
     private String image;// 海报图
+    @Field("video_film_onDecade")
     private String onDecade;//上影年代
     private String status;//状态
     private String resolution;//分辨率
     private String typeName;//类型名称
+    @Field("video_type_id")
     private String type_id;//类型Id
     private String actor;//演员
     private String locName;//地区名称
+    @Field("video_film_loc_id")
     private String loc_id;//地区Id
     private String updateTime;//更新时间
     private int isUse;//是否在使用
+    @Field("video_film_cataLog_id")
     private String cataLog_id;//一级目录
     private String cataLogName;//一级目录名称
+    @Field("video_film_subClass_id")
     private String subClass_id;//二级目录
     private String subClassName;//二级目录名称
     private Integer isVip;//是否vip资源

@@ -2,6 +2,7 @@ package com.asimple.controller;
 
 import com.asimple.entity.*;
 import com.asimple.service.*;
+import com.asimple.task.RankTask;
 import com.asimple.util.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.tools.Tool;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -51,6 +51,8 @@ public class Manager {
     private ITypeService typeService;
     @Resource
     private IVipCodeService vipCodeService;
+    @Resource
+    private RankTask rankTask;
 
     /**
      * @Author Asimple
@@ -75,7 +77,6 @@ public class Manager {
         users = userService.findByCondition(user);
         // 用户名登录
         if( users != null && users.size()>0 ) {
-            System.err.println(1);
             flag = checkAccount(password, users, session, map);
         } else { // 邮箱登录
             user.setUserName(null);
@@ -174,6 +175,7 @@ public class Manager {
     public String addFilm(Film film) {
         JSONObject jsonObject = new JSONObject();
         String id = filmService.save(film);
+        this.updateRedis(id);
         jsonObject.put("id", id);
         return jsonObject.toString();
     }
@@ -185,9 +187,12 @@ public class Manager {
     @RequestMapping( value = "/delFilm.html")
     @ResponseBody
     public String delFilm(String film_id) {
-        System.err.println(film_id);
+        LogUtil.info(Manager.class, "film_id = " + film_id);
         JSONObject jsonObject = new JSONObject();
-        if ( filmService.deleteById(film_id) ) jsonObject.put("code", "1");
+        if ( filmService.deleteById(film_id) ) {
+            jsonObject.put("code", "1");
+            this.updateRedis("1");
+        }
         else jsonObject.put("code", "0");
         return jsonObject.toString();
     }
@@ -259,8 +264,11 @@ public class Manager {
     @ResponseBody
     public String updateIsUse(String res_id) {
         JSONObject jsonObject = new JSONObject();
-        System.err.println(res_id);
-        if( resService.updateIsUse(res_id) ) jsonObject.put("code", "1");
+        LogUtil.info(Manager.class, "res_id = " + res_id);
+        if( resService.updateIsUse(res_id) ) {
+            jsonObject.put("code", "1");
+            this.updateRedis("1");;
+        }
         else jsonObject.put("code", "0");
         return jsonObject.toString();
     }
@@ -274,8 +282,7 @@ public class Manager {
     public String updateFilmInfo(String film_id, String val, String key, HttpSession session) {
         JSONObject jsonObject = new JSONObject();
         Film film = filmService.load(film_id);
-        System.err.println(key);
-        System.err.println(val);
+        LogUtil.info(Manager.class, "key = " + key + "   val = " + val);
         switch ( key ) {
             case "name":
                 film.setName(val);
@@ -299,7 +306,7 @@ public class Manager {
             case "type_id":
                 film.setType_id(val);
                 Type type = typeService.load(val);
-                System.err.println(type);
+                LogUtil.info(Manager.class, "type = " + type);
                 film.setSubClass_id(type.getSubClass().getId());
                 film.setSubClassName(type.getSubClass().getName());
                 film.setCataLog_id(type.getSubClass().getCataLog().getId());
@@ -318,8 +325,11 @@ public class Manager {
                 film.setIsVip(Integer.valueOf(val));
                 break;
         }
-        System.err.println(film);
-        if( filmService.update(film) ) jsonObject.put("code", "1");
+        LogUtil.info(Manager.class, "film = " + film);
+        if( filmService.update(film) ) {
+            jsonObject.put("code", "1");
+            this.updateRedis("1");
+        }
         else jsonObject.put("code", "0");
         return jsonObject.toString();
     }
@@ -389,6 +399,7 @@ public class Manager {
     public String addCataLog(CataLog cataLog) {
         cataLog.setIsUse(1);
         String id = cataLogService.add(cataLog);
+        this.updateRedis(id);
         return addReturned(id);
     }
 
@@ -553,6 +564,12 @@ public class Manager {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("code", id);
         return jsonObject.toString();
+    }
+
+    private void updateRedis(String id) {
+        if( !"0".equals(id) ) {
+            rankTask.commendRank();
+        }
     }
 
 }

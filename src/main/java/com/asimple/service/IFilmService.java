@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface IFilmService {
 
+    List<Film> findAll();
+
     List<Film> listByType_id(String type_id);
 
     List<Film> listByType_id(String type_id, int top);
