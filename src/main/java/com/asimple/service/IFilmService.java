@@ -1,5 +1,6 @@
 package com.asimple.service;
 
+import com.asimple.entity.Bullet;
 import com.asimple.entity.Film;
 import com.asimple.util.PageBean;
 
@@ -30,5 +31,9 @@ public interface IFilmService {
     String save(Film film);
 
     boolean deleteById(String film_id);
+
+    List<Bullet> getBulletByFilmId(String filmId);
+
+    boolean saveBullet(Bullet bullet);
 
 }

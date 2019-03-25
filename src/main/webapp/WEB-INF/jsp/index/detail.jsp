@@ -38,7 +38,7 @@
         /**窗口变化重新计算大小*/
         function updateFilmSize() {
             var w = $(".player").width();
-            var h = (w * 3) / 4;
+            var h = Math.floor( (w * 9) / 16);
             $(".player").css("height", h + "px");
         }
 

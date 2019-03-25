@@ -100,4 +100,13 @@
         DELETE FROM `t_film` WHERE `id`=#{id}
     </delete>
 
+    <select id="getBulletByFilmId" resultType="Bullet" parameterType="String">
+        SELECT * FROM `t_bullet` WHERE `filmId`=#{filmId}
+    </select>
+
+    <insert id="saveBullet" parameterType="Bullet">
+        INSERT INTO `t_bullet` (`id`, `text`, `position`, `size`, `color`, `time`, `filmId`)
+            VALUES (#{id}, #{text}, #{position}, #{size}, #{color}, #{time}, #{filmId})
+    </insert>
+
 </mapper>

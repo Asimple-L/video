@@ -4,6 +4,7 @@ import com.asimple.dao.film.IFilmDao;
 import com.asimple.dao.raty.IRatyDao;
 import com.asimple.dao.res.IResDao;
 import com.asimple.dao.type.ITypeDao;
+import com.asimple.entity.Bullet;
 import com.asimple.entity.Film;
 import com.asimple.entity.Type;
 import com.asimple.service.IFilmService;
@@ -165,6 +166,17 @@ public class FilmServiceImpl implements IFilmService  {
         // 3、删除电影本身
         sum += filmDao.deleteById(film_id);
         return sum != 0;
+    }
+
+    @Override
+    public List<Bullet> getBulletByFilmId(String filmId) {
+        return filmDao.getBulletByFilmId(filmId);
+    }
+
+    @Override
+    public boolean saveBullet(Bullet bullet) {
+        bullet.setId(Tools.UUID());
+        return filmDao.saveBullet(bullet)!=0;
     }
 
 

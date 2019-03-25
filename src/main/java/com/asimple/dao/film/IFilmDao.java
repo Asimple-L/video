@@ -1,5 +1,6 @@
 package com.asimple.dao.film;
 
+import com.asimple.entity.Bullet;
 import com.asimple.entity.Film;
 import com.asimple.util.IBaseDao;
 
@@ -18,4 +19,9 @@ public interface IFilmDao extends IBaseDao<Film> {
     List<Film> listByEvaluation(String id);
 
     List<Film> listByEvaluation(String id, int top);
+
+    List<Bullet> getBulletByFilmId(String filmId);
+
+    int saveBullet(Bullet bullet);
+
 }

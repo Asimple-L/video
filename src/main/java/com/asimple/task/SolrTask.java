@@ -24,7 +24,7 @@ public class SolrTask {
     @Resource
     private SolrTemplate solrTemplate;
 
-    @Scheduled(cron = "0/10 * * * * ?")
+    @Scheduled(cron = "0 10 0 * * ?")
     public void pushToSolr() {
         LogUtil.info(SolrTask.class, "pushSolr start!");
         Long startTime = System.currentTimeMillis();

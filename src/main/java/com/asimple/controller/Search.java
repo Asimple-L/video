@@ -1,11 +1,12 @@
 package com.asimple.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.asimple.entity.*;
 import com.asimple.service.*;
 import com.asimple.util.DateUtil;
+import com.asimple.util.LogUtil;
 import com.asimple.util.PageBean;
 import com.asimple.util.Tools;
-import net.sf.json.JSONObject;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -218,6 +219,40 @@ public class Search {
     public String pc(ModelMap map, HttpServletRequest request) {
         return "index/pc";
     }
+
+    /**
+     * @Author Asimple
+     * @Description 查询弹幕
+     **/
+    @RequestMapping(value = "/queryBullet.html")
+    @ResponseBody
+    public String queryBullet(String film_id) {
+        StringBuilder stringBuilder = new StringBuilder("[");
+        List<Bullet> list = filmService.getBulletByFilmId(film_id);
+        int length = list.size();
+        for(int i=0; i<length; i++) {
+            Bullet bullet = list.get(i); if( i!=0 ) stringBuilder.append(",");
+            stringBuilder.append("'"+bullet.toString()+"'");
+        }
+        stringBuilder.append("]");
+        LogUtil.info(stringBuilder.toString()); return stringBuilder.toString();
+    }
+
+    /**
+     * @Author Asimple
+     * @Description 保存弹幕
+     **/
+    @RequestMapping(value = "/saveBullet.html")
+    @ResponseBody public String saveBullet(String film_id, String danmu) {
+        Map map = JSONObject.parseObject(danmu, Map.class);
+        LogUtil.info("map = " + map);
+        Bullet bullet = new Bullet(null, (String) map.get("text"), (String) map.get("color"), (String) map.get("position"), (String) map.get("size"), (Integer)map.get("time"), film_id);
+        boolean result = filmService.saveBullet(bullet);
+        if( !result ) {
+            LogUtil.error("保存弹幕失败哟~ 失败弹幕信息：" + bullet);
+        } return "callback";
+    }
+
 
     private void getFilm(ModelMap map, HttpServletRequest request) {
         String name = request.getParameter("name");

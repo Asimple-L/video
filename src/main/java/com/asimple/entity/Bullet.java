@@ -10,24 +10,24 @@ import java.io.Serializable;
 public class Bullet implements Serializable {
 
     private String id;
-    private String film_id;
     private String text;
     private String color;
     private String position;
     private String size;
-    private String time;
+    private Integer time;
+    private String filmId;
 
     public Bullet() {
     }
 
-    public Bullet(String id, String film_id, String text, String color, String position, String size, String time) {
+    public Bullet(String id, String text, String color, String position, String size, Integer time, String filmId) {
         this.id = id;
-        this.film_id = film_id;
         this.text = text;
         this.color = color;
         this.position = position;
         this.size = size;
         this.time = time;
+        this.filmId = filmId;
     }
 
     public String getId() {
@@ -36,14 +36,6 @@ public class Bullet implements Serializable {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getFilm_id() {
-        return film_id;
-    }
-
-    public void setFilm_id(String film_id) {
-        this.film_id = film_id;
     }
 
     public String getText() {
@@ -78,24 +70,28 @@ public class Bullet implements Serializable {
         this.size = size;
     }
 
-    public String getTime() {
+    public Integer getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(Integer time) {
         this.time = time;
+    }
+
+    public String getFilmId() {
+        return filmId;
+    }
+
+    public void setFilmId(String filmId) {
+        this.filmId = filmId;
     }
 
     @Override
     public String toString() {
-        return "Bullet{" +
-                "id='" + id + '\'' +
-                ", film_id='" + film_id + '\'' +
-                ", text='" + text + '\'' +
-                ", color='" + color + '\'' +
-                ", position='" + position + '\'' +
-                ", size='" + size + '\'' +
-                ", time='" + time + '\'' +
-                '}';
+        return "{" + "\"text\":\"" + text + '"' +
+                ", \"color\":\"" + color + '"' +
+                ", \"position\":\"" + position + '"' +
+                ", \"size\":\"" + size + '"' +
+                ", \"time\":" + time + '}';
     }
 }
