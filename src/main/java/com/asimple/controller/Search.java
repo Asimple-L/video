@@ -45,7 +45,7 @@ public class Search {
     @Resource
     private IResService resService;
     @Resource
-    private RedisUtil redisUtil;
+    private ICommonService commonService;
 
     /**
      * @Author Asimple
@@ -65,7 +65,7 @@ public class Search {
             List<Type> types = typeService.listIsUseBySubClass_id(subClass_id);
             model.put("typeList", types);
         }
-        getCatalog(model);
+        model = commonService.getCatalog(model);
         return "index/1";
     }
 
@@ -280,31 +280,6 @@ public class Search {
         PageBean<Film> pageBean = filmService.getPage(ob, pc, ps);
         pageBean.setUrl(url);
         map.addAttribute("pb", pageBean);
-    }
-
-    private void getCatalog(ModelMap model) {
-        List<Loc> locList = (List<Loc>)redisUtil.get("redis_locList");
-        if( locList==null || locList.isEmpty() ) {
-            locList = locService.listIsUse();
-        }
-        List<Level> levelList = (List<Level>)redisUtil.get("redis_levelList");
-        if( levelList == null || levelList.isEmpty() ) {
-            levelList = levelService.listIsUse();
-        }
-        List<Decade> decadeList = (List<Decade>)redisUtil.get("redis_decadeList");
-        if( decadeList==null || decadeList.isEmpty() ) {
-            decadeList = decadeService.listIsUse();
-        }
-        List<CataLog> cataLogList = (List<CataLog>)redisUtil.get("redis_cataLogList");
-        if( cataLogList==null || cataLogList.isEmpty() ) {
-            cataLogList = cataLogService.listIsUse();
-        }
-
-        //读取路径下的文件返回UTF-8类型json字符串
-        model.addAttribute("locList", locList);
-        model.addAttribute("levelList", levelList);
-        model.addAttribute("decadeList", decadeList);
-        model.addAttribute("cataLogList", cataLogList);
     }
 
     public void setFilmService(IFilmService filmService) {

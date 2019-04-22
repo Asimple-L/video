@@ -1,11 +1,10 @@
 package com.asimple.controller;
 
 import com.asimple.entity.Film;
+import com.asimple.entity.Res;
 import com.asimple.entity.User;
 import com.asimple.entity.VipCode;
-import com.asimple.service.IFilmService;
-import com.asimple.service.IUserService;
-import com.asimple.service.IVipCodeService;
+import com.asimple.service.*;
 import com.asimple.util.*;
 import net.sf.json.JSONObject;
 import org.json.JSONException;
@@ -26,7 +25,7 @@ import java.util.List;
 
 /**
  * @ProjectName video
- * @Description: 用户登录注册以及等级验证
+ * @Description: 用户登录注册以及等级验证、个人中心
  * @author: Asimple
  */
 
@@ -40,6 +39,10 @@ public class Authentication {
     private IVipCodeService vipCodeService;
     @Resource(name = "filmService")
     private IFilmService filmService;
+    @Resource
+    private IResService resService;
+    @Resource
+    private ICommonService commonService;
 
 
     /**
@@ -143,6 +146,20 @@ public class Authentication {
         List<Film> list = filmService.findAll();
         map.put("films", list);
         return "index/profile";
+    }
+
+    @RequestMapping(value = "/share.html")
+    public String shareVideo(HttpServletRequest request, ModelMap map) {
+        String film_id = request.getParameter("film_id");
+        Film film = filmService.load(film_id);
+        if( film!=null ) {
+            map.put("film", film);
+            List<Res> list = resService.getListByFilmId(film_id);
+            if( list.size()== 0 )  map.addAttribute("res", null);
+            else map.addAttribute("res", list);
+        }
+        map = commonService.getCatalog(map);
+        return "index/addFilm";
     }
 
     /**

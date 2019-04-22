@@ -182,115 +182,37 @@
                                     </ul>
                                 </div>
                                 <div class="tab-content">
+                                    <%-- 我的视频 --%>
                                     <div class="tab-pane in active" id="video-mine">
                                         <div class="text-center" style="width: 100%;">
-                                            <button class="btn-primary btn" style="border-radius: 15%;">我要上传</button>
+                                            <a href="/video/share.html">
+                                                <button class="btn-primary btn" style="border-radius: 15%;">我要上传</button>
+                                            </a>
                                         </div>
-                                        <div style="margin: 10px auto;">
-                                            <ul class="film-list">
-                                                <c:forEach items="${films}" var="list">
-                                                    <li>
-                                                        <a href="admin/film.html?film_id=${list.id}">
-                                                            <div title="${list.name}"><img src="${list.image}" style="height: 175px;width: 126px;"></div>
-                                                        </a>
-                                                        <div class="film-info">
-                                                            <a href="admin/film.html?film_id=${list.id}" title="${list.name}"><p>${list.name}</p></a>
-                                                            <p>${list.onDecade}-${list.typeName}</p>
-                                                        </div>
-                                                    </li>
-                                                </c:forEach>
-                                            </ul>
-                                        </div>
-                                        <div class="margin-top-30 text-center"><a href="#" class="btn btn-default">查看所有</a></div>
+                                        <c:if test="${films!=null && films.size()>0}">
+                                            <div style="margin: 10px auto;">
+                                                <ul class="film-list">
+                                                    <c:forEach items="${films}" var="list">
+                                                        <li>
+                                                            <a href="/video/share.html?film_id=${list.id}">
+                                                                <div title="${list.name}"><img src="${list.image}" style="height: 175px;width: 126px;"></div>
+                                                            </a>
+                                                            <div class="film-info">
+                                                                <a href="/video/share.html?film_id=${list.id}" title="${list.name}"><p>${list.name}</p></a>
+                                                                <p>${list.onDecade}-${list.typeName}</p>
+                                                            </div>
+                                                        </li>
+                                                    </c:forEach>
+                                                </ul>
+                                            </div>
+                                            <div class="margin-top-30 text-center"><a href="#" class="btn btn-default">查看所有</a></div>
+                                        </c:if>
                                     </div>
+                                    <%-- 浏览历史 --%>
                                     <div class="tab-pane" id="view-history">
-                                        <div class="table-responsive">
-                                            <table class="table project-table">
-                                                <thead>
-                                                <tr>
-                                                    <th>Title</th>
-                                                    <th>Progress</th>
-                                                    <th>Leader</th>
-                                                    <th>Status</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <tr>
-                                                    <td><a href="#">Spot Media</a></td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                                                                <span>60% Complete</span>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td><a href="#">Michael</a></td>
-                                                    <td><span class="label label-success">ACTIVE</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><a href="#">E-Commerce Site</a></td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar" role="progressbar" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100" style="width: 33%;">
-                                                                <span>33%</span>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td><a href="#">Antonius</a></td>
-                                                    <td><span class="label label-warning">PENDING</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><a href="#">Project 123GO</a></td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100" style="width: 68%;">
-                                                                <span>68% Complete</span>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td><a href="#">Antonius</a></td>
-                                                    <td><span class="label label-success">ACTIVE</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><a href="#">Wordpress Theme</a></td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;">
-                                                                <span>75%</span>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td><a href="#">Michael</a></td>
-                                                    <td><span class="label label-success">ACTIVE</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><a href="#">Project 123GO</a></td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
-                                                                <span>100%</span>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td><a href="#">Antonius</a></td>
-                                                    <td><span class="label label-default">CLOSED</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><a href="#">Redesign Landing Page</a></td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
-                                                                <span>100%</span>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td><a href="#">Jason</a></td>
-                                                    <td><span class="label label-default">CLOSED</span></td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                        浏览历史
                                     </div>
+                                    <%-- 我的评论 --%>
                                     <div class="tab-pane in" id="my-comment">
                                         <ul class="list-unstyled activity-timeline">
                                             <li>
@@ -313,6 +235,7 @@
                                         <%--  分页 --%>
                                         <div class="margin-top-30 text-center"><a href="#" class="btn btn-default">See all activity</a></div>
                                     </div>
+                                    <%--修改资料--%>
                                     <div class="tab-pane in" id="update-info">
                                         修改信息
                                     </div>

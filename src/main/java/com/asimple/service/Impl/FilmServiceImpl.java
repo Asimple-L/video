@@ -179,13 +179,8 @@ public class FilmServiceImpl implements IFilmService  {
         return filmDao.saveBullet(bullet)!=0;
     }
 
-
-    // 添加set方法，为了变成xml配置开发的时候不会报错
-    public void setFilmDao(IFilmDao filmDao) {
-        this.filmDao = filmDao;
-    }
-
-    public void setTypeDao(ITypeDao typeDao) {
-        this.typeDao = typeDao;
+    @Override
+    public List<Film> listByUser(String uid, int top){
+        return filmDao.listByUser(uid, top);
     }
 }

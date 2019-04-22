@@ -22,6 +22,8 @@ public interface IFilmService {
 
     List<Film> listByEvaluation(String id, int top);
 
+    List<Film> listByUser(String uid, int top);
+
     PageBean<Film> getPage(Film ob, int pc, int ps);
 
     Film load(String film_id);

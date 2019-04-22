@@ -109,4 +109,11 @@
             VALUES (#{id}, #{text}, #{position}, #{size}, #{color}, #{time}, #{filmId})
     </insert>
 
+    <select id="listByUser" resultType="Film">
+        SELECT * FROM t_film WHERE `uid`=#{param1}
+        <if test="param2 != null">
+            LIMIT 0,#{param2}
+        </if>
+    </select>
+
 </mapper>

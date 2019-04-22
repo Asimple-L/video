@@ -57,6 +57,8 @@ public class Manager {
     @Resource
     private IVipCodeService vipCodeService;
     @Resource
+    private ICommonService commonService;
+    @Resource
     private RankTask rankTask;
     @Resource
     private SolrTask solrTask;
@@ -125,7 +127,7 @@ public class Manager {
             if( list.size()== 0 )  map.addAttribute("res", null);
             else map.addAttribute("res", list);
         }
-        getCatalog(map);
+        map = commonService.getCatalog(map);
         return "manager/addFilm";
     }
 
@@ -351,7 +353,7 @@ public class Manager {
      **/
     @RequestMapping( value = "/catalog.html")
     public String catalog(ModelMap map) {
-        getCatalog(map);
+        map = commonService.getCatalog(map);
         return "manager/catalog";
     }
 
@@ -361,7 +363,7 @@ public class Manager {
      **/
     @RequestMapping( value = "/editCatalog.html")
     public String editCatalog(ModelMap map) {
-        getCatalog(map);
+        map = commonService.getCatalog(map);
         return "manager/editCatalog";
     }
 
@@ -472,7 +474,6 @@ public class Manager {
      **/
     @RequestMapping(value = "/vipCode.html")
     public String vipCode(ModelMap map) {
-        getCatalog(map);
         List<VipCode> list = vipCodeService.listIsUse();
         map.addAttribute("vip_codes",list);
         return "manager/vipManager";
@@ -548,17 +549,6 @@ public class Manager {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("code", "1");
         return jsonObject.toString();
-    }
-
-    private void getCatalog(ModelMap model) {
-        List<Loc> locList = locService.listIsUse();
-        model.addAttribute("locList", locList);
-        List<Level> levelList = levelService.listIsUse();
-        model.addAttribute("levelList", levelList);
-        List<Decade> decadeList = decadeService.listIsUse();
-        model.addAttribute("decadeList", decadeList);
-        List<CataLog> cataLogList = cataLogService.listIsUse();
-        model.addAttribute("cataLogList", cataLogList);
     }
 
     private boolean checkAccount(String password, List<User> users, HttpSession session, ModelMap map) {
