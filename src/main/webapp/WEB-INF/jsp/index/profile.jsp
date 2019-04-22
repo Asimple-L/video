@@ -25,6 +25,32 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/public/static/css/manager/main.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/public/static/css/index/profile.css">
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
+    <style>
+        .film-list {
+            width: 98%;
+            height: auto;
+            padding: 1%;
+            overflow: hidden;
+            border-top: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+        }
+        .film-list li {
+            list-style: none;
+            float: left;
+            width: 104px;
+            height: 190px;
+            margin: 6px 36px 6px 6px;
+        }
+        .film-info {
+            width: 98%;
+            padding: 1%;
+            height: auto;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
     <jsp:include page="/WEB-INF/jsp/pub/head.jsp"/>
@@ -47,7 +73,7 @@
                                         <canvas id="headImg" style="display:none"></canvas>
                                         <script type="text/javascript">
                                             $(function(){
-                                                textToImg('Asimple');
+                                                textToImg('${u_skl.userName}');
                                             });
 
                                             function textToImg(uname) {
@@ -140,7 +166,7 @@
                                                 <div class="hexagon">
                                                     <span class="lnr lnr-heart award-icon"></span>
                                                 </div>
-                                                <span>Most Loved</span>
+                                                <span>资料管理</span>
                                             </div>
                                         </div>
                                     </div>
@@ -149,33 +175,33 @@
                                 <!-- TABBED CONTENT -->
                                 <div class="custom-tabs-line tabs-line-bottom left-aligned">
                                     <ul class="nav" role="tablist">
-                                        <li class="active"><a href="#video-share" role="tab" data-toggle="tab">视频分享</a></li>
+                                        <li class="active"><a href="#video-mine" role="tab" data-toggle="tab">我的视频</a></li>
                                         <li><a href="#view-history" role="tab" data-toggle="tab">浏览记录</a></li>
                                         <li><a href="#my-comment" role="tab" data-toggle="tab">我的评论</a></li>
                                         <li><a href="#update-info" role="tab" data-toggle="tab">信息修改</a></li>
                                     </ul>
                                 </div>
                                 <div class="tab-content">
-                                    <div class="tab-pane in active" id="video-share">
-                                        <ul class="list-unstyled activity-timeline">
-                                            <li>
-                                                <i class="fa fa-comment activity-icon"></i>
-                                                <p>Commented on post <a href="#">Prototyping</a> <span class="timestamp">2 minutes ago</span></p>
-                                            </li>
-                                            <li>
-                                                <i class="fa fa-cloud-upload activity-icon"></i>
-                                                <p>Uploaded new file <a href="#">Proposal.docx</a> to project <a href="#">New Year Campaign</a> <span class="timestamp">7 hours ago</span></p>
-                                            </li>
-                                            <li>
-                                                <i class="fa fa-plus activity-icon"></i>
-                                                <p>Added <a href="#">Martin</a> and <a href="#">3 others colleagues</a> to project repository <span class="timestamp">Yesterday</span></p>
-                                            </li>
-                                            <li>
-                                                <i class="fa fa-check activity-icon"></i>
-                                                <p>Finished 80% of all <a href="#">assigned tasks</a> <span class="timestamp">1 day ago</span></p>
-                                            </li>
-                                        </ul>
-                                        <div class="margin-top-30 text-center"><a href="#" class="btn btn-default">See all activity</a></div>
+                                    <div class="tab-pane in active" id="video-mine">
+                                        <div class="text-center" style="width: 100%;">
+                                            <button class="btn-primary btn" style="border-radius: 15%;">我要上传</button>
+                                        </div>
+                                        <div style="margin: 10px auto;">
+                                            <ul class="film-list">
+                                                <c:forEach items="${films}" var="list">
+                                                    <li>
+                                                        <a href="admin/film.html?film_id=${list.id}">
+                                                            <div title="${list.name}"><img src="${list.image}" style="height: 175px;width: 126px;"></div>
+                                                        </a>
+                                                        <div class="film-info">
+                                                            <a href="admin/film.html?film_id=${list.id}" title="${list.name}"><p>${list.name}</p></a>
+                                                            <p>${list.onDecade}-${list.typeName}</p>
+                                                        </div>
+                                                    </li>
+                                                </c:forEach>
+                                            </ul>
+                                        </div>
+                                        <div class="margin-top-30 text-center"><a href="#" class="btn btn-default">查看所有</a></div>
                                     </div>
                                     <div class="tab-pane" id="view-history">
                                         <div class="table-responsive">
@@ -266,7 +292,26 @@
                                         </div>
                                     </div>
                                     <div class="tab-pane in" id="my-comment">
-                                        我的评论
+                                        <ul class="list-unstyled activity-timeline">
+                                            <li>
+                                                <i class="fa fa-comment activity-icon"></i>
+                                                <p>Commented on post <a href="#">Prototyping</a> <span class="timestamp">2 minutes ago</span></p>
+                                            </li>
+                                            <li>
+                                                <i class="fa fa-cloud-upload activity-icon"></i>
+                                                <p>Uploaded new file <a href="#">Proposal.docx</a> to project <a href="#">New Year Campaign</a> <span class="timestamp">7 hours ago</span></p>
+                                            </li>
+                                            <li>
+                                                <i class="fa fa-plus activity-icon"></i>
+                                                <p>Added <a href="#">Martin</a> and <a href="#">3 others colleagues</a> to project repository <span class="timestamp">Yesterday</span></p>
+                                            </li>
+                                            <li>
+                                                <i class="fa fa-check activity-icon"></i>
+                                                <p>Finished 80% of all <a href="#">assigned tasks</a> <span class="timestamp">1 day ago</span></p>
+                                            </li>
+                                        </ul>
+                                        <%--  分页 --%>
+                                        <div class="margin-top-30 text-center"><a href="#" class="btn btn-default">See all activity</a></div>
                                     </div>
                                     <div class="tab-pane in" id="update-info">
                                         修改信息

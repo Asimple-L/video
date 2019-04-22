@@ -40,12 +40,6 @@ public class Start {
      **/
     @RequestMapping("/index.html")
     public String index(ModelMap model, HttpSession session) {
-//        User user = new User();
-//        user.setIsVip(1);
-//        user.setUserName("Asimple");
-////        model.put("user", user);
-//        session.setAttribute("u_skl",user);
-//        return "index/profile";
         // 查询用户菜单列表
         List<CataLog> logList = (List<CataLog>) redisUtil.get("index_cataLogList");
         LogUtil.info(Start.class, "logList = " + logList);

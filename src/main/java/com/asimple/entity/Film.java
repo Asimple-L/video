@@ -21,6 +21,7 @@ public class Film implements Serializable {
     private String onDecade;//上影年代
     private String status;//状态
     private String resolution;//分辨率
+    @Field("video_type_name")
     private String typeName;//类型名称
     @Field("video_type_id")
     private String type_id;//类型Id
@@ -42,7 +43,7 @@ public class Film implements Serializable {
     // 下载列表
     private List<Res> resList;
     // 浏览数目
-    private Integer viewNumber;
+    private Integer view_number;
     // 上传用户
     private User user;
 
@@ -71,7 +72,7 @@ public class Film implements Serializable {
         this.plot = plot;
         this.evaluation = evaluation;
         this.resList = resList;
-        this.viewNumber = viewNumber;
+        this.view_number = viewNumber;
         this.user = user;
     }
 
@@ -244,11 +245,11 @@ public class Film implements Serializable {
     }
 
     public Integer getViewNumber() {
-        return viewNumber;
+        return view_number;
     }
 
-    public void setViewNumber(Integer viewNumber) {
-        this.viewNumber = viewNumber;
+    public void setView_number(Integer view_number) {
+        this.view_number = view_number;
     }
 
     public User getUser() {
@@ -283,7 +284,7 @@ public class Film implements Serializable {
                 ", plot='" + plot + '\'' +
                 ", evaluation=" + evaluation +
                 ", resList=" + resList +
-                ", viewNumber=" + viewNumber +
+                ", viewNumber=" + view_number +
                 ", user=" + user +
                 '}';
     }

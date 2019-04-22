@@ -1,13 +1,16 @@
 package com.asimple.controller;
 
+import com.asimple.entity.Film;
 import com.asimple.entity.User;
 import com.asimple.entity.VipCode;
+import com.asimple.service.IFilmService;
 import com.asimple.service.IUserService;
 import com.asimple.service.IVipCodeService;
 import com.asimple.util.*;
 import net.sf.json.JSONObject;
 import org.json.JSONException;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -35,6 +38,8 @@ public class Authentication {
     private IUserService userService;
     @Resource( name = "vipCodeService")
     private IVipCodeService vipCodeService;
+    @Resource(name = "filmService")
+    private IFilmService filmService;
 
 
     /**
@@ -129,7 +134,14 @@ public class Authentication {
     }
 
     @RequestMapping(value = "/profilePage.html")
-    public String profile() {
+    public String profile(ModelMap map, HttpSession session) {
+        // 判断是否登录
+        User user = (User) session.getAttribute(USER_KEY);
+        if( user==null ) {
+            return "forward:/index.html";
+        }
+        List<Film> list = filmService.findAll();
+        map.put("films", list);
         return "index/profile";
     }
 
