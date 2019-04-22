@@ -10,6 +10,10 @@ import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 import net.sf.json.util.PropertyFilter;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.solr.core.SolrTemplate;
+import org.springframework.data.solr.core.query.*;
+import org.springframework.data.solr.core.query.result.HighlightEntry;
+import org.springframework.data.solr.core.query.result.HighlightPage;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,6 +60,8 @@ public class Manager {
     private RankTask rankTask;
     @Resource
     private SolrTask solrTask;
+    @Resource
+    private SolrTemplate solrTemplate;
 
     /**
      * @Author Asimple
@@ -129,7 +135,8 @@ public class Manager {
      **/
     @RequestMapping(value = "/list.html")
     public String filmList(ModelMap map, HttpServletRequest request) {
-        getFilmList(map, request, 0);
+//        getFilmList(map, request, 0);
+        getFilmOfSolr(map, request);
         return "manager/allFilm";
     }
 
@@ -332,8 +339,9 @@ public class Manager {
         if( filmService.update(film) ) {
             jsonObject.put("code", "1");
             this.updateRedis("1");
+        } else {
+            jsonObject.put("code", "0");
         }
-        else jsonObject.put("code", "0");
         return jsonObject.toString();
     }
 
@@ -366,6 +374,7 @@ public class Manager {
     public String addDecade(Decade decade) {
         decade.setIsUse(1);
         String id = decadeService.add(decade);
+        this.updateRedisList(id);
         return addReturned(id);
     }
 
@@ -378,6 +387,7 @@ public class Manager {
     public String addLevel(Level level) {
         level.setIsUse(1);
         String id = levelService.add(level);
+        this.updateRedisList(id);
         return addReturned(id);
     }
 
@@ -390,6 +400,7 @@ public class Manager {
     public String addLoc(Loc loc) {
         loc.setIsUse(1);
         String id = locService.add(loc);
+        this.updateRedisList(id);
         return addReturned(id);
     }
 
@@ -403,6 +414,7 @@ public class Manager {
         cataLog.setIsUse(1);
         String id = cataLogService.add(cataLog);
         this.updateRedis(id);
+        this.updateRedisList(id);
         return addReturned(id);
     }
 
@@ -585,6 +597,63 @@ public class Manager {
         map.addAttribute("pb", pageBean);
     }
 
+    private void getFilmOfSolr(ModelMap map, HttpServletRequest request) {
+        PageBean<Film> pageBean = new PageBean<>();
+        String name = request.getParameter("name");
+        if( !Tools.isEmpty(name) ) map.addAttribute("name", name);
+        String url = request.getQueryString();
+        if( url != null ) {
+            int index = url.indexOf("&pc=");
+            if( index != -1 ) url = url.substring(0, index);
+        }
+        // 当前页面数
+        String value = request.getParameter("pc");
+        int pc = 1;
+        if( Tools.notEmpty(value) ) pc = Integer.parseInt(value);
+        pageBean.setPc(pc);
+        // 每页显示数目
+        int ps = 27;
+        pageBean.setPs(ps);
+        // 获取页面传递的查询条件
+        Film ob = Tools.toBean(request.getParameterMap(), Film.class);
+        pageBean.setUrl(url);
+
+        HighlightQuery query = new SimpleHighlightQuery(new SimpleStringCriteria("*:*"));
+        if( Tools.notEmpty(name) ) {
+            Criteria filterCriteria = new Criteria("video_film_name").is("\"*"+name+"*\"");
+            FilterQuery filterQuery = new SimpleFilterQuery(filterCriteria);
+            query.addFilterQuery(filterQuery);
+        }
+        query.setOffset((pc-1)*ps);//开始索引（默认0）
+        query.setRows(ps);//每页记录数(默认10)
+
+        //***********************高亮设置***********************
+        //设置高亮的域
+        HighlightOptions highlightOptions = new HighlightOptions().addField("video_film_name");
+        //高亮前缀
+        highlightOptions.setSimplePrefix("<em style='color:red'>");
+        //高亮后缀
+        highlightOptions.setSimplePostfix("</em>");
+        //设置高亮选项
+        query.setHighlightOptions(highlightOptions);
+
+        //***********************获取数据***********************
+        HighlightPage<Film> page = solrTemplate.queryForHighlightPage(query, Film.class);
+
+        //***********************设置高亮结果***********************
+        List<HighlightEntry<Film>> highlighted = page.getHighlighted();
+        for (HighlightEntry<Film> h : highlighted) {//循环高亮入口集合
+            Film item = h.getEntity();//获取原实体类
+            if (h.getHighlights().size() > 0 && h.getHighlights().get(0).getSnipplets().size() > 0) {
+                item.setName(h.getHighlights().get(0).getSnipplets().get(0));//设置高亮的结果
+            }
+        }
+        System.err.println(page.getContent());
+        pageBean.setBeanList(page.getContent());
+        pageBean.setTr((int)page.getTotalElements());
+        map.addAttribute("pb", pageBean);
+    }
+
     private String addReturned(String id){
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("code", id);
@@ -594,6 +663,12 @@ public class Manager {
     private void updateRedis(String id) {
         if( !"0".equals(id) ) {
             rankTask.commendRank();
+        }
+    }
+
+    private void updateRedisList(String id) {
+        if( !"0".equals(id) ) {
+            rankTask.addListInfoToRedis();
         }
     }
 

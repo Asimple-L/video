@@ -15,6 +15,7 @@ public class Film implements Serializable {
     private String id;// 主键
     @Field("video_film_name")
     private String name;// 片名
+    @Field("video_film_image")
     private String image;// 海报图
     @Field("video_film_onDecade")
     private String onDecade;//上影年代

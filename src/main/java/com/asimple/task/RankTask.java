@@ -1,9 +1,7 @@
 package com.asimple.task;
 
-import com.asimple.entity.CataLog;
-import com.asimple.entity.Film;
-import com.asimple.service.ICataLogService;
-import com.asimple.service.IFilmService;
+import com.asimple.entity.*;
+import com.asimple.service.*;
 import com.asimple.util.LogUtil;
 import com.asimple.util.RedisUtil;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -23,10 +21,18 @@ public class RankTask {
 
     @Resource( name = "cataLogService")
     private ICataLogService cataLogService;
-
     @Resource( name = "filmService")
     private IFilmService filmService;
-
+    @Resource
+    private ISubClassService subClassService;
+    @Resource
+    private IDecadeService decadeService;
+    @Resource
+    private ITypeService typeService;
+    @Resource
+    private ILocService locService;
+    @Resource
+    private ILevelService levelService;
     @Resource
     private RedisUtil redisUtil;
 
@@ -65,6 +71,25 @@ public class RankTask {
 
         long endTime = System.currentTimeMillis();
         LogUtil.info("commendRank update end! run time = " + (endTime - startTime)/1000 + "s");
+    }
+
+    /**
+     * @Author Asimple
+     * @Description 更新目录等信息
+     **/
+    @Scheduled(cron = "0 20 0 * * ?")
+    public void addListInfoToRedis() {
+        long startTime = System.currentTimeMillis();
+        List<Loc> locList = locService.listIsUse();
+        List<Level> levelList = levelService.listIsUse();
+        List<Decade> decadeList = decadeService.listIsUse();
+        List<CataLog> cataLogList = cataLogService.listIsUse();
+        redisUtil.set("redis_locList", locList);
+        redisUtil.set("redis_levelList", levelList);
+        redisUtil.set("redis_decadeList", decadeList);
+        redisUtil.set("redis_cataLogList", cataLogList);
+        long endTime = System.currentTimeMillis();
+        LogUtil.info("addListInfoToRedis end! run time = " + (endTime-startTime)/1000);
     }
 
 }

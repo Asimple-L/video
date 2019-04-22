@@ -3,14 +3,9 @@ package com.asimple.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.asimple.entity.*;
 import com.asimple.service.*;
-import com.asimple.util.DateUtil;
-import com.asimple.util.LogUtil;
-import com.asimple.util.PageBean;
-import com.asimple.util.Tools;
-import org.springframework.http.HttpRequest;
+import com.asimple.util.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -49,6 +44,8 @@ public class Search {
     private IRatyService ratyService;
     @Resource
     private IResService resService;
+    @Resource
+    private RedisUtil redisUtil;
 
     /**
      * @Author Asimple
@@ -243,7 +240,8 @@ public class Search {
      * @Description 保存弹幕
      **/
     @RequestMapping(value = "/saveBullet.html")
-    @ResponseBody public String saveBullet(String film_id, String danmu) {
+    @ResponseBody
+    public String saveBullet(String film_id, String danmu) {
         Map map = JSONObject.parseObject(danmu, Map.class);
         LogUtil.info("map = " + map);
         Bullet bullet = new Bullet(null, (String) map.get("text"), (String) map.get("color"), (String) map.get("position"), (String) map.get("size"), (Integer)map.get("time"), film_id);
@@ -285,10 +283,22 @@ public class Search {
     }
 
     private void getCatalog(ModelMap model) {
-        List<Loc> locList = locService.listIsUse();
-        List<Level> levelList = levelService.listIsUse();
-        List<Decade> decadeList = decadeService.listIsUse();
-        List<CataLog> cataLogList = cataLogService.listIsUse();
+        List<Loc> locList = (List<Loc>)redisUtil.get("redis_locList");
+        if( locList==null || locList.isEmpty() ) {
+            locList = locService.listIsUse();
+        }
+        List<Level> levelList = (List<Level>)redisUtil.get("redis_levelList");
+        if( levelList == null || levelList.isEmpty() ) {
+            levelList = levelService.listIsUse();
+        }
+        List<Decade> decadeList = (List<Decade>)redisUtil.get("redis_decadeList");
+        if( decadeList==null || decadeList.isEmpty() ) {
+            decadeList = decadeService.listIsUse();
+        }
+        List<CataLog> cataLogList = (List<CataLog>)redisUtil.get("redis_cataLogList");
+        if( cataLogList==null || cataLogList.isEmpty() ) {
+            cataLogList = cataLogService.listIsUse();
+        }
 
         //读取路径下的文件返回UTF-8类型json字符串
         model.addAttribute("locList", locList);
