@@ -2,6 +2,7 @@ package com.asimple.controller;
 
 import com.asimple.entity.CataLog;
 import com.asimple.entity.Film;
+import com.asimple.entity.User;
 import com.asimple.service.ICataLogService;
 import com.asimple.service.IFilmService;
 import com.asimple.util.LogUtil;
@@ -13,6 +14,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +39,13 @@ public class Start {
      * @Description 首页访问
      **/
     @RequestMapping("/index.html")
-    public String index(ModelMap model) {
+    public String index(ModelMap model, HttpSession session) {
+//        User user = new User();
+//        user.setIsVip(1);
+//        user.setUserName("Asimple");
+////        model.put("user", user);
+//        session.setAttribute("u_skl",user);
+//        return "index/profile";
         // 查询用户菜单列表
         List<CataLog> logList = (List<CataLog>) redisUtil.get("index_cataLogList");
         LogUtil.info(Start.class, "logList = " + logList);
@@ -62,6 +70,7 @@ public class Start {
         // 电影排行榜
         List<Object> list1 = (List<Object>) redisUtil.get("index_filmPaiHang");
         if( null==list1 || list1.isEmpty() ) {
+            list1 = new ArrayList<>();
             for (CataLog aLogList : logList) {
                 List<Film> films = filmService.listByEvaluation(aLogList.getId(), 13);
                 if (films.size() != 0) {

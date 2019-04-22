@@ -3,6 +3,7 @@ package com.asimple.controller;
 import com.asimple.entity.*;
 import com.asimple.service.*;
 import com.asimple.task.RankTask;
+import com.asimple.task.SolrTask;
 import com.asimple.util.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -53,6 +54,8 @@ public class Manager {
     private IVipCodeService vipCodeService;
     @Resource
     private RankTask rankTask;
+    @Resource
+    private SolrTask solrTask;
 
     /**
      * @Author Asimple
@@ -511,6 +514,28 @@ public class Manager {
         });
         JSONArray jsonArray = JSONArray.fromObject(types, jsonConfig);
         return jsonArray.toString();
+    }
+
+    /**
+     * @Author Asimple
+     * @Description 数据导入页面
+     **/
+    @RequestMapping(value = "/loadInSolrPage.html")
+    public String loadSolr() {
+        return "manager/loadSolr";
+    }
+
+    /**
+     * @Author Asimple
+     * @Description 导入Solr库
+     **/
+    @RequestMapping(value = "/loadIn.html", produces = "text/html;charset=UTF-8")
+    @ResponseBody
+    public String loadInSolr() {
+        solrTask.pushToSolr();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("code", "1");
+        return jsonObject.toString();
     }
 
     private void getCatalog(ModelMap model) {

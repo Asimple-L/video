@@ -40,11 +40,16 @@ public class Film implements Serializable {
     private double  evaluation;//评分
     // 下载列表
     private List<Res> resList;
+    // 浏览数目
+    private Integer viewNumber;
+    // 上传用户
+    private User user;
 
     public Film() {
     }
 
-    public Film(String name, String image, String onDecade, String status, String resolution, String typeName, String type_id, String actor, String locName, String loc_id, String updateTime, int isUse, String cataLog_id, String cataLogName, String subClass_id, String subClassName, Integer isVip, String plot, double evaluation, List<Res> resList) {
+    public Film(String id, String name, String image, String onDecade, String status, String resolution, String typeName, String type_id, String actor, String locName, String loc_id, String updateTime, int isUse, String cataLog_id, String cataLogName, String subClass_id, String subClassName, Integer isVip, String plot, double evaluation, List<Res> resList, Integer viewNumber, User user) {
+        this.id = id;
         this.name = name;
         this.image = image;
         this.onDecade = onDecade;
@@ -65,6 +70,8 @@ public class Film implements Serializable {
         this.plot = plot;
         this.evaluation = evaluation;
         this.resList = resList;
+        this.viewNumber = viewNumber;
+        this.user = user;
     }
 
     public String getId() {
@@ -235,6 +242,22 @@ public class Film implements Serializable {
         this.resList = resList;
     }
 
+    public Integer getViewNumber() {
+        return viewNumber;
+    }
+
+    public void setViewNumber(Integer viewNumber) {
+        this.viewNumber = viewNumber;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public String toString() {
         return "Film{" +
@@ -259,6 +282,8 @@ public class Film implements Serializable {
                 ", plot='" + plot + '\'' +
                 ", evaluation=" + evaluation +
                 ", resList=" + resList +
+                ", viewNumber=" + viewNumber +
+                ", user=" + user +
                 '}';
     }
 }

@@ -23,5 +23,11 @@
                 <a href="/video/admin/vipCode.html" class="list-group-item">VIP管理</a>
             </li>
         </li>
+        <li>
+            <a href="#date_set" class="list-group-item " data-toggle="collapse"><i class="glyphicon glyphicon-search"></i>数据管理<span class="glyphicon glyphicon-chevron-right"></span></a>
+            <li class="collapse" id="date_set">
+                <a href="/video/admin/loadInSolrPage.html" class="list-group-item">数据导入</a>
+            </li>
+        </li>
     </ul>
 </div>

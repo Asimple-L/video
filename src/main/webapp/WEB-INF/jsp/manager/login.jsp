@@ -16,6 +16,7 @@
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
     <script src="${pageContext.request.contextPath}/public/static/js/jquery.cookie.js"></script>
     <script src="${pageContext.request.contextPath}/public/static/js/jquery.base64.js"></script>
+    <script src="${pageContext.request.contextPath}/plugins/gt/gt.js"></script>
     <script language="javascript" type="text/javascript">
         function setCookie() { //设置cookie
             var loginCode = $("#username").val(); //获取用户名信息
@@ -44,6 +45,59 @@
                 $("#password").val($.base64.decode(pwd));
             }
         }
+        // 加载验证码
+        var handler = function (captchaObj) {
+            $("#submit").click(function (e) {
+                var result = captchaObj.getValidate();
+                if (!result) {
+                    $("#notice2").show();
+                    setTimeout(function () {
+                        $("#notice2").hide();
+                    }, 2000);
+                } else {
+                    $.ajax({
+                        url: '${pageContext.request.contextPath}/verifyLogin.html',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            username: $('#username').val(),
+                            password: $('#password').val(),
+                            geetest_challenge: result.geetest_challenge,
+                            geetest_validate: result.geetest_validate,
+                            geetest_seccode: result.geetest_seccode
+                        },
+                        success: function (data) {
+                            if (data.status === 'success') {
+                                alert('登录成功');
+                            } else if (data.status === 'fail') {
+                                alert('登录失败');
+                            }
+                        }
+                    })
+                }
+                e.preventDefault();
+            });
+            // 将验证码加到id为captcha的元素里，同时会有三个input的值用于表单提交
+            captchaObj.appendTo("#captcha");
+            captchaObj.onReady(function () {
+                $("#wait").hide();
+            });
+        };
+        $.ajax({
+            url: "${pageContext.request.contextPath}/initCaptcha.html?t=" + (new Date()).getTime(), // 加随机数防止缓存
+            type: "get",
+            dataType: "json",
+            success: function (data) {
+                initGeetest({
+                    gt: data.gt,
+                    challenge: data.challenge,
+                    new_captcha: data.new_captcha, // 用于宕机时表示是新验证码的宕机
+                    offline: !data.success, // 表示用户后台检测极验服务器是否宕机，一般不需要关注
+                    product: "popup", // 产品形式，包括：float，popup
+                    width: "100%"
+                }, handler);
+            }
+        });
     </script>
 </head>
 <body style="height: 100%;" onload="getCookie();">
@@ -65,6 +119,11 @@
                                 <div class="form-group">
                                     <label for="password" class="control-label sr-only">密码</label>
                                     <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+                                </div>
+                                <div>
+                                    <div id="captcha">
+                                        <p id="wait" class="show">正在加载验证码......</p>
+                                    </div>
                                 </div>
                                 <div class="form-group clearfix">
                                     <label class="fancy-checkbox element-left">

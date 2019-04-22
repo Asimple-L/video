@@ -13,7 +13,7 @@ import java.util.*;
 public class JSONUtil {
 	/**
      * 
-     * @author wangwei JSON工具类
+     * @author Asimple JSON工具类
      * @param 
      * 
      */

@@ -1,0 +1,17 @@
+.custom-tabs-line>.nav>li>a {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+    font-size: 15px;
+}
+
+#wrapper #sidebar-nav, #wrapper .main {
+    padding-top: 20px;
+}
+.list-inline>li {
+    display: inline-block;
+}
+
+.awards {
+    margin-bottom: 0px;
+}

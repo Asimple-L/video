@@ -294,6 +294,11 @@
             <artifactId>spring-data-solr</artifactId>
             <version>1.5.6.RELEASE</version>
         </dependency>
+        <dependency>
+          <groupId>org.json</groupId>
+          <artifactId>json</artifactId>
+          <version>20160810</version>
+        </dependency>
 
         <!--&lt;!&ndash; 分页插件 &ndash;&gt;-->
         <!--<dependency>-->

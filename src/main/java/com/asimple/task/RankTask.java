@@ -34,7 +34,7 @@ public class RankTask {
      * @Author Asimple
      * @Description 每日零点推荐榜更新
      **/
-    @Scheduled(cron = "0 0/30 * * * ?")
+    @Scheduled(cron = "0 0 0 * * ?")
     public void commendRank() {
         long startTime = System.currentTimeMillis();
         LogUtil.info("start update commendRank!");

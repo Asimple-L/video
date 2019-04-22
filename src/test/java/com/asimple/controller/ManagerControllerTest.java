@@ -13,11 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @ContextConfiguration(locations = {
         "classpath:springmvc.xml",
-        "classpath:spring-service.xml",
-        "classpath:spring-mybatis.xml",
-        "classpath:spring-db.xml",
-        "classpath:spring-redis.xml",
-        "classpath:spring-tx.xml"
+        "classpath:spring-*.xml"
 })
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ManagerControllerTest {

@@ -313,7 +313,7 @@ html.fullscreen-bg #wrapper {
 }
 
 .navbar-nav > li > a {
-    padding: 28px 20px;
+    /*padding: 28px 20px;*/
 }
 
 .navbar-nav > li > a > i {
@@ -1385,7 +1385,6 @@ ul.activity-list > li .timestamp {
     width: 58%;
     height: 100%;
     position: relative;
-    background-image: url("../../img/pub/login-bg.jpg");
     background-repeat: no-repeat;
     background-size: cover;
 }
@@ -1620,7 +1619,6 @@ ul.activity-list > li .timestamp {
 .profile-header .profile-main {
     position: relative;
     padding: 20px;
-    background-image: url("../../assets/img/profile-bg.png");
     background-repeat: no-repeat;
     background-size: cover;
 }

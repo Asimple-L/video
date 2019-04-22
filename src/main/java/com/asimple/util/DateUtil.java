@@ -243,9 +243,4 @@ public class DateUtil {
 		return age;
 	}
 
-    public static void main(String[] args) {
-    	System.out.println(getDays());
-    	System.out.println(getAfterDayWeek("3"));
-    }
-
 }

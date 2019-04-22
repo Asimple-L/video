@@ -41,7 +41,7 @@
                         <a class="nav-link" onclick="fuelFilling()"  href="javascript:;">使用加油卡</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link"  href="javascript:;">个人中心</a>
+                        <a class="nav-link"  href="/video/profilePage.html">个人中心</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" id="globalLoginBtn_loginOut" href="javascript:;">退出</a>
