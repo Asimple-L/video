@@ -17,7 +17,7 @@
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#">${sessionScope.adminUser.userName}<b class="caret"></b></a>
                     <ul role="menu" class="dropdown-menu">
                         <li class="dropdown-header">菜单</li>
-                        <li><a href="/video/profilePage.html">个人中心</a></li>
+                        <li><a href="/video/profile/profilePage.html">个人中心</a></li>
                         <li id="logout"><a href="javascript:void(0);">退出登录</a></li>
                     </ul>
                 </li>

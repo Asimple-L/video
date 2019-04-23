@@ -113,7 +113,7 @@
                             $(t).parent().parent().find(".label").show().find(".show").text(val);
                         }
                     }
-                    // location.reload();
+                    location.reload();
                 } else {
                     alert("更改失败");
                 }
@@ -134,12 +134,11 @@ $(function () {
     $(".cataLog_id_subClass").change(function () {
         var catalog_id = $(this).val();
         $.ajax({
-            url: "/video/admin/getSubClass.html",
+            url: "/video/profile/getSubClass.html",
             type: "post",
             dataType: "json",
             data: "catalog_id=" + catalog_id,
             success: function (data) {
-                alert(data);
                 $(".subClass_id").find("option").remove();
                 var jss = typeof data == "string"?JSON.parse(data):data;
                 for (var i = 0; i < jss.length; i++) {
@@ -165,12 +164,11 @@ $(function () {
      * 初始目录
      */
     $.ajax({
-        url: "/video/admin/getSubClass.html",
+        url: "/video/profile/getSubClass.html",
         type: "POST",
         dataType: "json",
         data: "catalog_id=" + $(".cataLog_id_subClass").val(),
         success: function (data) {
-            alert(data);
             var jss;
             if( typeof data == "string" ) jss = JSON.parse(data);
             else jss = data;
@@ -190,7 +188,7 @@ $(function () {
      */
     function getType() {
         $.ajax({
-            url: "/video/admin/getType.html",
+            url: "/video/profile/getType.html",
             type: "POST",
             dataType: "json",
             data: "subClass_id=" + $(".subClass_id").val(),

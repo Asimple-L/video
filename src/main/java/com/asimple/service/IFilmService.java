@@ -5,6 +5,7 @@ import com.asimple.entity.Film;
 import com.asimple.util.PageBean;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IFilmService {
 
@@ -22,7 +23,15 @@ public interface IFilmService {
 
     List<Film> listByEvaluation(String id, int top);
 
-    List<Film> listByUser(String uid, int top);
+    List<Film> listByUser(String uid, int pc, int ps);
+
+    int countListByUser(String uid);
+
+    void addViewHistory(String filmId, String uid);
+
+    List<Map> getViewHistory(String uid, int pc, int ps);
+
+    int countViewHistory(String uid);
 
     PageBean<Film> getPage(Film ob, int pc, int ps);
 

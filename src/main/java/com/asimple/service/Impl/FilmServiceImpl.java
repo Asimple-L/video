@@ -10,12 +10,13 @@ import com.asimple.entity.Type;
 import com.asimple.service.IFilmService;
 import com.asimple.service.IRatyService;
 import com.asimple.util.DateUtil;
+import com.asimple.util.LogUtil;
 import com.asimple.util.PageBean;
 import com.asimple.util.Tools;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.List;
+import java.util.*;
 
 /**
  * @ProjectName video
@@ -168,19 +169,87 @@ public class FilmServiceImpl implements IFilmService  {
         return sum != 0;
     }
 
+    /**
+     * @Author Asimple
+     * @Description 根据视频获取弹幕
+     **/
     @Override
     public List<Bullet> getBulletByFilmId(String filmId) {
         return filmDao.getBulletByFilmId(filmId);
     }
 
+    /**
+     * @Author Asimple
+     * @Description 保存弹幕
+     **/
     @Override
     public boolean saveBullet(Bullet bullet) {
         bullet.setId(Tools.UUID());
         return filmDao.saveBullet(bullet)!=0;
     }
 
+    /**
+     * @Author Asimple
+     * @Description 查找用户上传的视频
+     **/
     @Override
-    public List<Film> listByUser(String uid, int top){
-        return filmDao.listByUser(uid, top);
+    public List<Film> listByUser(String uid, int pc, int ps){
+        int start = (pc-1)*ps;
+        return filmDao.listByUser(uid, start, ps);
     }
+
+    /**
+     * @Author Asimple
+     * @Description 统计用户上传的视频
+     **/
+    @Override
+    public int countListByUser(String uid) {
+        return filmDao.countListByUser(uid);
+    }
+
+    /**
+     * @Author Asimple
+     * @Description 添加用户浏览记录
+     **/
+    @Override
+    public void addViewHistory(String filmId, String uid){
+        Map map = new HashMap();
+        map.put("film_id", filmId);
+        map.put("uid", uid);
+        map.put("view_date", new Date());
+        int num = 0;
+        if( filmDao.countViewHistory(map)>0 ) {
+            num = filmDao.updateViewHistory(map);
+        } else {
+            num = filmDao.addViewHistory(map);
+        }
+        if( num == 0 ) {
+            LogUtil.error("浏览记录添加失败！");
+        }
+    }
+
+    /**
+     * @Author Asimple
+     * @Description 获取用户浏览记录
+     **/
+    @Override
+    public List<Map> getViewHistory(String uid, int pc, int ps){
+        List<Map> temp = filmDao.getViewHistory(uid, (pc-1)*ps, ps);
+        List<Map> res = new ArrayList<>();
+        for(int i=0; i<temp.size(); i++) {
+            Map item = temp.get(i);
+            Film film = load((String)item.get("film_id"));
+            item.put("film", film);
+            res.add(item);
+        }
+        return res;
+    }
+
+    @Override
+    public int countViewHistory(String uid) {
+        Map map = new HashMap();
+        map.put("uid", uid);
+        return filmDao.countViewHistory(map);
+    }
+
 }

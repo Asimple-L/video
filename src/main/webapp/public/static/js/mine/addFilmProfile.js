@@ -89,7 +89,7 @@
 
     function updateFilmInfo(f_id, key, val, t) {
         $.ajax({
-            url: "/video/admin/updateFilmInfo.html",
+            url: "/video/profile/updateFilmInfo.html",
             type: "post",
             dataType: "json",
             data: "film_id=" + f_id + "&key=" + key + "&val=" + val,
@@ -113,7 +113,7 @@
                             $(t).parent().parent().find(".label").show().find(".show").text(val);
                         }
                     }
-                    // location.reload();
+                    location.reload();
                 } else {
                     alert("更改失败");
                 }
@@ -134,12 +134,11 @@ $(function () {
     $(".cataLog_id_subClass").change(function () {
         var catalog_id = $(this).val();
         $.ajax({
-            url: "/video/admin/getSubClass.html",
+            url: "/video/profile/getSubClass.html",
             type: "post",
             dataType: "json",
             data: "catalog_id=" + catalog_id,
             success: function (data) {
-                alert(data);
                 $(".subClass_id").find("option").remove();
                 var jss = typeof data == "string"?JSON.parse(data):data;
                 for (var i = 0; i < jss.length; i++) {
@@ -165,12 +164,11 @@ $(function () {
      * 初始目录
      */
     $.ajax({
-        url: "/video/admin/getSubClass.html",
+        url: "/video/profile/getSubClass.html",
         type: "POST",
         dataType: "json",
         data: "catalog_id=" + $(".cataLog_id_subClass").val(),
         success: function (data) {
-            alert(data);
             var jss;
             if( typeof data == "string" ) jss = JSON.parse(data);
             else jss = data;
@@ -190,7 +188,7 @@ $(function () {
      */
     function getType() {
         $.ajax({
-            url: "/video/admin/getType.html",
+            url: "/video/profile/getType.html",
             type: "POST",
             dataType: "json",
             data: "subClass_id=" + $(".subClass_id").val(),
@@ -270,7 +268,7 @@ $(function () {
         } else {
             //添加影片
             $.ajax({
-                url: "/video/admin/addFilm.html",
+                url: "/video/profile/addFilm.html",
                 type: "post",
                 dataType: "json",
                 data: "name=" + name_val +
@@ -316,7 +314,7 @@ $(function () {
             alert("信息未填写完整，请检查");
         } else {
             $.ajax({
-                url: "/video/admin/addRes.html",
+                url: "/video/profile/addRes.html",
                 type: "POST",
                 dataType: "json",
                 data: "film_id=" + film_id +
@@ -364,7 +362,7 @@ $(function () {
      */
     $(".updateIsUse").click(function () {
         $.ajax({
-            url: "/video/admin/updateIsUse.html",
+            url: "/video/profile/updateIsUse.html",
             type: "post",
             dataType: "json",
             data: "res_id=" + $(this).attr("res_id"),
@@ -388,7 +386,7 @@ $(function () {
         var isEnsure = confirm("确定删除?");
         if (isEnsure) {
             $.ajax({
-                url: "/video/admin/delRes.html",
+                url: "/video/profile/delRes.html",
                 type: "post",
                 dataType: "json",
                 data: "res_id=" + $(this).attr("res_id"),
@@ -414,14 +412,14 @@ $(function () {
         var isEnsure = confirm("确定删除?");
         if( isEnsure ) {
             $.ajax({
-                url:"/video/admin/delFilm.html",
+                url:"/video/profile/delFilm.html",
                 type:"POST",
                 data:{"film_id": film_id},
                 success: function(data){
                     console.log(data);
                     if( typeof data == "string" ) data = JSON.parse(data);
                     if( data.code == "1" ) {
-                        location.assign("/video/admin/list.html");
+                        location.assign("/video/profile/profilePage.html");
                     } else {
                         alert("删除失败！");
                     }

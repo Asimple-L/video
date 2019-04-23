@@ -184,8 +184,10 @@ public class Manager {
      **/
     @RequestMapping( value = "/addFilm.html", produces = "text/html;charset=UTF-8")
     @ResponseBody
-    public String addFilm(Film film) {
+    public String addFilm(Film film, HttpSession session) {
+        User user = (User) session.getAttribute("adminUser");
         JSONObject jsonObject = new JSONObject();
+        film.setUser(user);
         String id = filmService.save(film);
         this.updateRedis(id);
         jsonObject.put("id", id);
@@ -450,26 +452,6 @@ public class Manager {
 
     /**
      * @Author Asimple
-     * @Description 获取二级目录信息
-     **/
-    @RequestMapping(value = "/getSubClass.html", produces = "text/html;charset=UTF-8")
-    @ResponseBody
-    public String getSubClass(String catalog_id) {
-        List<SubClass> subClasses = subClassService.listIsUse(catalog_id);
-        JsonConfig jsonConfig = new JsonConfig();
-        // 过滤列表
-        jsonConfig.setJsonPropertyFilter(new PropertyFilter(){
-            @Override
-            public boolean apply(Object o, String s, Object o1) {
-                return !("id".equals(s) || "name".equals(s));
-            }
-        });
-        JSONArray jsonArray = JSONArray.fromObject(subClasses, jsonConfig);
-        return jsonArray.toString();
-    }
-
-    /**
-     * @Author Asimple
      * @Description VIP管理
      **/
     @RequestMapping(value = "/vipCode.html")
@@ -507,26 +489,6 @@ public class Manager {
             } else jsonObject.put("code", "0");
         } else jsonObject.put("code", "0");
         return jsonObject.toString();
-    }
-
-    /**
-     * @Author Asimple
-     * @Description 获取类型
-     **/
-    @RequestMapping(value = "/getType.html", produces = "text/html;charset=UTF-8")
-    @ResponseBody
-    public String getType(String subClass_id) {
-        List<Type> types = typeService.listIsUseBySubClass_id(subClass_id);
-        JsonConfig jsonConfig = new JsonConfig();
-        // 过滤列表
-        jsonConfig.setJsonPropertyFilter(new PropertyFilter(){
-            @Override
-            public boolean apply(Object o, String s, Object o1) {
-                return !("id".equals(s) || "name".equals(s));
-            }
-        });
-        JSONArray jsonArray = JSONArray.fromObject(types, jsonConfig);
-        return jsonArray.toString();
     }
 
     /**

@@ -173,6 +173,12 @@ public class Search {
         map.addAttribute("resListFlh", resListFlh);
         map.addAttribute("resListOther", resListOther);
 
+        // 添加浏览记录
+        User user =(User) session.getAttribute(USER_KEY);
+        if( user!=null ) {
+            filmService.addViewHistory(film.getId(), user.getId());
+        }
+
         return "index/detail";
     }
 

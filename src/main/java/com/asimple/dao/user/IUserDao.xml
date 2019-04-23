@@ -43,7 +43,11 @@
     </select>
 
     <update id="update" parameterType="User">
-        UPDATE t_user SET `isVip`=#{isVip},`expireDate`=#{expireDate},`isManager`=#{isManager} WHERE id=#{id}
+        UPDATE t_user SET `isVip`=#{isVip},`expireDate`=#{expireDate},`isManager`=#{isManager}
+            <if test="userPasswd != null">
+                , `userPasswd`=#{userPasswd}
+            </if>
+        WHERE id=#{id}
     </update>
 
     <select id="load" resultType="User">

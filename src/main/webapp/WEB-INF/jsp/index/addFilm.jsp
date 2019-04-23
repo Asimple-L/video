@@ -18,15 +18,23 @@
             修改视频信息
         </c:if>
     </title>
+    <jsp:include page="/WEB-INF/jsp/pub/head_meta.jsp"/>
+    <jsp:include page="/WEB-INF/jsp/pub/head_link.jsp"/>
     <link rel="shortcut icon" href="<f:message key='pageIcon'/>">
     <link rel="stylesheet" href="${proname}/public/static/css/manager/addFilm.css">
     <link rel="stylesheet" href="${proname}/plugins/bootflat-admin/css/site.min.css">
     <script src="${proname}/plugins/bootflat-admin/js/site.min.js"></script>
-    <script src="${proname}/public/static/js/jquery-2.0.0.min.js?v=${version}" type="text/javascript" charset="UTF-8" ></script>
     <!--=====================CSS_Link===========================-->
     <link rel="stylesheet" href="${proname}/plugins/uploadify/uploadify.css" type="text/css">
     <!--=====================JS_Link===========================-->
     <script type="text/javascript" src="${proname}/plugins/uploadify/jquery.uploadify.min.js"></script>
+    <style>
+        .nav>li>a:focus, .nav>li>a:hover {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.75);
+            background-color: #343a40;
+        }
+    </style>
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/pub/head.jsp"/>
@@ -38,9 +46,7 @@
                 <div class="panel-body">
                     <div class="content-row">
                         <div class="row">
-
                             <%--  正文开始 --%>
-
                             <div style="width:100%; height: auto;overflow:hidden;margin: 0px auto;">
                                 <ul class="film-info">
                                     <li class="title">
@@ -49,7 +55,7 @@
                                                 上传视频
                                             </c:if>
                                             <c:if test="${film!=null}">
-                                                修改视频信息
+                                                修改视频
                                             </c:if>
                                         </div>
                                         <div class="right-con">
@@ -479,9 +485,7 @@
                                     </li>
                                 </ul>
                             </div>
-
                            <%--  正文结束 --%>
-
                         </div>
                     </div>
                 </div>

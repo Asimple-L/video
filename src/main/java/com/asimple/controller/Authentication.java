@@ -1,7 +1,5 @@
 package com.asimple.controller;
 
-import com.asimple.entity.Film;
-import com.asimple.entity.Res;
 import com.asimple.entity.User;
 import com.asimple.entity.VipCode;
 import com.asimple.service.*;
@@ -9,7 +7,6 @@ import com.asimple.util.*;
 import net.sf.json.JSONObject;
 import org.json.JSONException;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -37,12 +34,6 @@ public class Authentication {
     private IUserService userService;
     @Resource( name = "vipCodeService")
     private IVipCodeService vipCodeService;
-    @Resource(name = "filmService")
-    private IFilmService filmService;
-    @Resource
-    private IResService resService;
-    @Resource
-    private ICommonService commonService;
 
 
     /**
@@ -136,30 +127,25 @@ public class Authentication {
         return jsonObject.toString();
     }
 
-    @RequestMapping(value = "/profilePage.html")
-    public String profile(ModelMap map, HttpSession session) {
-        // 判断是否登录
+    /**
+     * @Author Asimple
+     * @Description 修改密码
+     **/
+    @RequestMapping(value = "/updatePassword.html", produces = "text/html;charset=UTF-8")
+    @ResponseBody
+    public String updatePassword(HttpSession session, String oldPwd, String newPwd) {
+        JSONObject jsonObject = new JSONObject();
         User user = (User) session.getAttribute(USER_KEY);
-        if( user==null ) {
-            return "forward:/index.html";
+        if( MD5Auth.validatePassword(user.getUserPasswd(), oldPwd+key, "UTF-8") ) {
+            user.setUserPasswd(MD5Auth.MD5Encode(newPwd+key, "UTF-8"));
+            userService.update(user);
+            jsonObject.put("code", 1);
+            session.removeAttribute(USER_KEY);
+        } else {
+            jsonObject.put("code", 0);
+            jsonObject.put("msg", "旧密码输入错误!");
         }
-        List<Film> list = filmService.findAll();
-        map.put("films", list);
-        return "index/profile";
-    }
-
-    @RequestMapping(value = "/share.html")
-    public String shareVideo(HttpServletRequest request, ModelMap map) {
-        String film_id = request.getParameter("film_id");
-        Film film = filmService.load(film_id);
-        if( film!=null ) {
-            map.put("film", film);
-            List<Res> list = resService.getListByFilmId(film_id);
-            if( list.size()== 0 )  map.addAttribute("res", null);
-            else map.addAttribute("res", list);
-        }
-        map = commonService.getCatalog(map);
-        return "index/addFilm";
+        return jsonObject.toString();
     }
 
     /**

@@ -14,11 +14,29 @@
     <title>个人中心</title>
     <jsp:include page="/WEB-INF/jsp/pub/head_meta.jsp"/>
     <jsp:include page="/WEB-INF/jsp/pub/head_link.jsp"/>
-    <%--<jsp:include page="/WEB-INF/jsp/pub/head_script.jsp"/>--%>
     <script src="${pageContext.request.contextPath}/public/static/js/jquery-2.0.0.min.js?v=${version}" type="text/javascript" charset="UTF-8" ></script>
     <script src="${pageContext.request.contextPath}/plugins/bootflat-admin/js/bootstrap.min.js"></script>
     <script src="${pageContext.request.contextPath}/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
     <script src="${pageContext.request.contextPath}/plugins/bootflat-admin/js/klorofil-common.js"></script>
+    <script>
+        function dateFtt(fmt,date) {
+            var o = {
+                "M+" : date.getMonth()+1,                 //月份
+                "d+" : date.getDate(),                    //日
+                "h+" : date.getHours(),                   //小时
+                "m+" : date.getMinutes(),                 //分
+                "s+" : date.getSeconds(),                 //秒
+                "q+" : Math.floor((date.getMonth()+3)/3), //季度
+                "S"  : date.getMilliseconds()             //毫秒
+            };
+            if(/(y+)/.test(fmt))
+                fmt=fmt.replace(RegExp.$1, (date.getFullYear()+"").substr(4 - RegExp.$1.length));
+            for(var k in o)
+                if(new RegExp("("+ k +")").test(fmt))
+                    fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+            return fmt;
+        }
+    </script>
     <!--=====================CSS_Link===========================-->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/plugins/linearicons/style.css">
@@ -38,7 +56,7 @@
             list-style: none;
             float: left;
             width: 104px;
-            height: 190px;
+            height: 220px;
             margin: 6px 36px 6px 6px;
         }
         .film-info {
@@ -49,6 +67,21 @@
             text-overflow: ellipsis;
             white-space: nowrap;
             text-align: center;
+        }
+        .pager li {
+            display: inline-block;
+        }
+        .pager li>a, .pager li>span {
+            display: inline-block;
+            padding: 5px 14px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 15px;
+        }
+        .pager .disabled>a, .pager .disabled>a:focus, .pager .disabled>a:hover, .pager .disabled>span {
+            color: #777;
+            cursor: not-allowed;
+            background-color: #fff;
         }
     </style>
 </head>
@@ -77,7 +110,7 @@
                                             });
 
                                             function textToImg(uname) {
-                                                var name = uname.charAt(0);
+                                                var name = uname.charAt(0).toUpperCase();
                                                 var fontSize = 37;
                                                 var fontWeight = 'bold';
 
@@ -104,7 +137,7 @@
                                     <div class="profile-stat">
                                         <div class="row">
                                             <div class="col-md-4 stat-item">
-                                                45 <span>上传视频</span>
+                                                ${myFilmsCount} <span>上传视频</span>
                                             </div>
                                             <div class="col-md-4 stat-item">
                                                 15 <span>评论</span>
@@ -121,10 +154,8 @@
                                     <div class="profile-info">
                                         <h4 class="heading">用户信息</h4>
                                         <ul class="list-unstyled list-justify">
-                                            <li>VIP到期日 <span>24 Aug, 2016</span></li>
-                                            <li>观看视频数目 <span>(124) 823409234</span></li>
-                                            <li>邮箱 <span>samuel@mydomain.com</span></li>
-                                            <li>Website <span>www.themeineed.com</span></li>
+                                            <li>观看视频数目 <span>${viewCount}</span></li>
+                                            <li>邮箱 <span>${u_skl.userEmail}</span></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -178,39 +209,196 @@
                                         <li class="active"><a href="#video-mine" role="tab" data-toggle="tab">我的视频</a></li>
                                         <li><a href="#view-history" role="tab" data-toggle="tab">浏览记录</a></li>
                                         <li><a href="#my-comment" role="tab" data-toggle="tab">我的评论</a></li>
-                                        <li><a href="#update-info" role="tab" data-toggle="tab">信息修改</a></li>
+                                        <li><a href="#update-info" role="tab" data-toggle="tab">修改密码</a></li>
                                     </ul>
                                 </div>
                                 <div class="tab-content">
                                     <%-- 我的视频 --%>
                                     <div class="tab-pane in active" id="video-mine">
                                         <div class="text-center" style="width: 100%;">
-                                            <a href="/video/share.html">
+                                            <a href="/video/profile/share.html">
                                                 <button class="btn-primary btn" style="border-radius: 15%;">我要上传</button>
                                             </a>
                                         </div>
                                         <c:if test="${films!=null && films.size()>0}">
                                             <div style="margin: 10px auto;">
-                                                <ul class="film-list">
+                                                <ul class="film-list" id="my-films">
                                                     <c:forEach items="${films}" var="list">
                                                         <li>
-                                                            <a href="/video/share.html?film_id=${list.id}">
+                                                            <a href="/video/profile/share.html?film_id=${list.id}">
                                                                 <div title="${list.name}"><img src="${list.image}" style="height: 175px;width: 126px;"></div>
                                                             </a>
                                                             <div class="film-info">
-                                                                <a href="/video/share.html?film_id=${list.id}" title="${list.name}"><p>${list.name}</p></a>
+                                                                <a href="/video/profile/share.html?film_id=${list.id}" title="${list.name}"><p>${list.name}</p></a>
                                                                 <p>${list.onDecade}-${list.typeName}</p>
                                                             </div>
                                                         </li>
                                                     </c:forEach>
                                                 </ul>
                                             </div>
-                                            <div class="margin-top-30 text-center"><a href="#" class="btn btn-default">查看所有</a></div>
+                                            <div class="margin-top-30 text-center">
+                                                <nav aria-label="...">
+                                                    <ul class="pager" id="my-films-page">
+                                                        <c:if test="${pageNo!=1}">
+                                                            <li>
+                                                                <a href="javascript:;" onclick="changePage(${pageNo-1})">上一页</a>
+                                                            </li>
+                                                        </c:if>
+                                                        <c:if test="${pageNo==1}">
+                                                            <li class="disabled">
+                                                                <a href="javascript:;">上一页</a>
+                                                            </li>
+                                                        </c:if>
+                                                        <li><p>${pageNo}/${totalPage}</p></li>
+                                                        <c:if test="${pageNo!=totalPage}">
+                                                            <li>
+                                                                <a href="javascript:;" onclick="changePage(${pageNo+1})">下一页</a>
+                                                            </li>
+                                                        </c:if>
+                                                        <c:if test="${pageNo==totalPage}">
+                                                            <li class="disabled">
+                                                                <a href="javascript:;">下一页</a>
+                                                            </li>
+                                                        </c:if>
+                                                    </ul>
+                                                </nav>
+                                            </div>
+                                            <script>
+                                                // 分页AJAX请求
+                                                function changePage(pc) {
+                                                    $.ajax({
+                                                        url:"/video/profile/getFilmAjax.html",
+                                                        type: "POST",
+                                                        dataType: "json",
+                                                        data:{pc:pc, type:'my-films'},
+                                                        success:function(data) {
+                                                            if( typeof data == "string" ) data = JSON.parse(data);
+                                                            var films = data.films;
+                                                            var pageNo = data.pageNo;
+                                                            var totalPage = data.totalPage;
+                                                            var htmlStr = '';
+                                                            for(var i=0; i<films.length; i++) {
+                                                                var film = films[i];
+                                                                htmlStr = htmlStr+'<li><a href="/video/profile/share.html?film_id='+film.id+'">';
+                                                                htmlStr = htmlStr+'<div title="'+film.name+'"><img src="'+film.image+'" style="height: 175px;width: 126px;"></div>';
+                                                                htmlStr = htmlStr+'</a><div class="film-info"><a href="/video/profile/share.html?film_id='+film.id+'" title="';
+                                                                htmlStr = htmlStr+film.name+'"><p>'+film.name+'</p></a><p>'+film.onDecade+'-'+film.typeName+'</p></div></li>';
+                                                            }
+                                                            $("#my-films").html(htmlStr);
+                                                            htmlStr = '';
+                                                            if( pageNo!=1 ) {
+                                                                htmlStr = htmlStr + '<li><a href="javascript:;" onclick="changePage(';
+                                                                htmlStr = htmlStr + (pageNo-1)+ ')">上一页</a></li>';
+                                                            } else {
+                                                                htmlStr = htmlStr + '<li class="disabled"><a href="javascript:;">上一页</a></li>';
+                                                            }
+                                                            htmlStr = htmlStr + '<li><p>'+ pageNo + '/' + totalPage + '</p></li>';
+                                                            if( pageNo!=totalPage ) {
+                                                                htmlStr = htmlStr + '<li><a href="javascript:;" onclick="changePage(';
+                                                                htmlStr = htmlStr + (pageNo+1)+ ')">下一页</a></li>';
+                                                            } else {
+                                                                htmlStr = htmlStr + '<li class="disabled"><a href="javascript:;">下一页</a></li>';
+                                                            }
+                                                            $("#my-films-page").html(htmlStr);
+                                                        },
+                                                        error:function() {
+                                                            alert("请求出错！");
+                                                        }
+                                                    });
+                                                }
+                                            </script>
                                         </c:if>
                                     </div>
                                     <%-- 浏览历史 --%>
                                     <div class="tab-pane" id="view-history">
-                                        浏览历史
+                                        <c:if test="${viewHistoryList!=null && viewHistoryList.size()>0}">
+                                            <div style="margin: 10px auto;">
+                                                <ul class="film-list" id="my-view-history">
+                                                    <c:forEach items="${viewHistoryList}" var="list">
+                                                        <li>
+                                                            <a href="/video/xl/detail.html?film_id=${list.film.id}">
+                                                                <div title="上次浏览时间:<f:formatDate value="${list.date_view}" pattern="yyyy-MM-dd HH:mm:ss" />"><img src="${list.film.image}" style="height: 175px;width: 126px;"></div>
+                                                            </a>
+                                                            <div class="film-info">
+                                                                <a href="/video/xl/detail.html?film_id=${list.id}" title="${list.film.name}"><p>${list.film.name}</p></a>
+                                                                <p>${list.film.onDecade}-${list.film.typeName}</p>
+                                                            </div>
+                                                        </li>
+                                                    </c:forEach>
+                                                </ul>
+                                            </div>
+                                            <div class="margin-top-30 text-center">
+                                                <nav aria-label="...">
+                                                    <ul class="pager" id="my-view-history-page">
+                                                        <c:if test="${viewHistoryPage!=1}">
+                                                            <li>
+                                                                <a href="javascript:;" onclick="changeViewHistoryPage(${viewHistoryPage-1})">上一页</a>
+                                                            </li>
+                                                        </c:if>
+                                                        <c:if test="${viewHistoryPage==1}">
+                                                            <li class="disabled">
+                                                                <a href="javascript:;">上一页</a>
+                                                            </li>
+                                                        </c:if>
+                                                        <li><p>${viewHistoryPage}/${viewHistoryAllPage}</p></li>
+                                                        <c:if test="${viewHistoryPage!=viewHistoryAllPage}">
+                                                            <li>
+                                                                <a href="javascript:;" onclick="changeViewHistoryPage(${viewHistoryPage+1})">下一页</a>
+                                                            </li>
+                                                        </c:if>
+                                                        <c:if test="${viewHistoryPage==viewHistoryAllPage}">
+                                                            <li class="disabled">
+                                                                <a href="javascript:;">下一页</a>
+                                                            </li>
+                                                        </c:if>
+                                                    </ul>
+                                                </nav>
+                                            </div>
+                                            <script>
+                                                // 分页AJAX请求
+                                                function changeViewHistoryPage(pc) {
+                                                    $.ajax({
+                                                        url:"/video/profile/getFilmAjax.html",
+                                                        type: "POST",
+                                                        dataType: "json",
+                                                        data:{pc:pc, type:'view-history'},
+                                                        success:function(data) {
+                                                            if( typeof data == "string" ) data = JSON.parse(data);
+                                                            var films = data.viewHistoryList;
+                                                            var pageNo = data.pageNo;
+                                                            var totalPage = data.totalPage;
+                                                            var htmlStr = '';
+                                                            for(var i=0; i<films.length; i++) {
+                                                                var mapList = films[i];
+                                                                htmlStr = htmlStr+'<li><a href="/video/xl/detail.html?film_id='+mapList.film.id+'">';
+                                                                htmlStr = htmlStr+'<div title="上次浏览时间:'+dateFtt("yyyy-MM-dd hh:mm:ss", new Date(mapList.date_view.time))+'"><img src="'+mapList.film.image+'" style="height: 175px;width: 126px;"></div>';
+                                                                htmlStr = htmlStr+'</a><div class="film-info"><a href="/video/xl/detail.html?film_id='+mapList.film.id+'" title="';
+                                                                htmlStr = htmlStr+mapList.film.name+'"><p>'+mapList.film.name+'</p></a><p>'+mapList.film.onDecade+'-'+mapList.film.typeName+'</p></div></li>';
+                                                            }
+                                                            $("#my-view-history").html(htmlStr);
+                                                            htmlStr = '';
+                                                            if( pageNo!=1 ) {
+                                                                htmlStr = htmlStr + '<li><a href="javascript:;" onclick="changeViewHistoryPage(';
+                                                                htmlStr = htmlStr + (pageNo-1)+ ')">上一页</a></li>';
+                                                            } else {
+                                                                htmlStr = htmlStr + '<li class="disabled"><a href="javascript:;">上一页</a></li>';
+                                                            }
+                                                            htmlStr = htmlStr + '<li><p>'+ pageNo + '/' + totalPage + '</p></li>';
+                                                            if( pageNo!=totalPage ) {
+                                                                htmlStr = htmlStr + '<li><a href="javascript:;" onclick="changeViewHistoryPage(';
+                                                                htmlStr = htmlStr + (pageNo+1)+ ')">下一页</a></li>';
+                                                            } else {
+                                                                htmlStr = htmlStr + '<li class="disabled"><a href="javascript:;">下一页</a></li>';
+                                                            }
+                                                            $("#my-view-history-page").html(htmlStr);
+                                                        },
+                                                        error:function() {
+                                                            alert("请求出错！");
+                                                        }
+                                                    });
+                                                }
+                                            </script>
+                                        </c:if>
                                     </div>
                                     <%-- 我的评论 --%>
                                     <div class="tab-pane in" id="my-comment">
@@ -237,7 +425,49 @@
                                     </div>
                                     <%--修改资料--%>
                                     <div class="tab-pane in" id="update-info">
-                                        修改信息
+                                        <div class="margin-top-30 text-center">
+                                            <label for="oldPwd" class="control-label sr-only">旧密码：</label>
+                                            <input type="password" class="form-control" name="oldPwd" id="oldPwd" placeholder="旧密码" autocomplete="off">
+                                        </div>
+                                        <div class="margin-top-30 text-center">
+                                            <label for="rePwd" class="control-label sr-only">再次输入：</label>
+                                            <input type="password" class="form-control" name="rePwd" id="rePwd" placeholder="再次输入旧密码" autocomplete="off">
+                                        </div>
+                                        <div class="margin-top-30 text-center">
+                                            <label for="newPwd" class="control-label sr-only">新密码：</label>
+                                            <input type="password" class="form-control" name="newPwd" id="newPwd" placeholder="新密码" autocomplete="off">
+                                        </div>
+                                        <div class="margin-top-30 text-center"><a href="javascript:;" class="btn btn-default" onclick="updatePassword()">提交修改</a></div>
+                                        <script>
+                                            function updatePassword() {
+                                                var oldPwd = document.getElementById("oldPwd").value;
+                                                var rePwd = document.getElementById("rePwd").value;
+                                                var newPwd = document.getElementById("newPwd").value;
+                                                if( oldPwd!=rePwd ) {
+                                                    alert("两次旧密码输入不一致,请重新输入!");
+                                                } else {
+                                                    $.ajax({
+                                                       url:"/video/updatePassword.html",
+                                                       type:"POST",
+                                                       dataType: "json",
+                                                       data:{oldPwd:oldPwd, newPwd:newPwd},
+                                                       success:function (data) {
+                                                           if( typeof data == "string" ) data = JSON.parse(data);
+                                                           var code = data.code;
+                                                           if( code=='1' ) {
+                                                               alert("修改成功!请使用新密码重新登录~~")
+                                                               location.href='/video/index.html';
+                                                           } else {
+                                                               alert(data.msg);
+                                                           }
+                                                       },
+                                                       error:function () {
+                                                           alert("系统出错!");
+                                                       }
+                                                    });
+                                                }
+                                            }
+                                        </script>
                                     </div>
                                 </div>
                                 <!-- END TABBED CONTENT -->

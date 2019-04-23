@@ -90,10 +90,10 @@
                 `evaluation`, `image`, `isUse`, `locName`, `loc_id`,
                 `name`, `onDecade`, `plot`, `resolution`, `status`,
                 `subClassName`, `subClass_id`, `typeName`, `type_id`,
-                `updateTime`, `isVip`) VALUES (#{id}, #{actor}, #{cataLogName},
+                `updateTime`, `isVip`, `uid`) VALUES (#{id}, #{actor}, #{cataLogName},
                  #{cataLog_id}, #{evaluation}, #{image}, #{isUse}, #{locName},
                  #{loc_id}, #{name}, #{onDecade}, #{plot}, #{resolution}, #{status},
-                 #{subClassName}, #{subClass_id}, #{typeName}, #{type_id}, #{updateTime}, #{isVip})
+                 #{subClassName}, #{subClass_id}, #{typeName}, #{type_id}, #{updateTime}, #{isVip}, #{user.id})
     </insert>
 
     <delete id="deleteById" parameterType="String">
@@ -110,10 +110,33 @@
     </insert>
 
     <select id="listByUser" resultType="Film">
-        SELECT * FROM t_film WHERE `uid`=#{param1}
-        <if test="param2 != null">
-            LIMIT 0,#{param2}
+        SELECT * FROM t_film WHERE `uid`=#{param1} LIMIT #{start},#{count}
+    </select>
+
+    <select id="countListByUser" resultType="java.lang.Integer">
+        SELECT count(1) FROM t_film WHERE `uid`=#{param1}
+    </select>
+
+    <insert id="addViewHistory" parameterType="java.util.HashMap">
+        INSERT INTO `t_view_history` (`uid`, `film_id`, `date_view`)
+            VALUES (#{uid}, #{film_id}, #{view_date})
+    </insert>
+
+    <select id="getViewHistory" resultType="java.util.HashMap">
+        SELECT * FROM `t_view_history` WHERE `uid`=#{uid} ORDER BY `date_view` DESC
+          LIMIT #{start},#{count}
+    </select>
+
+    <select id="countViewHistory" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+        SELECT count(1) FROM `t_view_history` WHERE `uid`=#{uid}
+        <if test="film_id != null">
+            AND `film_id`=#{film_id}
         </if>
     </select>
+
+    <update id="updateViewHistory" parameterType="java.util.HashMap">
+        UPDATE `t_view_history` SET `date_view`=#{view_date}
+          WHERE `uid`=#{uid} AND `film_id`=#{film_id}
+    </update>
 
 </mapper>
