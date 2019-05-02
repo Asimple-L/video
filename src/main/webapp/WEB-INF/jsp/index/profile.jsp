@@ -140,10 +140,10 @@
                                                 ${myFilmsCount} <span>上传视频</span>
                                             </div>
                                             <div class="col-md-4 stat-item">
-                                                15 <span>评论</span>
+                                                ${commentCount} <span>评论</span>
                                             </div>
                                             <div class="col-md-4 stat-item">
-                                                2174 <span>点赞</span>
+                                                ${totalLike} <span>点赞</span>
                                             </div>
                                         </div>
                                     </div>
@@ -403,25 +403,84 @@
                                     <%-- 我的评论 --%>
                                     <div class="tab-pane in" id="my-comment">
                                         <ul class="list-unstyled activity-timeline">
-                                            <li>
-                                                <i class="fa fa-comment activity-icon"></i>
-                                                <p>Commented on post <a href="#">Prototyping</a> <span class="timestamp">2 minutes ago</span></p>
-                                            </li>
-                                            <li>
-                                                <i class="fa fa-cloud-upload activity-icon"></i>
-                                                <p>Uploaded new file <a href="#">Proposal.docx</a> to project <a href="#">New Year Campaign</a> <span class="timestamp">7 hours ago</span></p>
-                                            </li>
-                                            <li>
-                                                <i class="fa fa-plus activity-icon"></i>
-                                                <p>Added <a href="#">Martin</a> and <a href="#">3 others colleagues</a> to project repository <span class="timestamp">Yesterday</span></p>
-                                            </li>
-                                            <li>
-                                                <i class="fa fa-check activity-icon"></i>
-                                                <p>Finished 80% of all <a href="#">assigned tasks</a> <span class="timestamp">1 day ago</span></p>
-                                            </li>
+                                            <c:forEach items="${comments}" var="list">
+                                                <li>
+                                                    <i class="fa fa-comment activity-icon"></i>
+                                                    <p>${list.context} <span class="timestamp"><f:formatDate value="${list.date_update}" pattern="yyyy-MM-dd HH:mm:ss" /></span></p>
+                                                </li>
+                                            </c:forEach>
                                         </ul>
                                         <%--  分页 --%>
-                                        <div class="margin-top-30 text-center"><a href="#" class="btn btn-default">See all activity</a></div>
+                                        <div class="margin-top-30 text-center">
+                                            <nav aria-label="...">
+                                                <ul class="pager" id="my-comment-page">
+                                                    <c:if test="${commentPage!=1}">
+                                                        <li>
+                                                            <a href="javascript:;" onclick="changeComment(${commentPage-1})">上一页</a>
+                                                        </li>
+                                                    </c:if>
+                                                    <c:if test="${commentPage==1}">
+                                                        <li class="disabled">
+                                                            <a href="javascript:;">上一页</a>
+                                                        </li>
+                                                    </c:if>
+                                                    <li><p>${commentPage}/${commentAllPage}</p></li>
+                                                    <c:if test="${commentPage!=commentAllPage}">
+                                                        <li>
+                                                            <a href="javascript:;" onclick="changeComment(${commentPage+1})">下一页</a>
+                                                        </li>
+                                                    </c:if>
+                                                    <c:if test="${commentPage==commentAllPage}">
+                                                        <li class="disabled">
+                                                            <a href="javascript:;">下一页</a>
+                                                        </li>
+                                                    </c:if>
+                                                </ul>
+                                            </nav>
+                                        </div>
+                                        <script>
+                                            // 分页AJAX请求
+                                            function changeComment(pc) {
+                                                $.ajax({
+                                                    url:"/video/profile/getMyComments.html",
+                                                    type: "POST",
+                                                    dataType: "json",
+                                                    data:{pc:pc},
+                                                    success:function(data) {
+                                                        if( typeof data == "string" ) data = JSON.parse(data);
+                                                        var comments = data.commentList;
+                                                        var pageNo = data.pageNo;
+                                                        var totalPage = data.totalPage;
+                                                        var htmlStr = '<ul class="list-unstyled activity-timeline">';
+                                                        for(var i=0; i<comments.length; i++) {
+                                                            var comment = comments[i];
+                                                            htmlStr = htmlStr + '<li><i class="fa fa-comment activity-icon"></i>';
+                                                            htmlStr = htmlStr + '<p>'+comment.context+'<span class="timestamp">'+dateFtt("yyyy-MM-dd hh:mm:ss", new Date(comment.date_update.time))+'</span></p></li>';
+                                                        }
+                                                        htmlStr = htmlStr + '</ul>';
+                                                        $("#my-comment").html(htmlStr);
+                                                        htmlStr = '';
+                                                        if( pageNo!=1 ) {
+                                                            htmlStr = htmlStr + '<li><a href="javascript:;" onclick="changeComment(';
+                                                            htmlStr = htmlStr + (pageNo-1)+ ')">上一页</a></li>';
+                                                        } else {
+                                                            htmlStr = htmlStr + '<li class="disabled"><a href="javascript:;">上一页</a></li>';
+                                                        }
+                                                        htmlStr = htmlStr + '<li><p>'+ pageNo + '/' + totalPage + '</p></li>';
+                                                        if( pageNo!=totalPage ) {
+                                                            htmlStr = htmlStr + '<li><a href="javascript:;" onclick="changeComment(';
+                                                            htmlStr = htmlStr + (pageNo+1)+ ')">下一页</a></li>';
+                                                        } else {
+                                                            htmlStr = htmlStr + '<li class="disabled"><a href="javascript:;">下一页</a></li>';
+                                                        }
+                                                        $("#my-comment-page").html(htmlStr);
+                                                    },
+                                                    error:function() {
+                                                        alert("请求出错！");
+                                                    }
+                                                });
+                                            }
+                                        </script>
                                     </div>
                                     <%--修改资料--%>
                                     <div class="tab-pane in" id="update-info">

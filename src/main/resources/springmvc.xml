@@ -70,10 +70,10 @@
 			<mvc:mapping path="/admin/*"/>
 			<bean class="com.asimple.interceptor.AdminUserInterceptor"/>
 		</mvc:interceptor>
-		<!--<mvc:interceptor>-->
-			<!--<mvc:mapping path="/profile/*"/>-->
-			<!--<bean class="com.asimple.interceptor.ProfileInterceptor"/>-->
-		<!--</mvc:interceptor>-->
+		<mvc:interceptor>
+			<mvc:mapping path="/profile/*"/>
+			<bean class="com.asimple.interceptor.ProfileInterceptor"/>
+		</mvc:interceptor>
 	</mvc:interceptors>
 
 	<!-- 开启task任务调度 -->

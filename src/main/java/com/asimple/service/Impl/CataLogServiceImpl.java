@@ -19,10 +19,6 @@ public class CataLogServiceImpl implements ICataLogService {
     @Resource(name = "ICataLogDao")
     private ICataLogDao cataLogDao;
 
-    public void setCataLogDao(ICataLogDao cataLogDao) {
-        this.cataLogDao = cataLogDao;
-    }
-
     /**
      * @Author Asimple
      * @Description 查找可用的列表

@@ -40,7 +40,13 @@ public class Profile {
     private RankTask rankTask;
     @Resource
     private ICommonService commonService;
+    @Resource
+    private ICommentService commentService;
 
+    /**
+     * @Author Asimple
+     * @Description 进入个人中心页面
+     **/
     @RequestMapping(value = "/profilePage.html")
     public String profile(ModelMap map, HttpSession session) {
         map = commonService.getCatalog(map);
@@ -58,12 +64,30 @@ public class Profile {
         map.put("viewHistoryList", viewHistoryMap);
         map.put("viewHistoryAllPage", viewHistoryNumber/5+((viewHistoryNumber%5)>0?1:0));
         map.put("viewHistoryPage", 1);
+        // 我的评论
+        List<Comment> commentList = commentService.getPageByUid(uid, 1, 4);
+        int commentNumber = commentService.getCommentsTotal(uid);
+        map.put("comments", commentList);
+        map.put("commentPage", 1);
+        map.put("commentAllPage", commentNumber/4+((commentNumber%4)>0?1:0));
+
+        long totalLike = 0;
+        for (Comment comment: commentList) {
+            totalLike += comment.getLikeNum();
+        }
+
         // 左边栏目信息
         map.put("viewCount", viewHistoryNumber);
         map.put("myFilmsCount", total);
+        map.put("commentCount", commentNumber);
+        map.put("totalLike", totalLike);
         return "index/profile";
     }
 
+    /**
+     * @Author Asimple
+     * @Description 视频分享页面
+     **/
     @RequestMapping(value = "/share.html")
     public String shareVideo(HttpServletRequest request, ModelMap map) {
         String film_id = request.getParameter("film_id");
@@ -309,6 +333,17 @@ public class Profile {
         }
         jsonObject.put("pageNo", pc);
         return  jsonObject.toString();
+    }
+
+    @RequestMapping(value = "/getMyComments.html", produces = "text/html;charset=UTF-8")
+    @ResponseBody
+    public String getMyComments(HttpSession session, int pc) {
+        JSONObject jsonObject = new JSONObject();
+        User user = (User) session.getAttribute(USER_KEY);
+        jsonObject.put("commentList", commentService.getPageByUid(user.getId(), pc, 4));
+        jsonObject.put("pageNo", pc);
+        jsonObject.put("totalPage", commentService.getCommentsTotal(user.getId()));
+        return jsonObject.toString();
     }
 
     private void updateRedis(String id) {
