@@ -110,7 +110,7 @@ $(function () {
     $(".cataLog_id_subClass").change(function () {
         var catalog_id = $(this).val();
         $.ajax({
-            url: "admin/getSubClass.html",
+            url: "profile/getSubClass.html",
             type: "post",
             dataType: "json",
             data: "catalog_id=" + catalog_id,
@@ -130,7 +130,7 @@ $(function () {
     });
 
     $.ajax({
-        url: "admin/getSubClass.html",
+        url: "profile/getSubClass.html",
         type: "POST",
         dataType: "json",
         data: "catalog_id=" + $(".cataLog_id_subClass").val(),
