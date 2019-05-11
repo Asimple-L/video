@@ -154,8 +154,4 @@ public class Start {
     public String error() {
         return "index/error";
     }
-
-    public void setCataLogService(ICataLogService cataLogService) {
-        this.cataLogService = cataLogService;
-    }
 }

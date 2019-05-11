@@ -33,13 +33,7 @@ public class Search {
     @Resource
     private ISubClassService subClassService;
     @Resource
-    private IDecadeService decadeService;
-    @Resource
     private ITypeService typeService;
-    @Resource
-    private ILocService locService;
-    @Resource
-    private ILevelService levelService;
     @Resource
     private IRatyService ratyService;
     @Resource
@@ -286,33 +280,5 @@ public class Search {
         PageBean<Film> pageBean = filmService.getPage(ob, pc, ps);
         pageBean.setUrl(url);
         map.addAttribute("pb", pageBean);
-    }
-
-    public void setFilmService(IFilmService filmService) {
-        this.filmService = filmService;
-    }
-
-    public void setCataLogService(ICataLogService cataLogService) {
-        this.cataLogService = cataLogService;
-    }
-
-    public void setSubClassService(ISubClassService subClassService) {
-        this.subClassService = subClassService;
-    }
-
-    public void setDecadeService(IDecadeService decadeService) {
-        this.decadeService = decadeService;
-    }
-
-    public void setTypeService(ITypeService typeService) {
-        this.typeService = typeService;
-    }
-
-    public void setLocService(ILocService locService) {
-        this.locService = locService;
-    }
-
-    public void setLevelService(ILevelService levelService) {
-        this.levelService = levelService;
     }
 }

@@ -24,11 +24,7 @@ public class RankTask {
     @Resource( name = "filmService")
     private IFilmService filmService;
     @Resource
-    private ISubClassService subClassService;
-    @Resource
     private IDecadeService decadeService;
-    @Resource
-    private ITypeService typeService;
     @Resource
     private ILocService locService;
     @Resource
