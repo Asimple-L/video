@@ -5,11 +5,9 @@ import com.asimple.service.*;
 import com.asimple.task.RankTask;
 import com.asimple.task.SolrTask;
 import com.asimple.util.*;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import net.sf.json.JsonConfig;
-import net.sf.json.util.PropertyFilter;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.data.solr.core.query.*;
 import org.springframework.data.solr.core.query.result.HighlightEntry;
@@ -35,29 +33,32 @@ import java.util.List;
 @Controller
 @RequestMapping("/admin")
 public class Manager {
-    private final static String key = "a1s2i3m4p5l6e7";
+    @Value("${key}")
+    private String key;
+    @Value("${userKey}")
+    private String userKey;
     @Resource
-    private IUserService userService;
+    private UserService userService;
     @Resource
-    private ILocService locService;
+    private LocService locService;
     @Resource
-    private ILevelService levelService;
+    private LevelService levelService;
     @Resource
-    private IDecadeService decadeService;
+    private DecadeService decadeService;
     @Resource
-    private ICataLogService cataLogService;
+    private CataLogService cataLogService;
     @Resource
-    private IResService resService;
+    private ResService resService;
     @Resource
-    private IFilmService filmService;
+    private FilmService filmService;
     @Resource
-    private ISubClassService subClassService;
+    private SubClassService subClassService;
     @Resource
-    private ITypeService typeService;
+    private TypeService typeService;
     @Resource
-    private IVipCodeService vipCodeService;
+    private VipCodeService vipCodeService;
     @Resource
-    private ICommonService commonService;
+    private CommonService commonService;
     @Resource
     private RankTask rankTask;
     @Resource
@@ -69,7 +70,7 @@ public class Manager {
      * @Author Asimple
      * @Description 跳转到后台登录页面
      **/
-    @RequestMapping(value = "/login.html", method = { RequestMethod.GET })
+    @RequestMapping(value = "/login", method = { RequestMethod.GET })
     public String adminLoginPage() {
         return "manager/login";
     }
@@ -78,7 +79,7 @@ public class Manager {
      * @Author Asimple
      * @Description 管理员登录
      **/
-    @RequestMapping(value = "/login.html", method = { RequestMethod.POST })
+    @RequestMapping(value = "/login", method = { RequestMethod.POST })
     public String adminLogin(String username, String password, ModelMap map, HttpSession session) {
         // 用户名或者邮箱登录
         boolean flag = false;// 是否登录成功
@@ -100,7 +101,7 @@ public class Manager {
             }
         }
         // 登录成功重定向到后台首页
-        if ( flag ) return "redirect:/admin/index.html";
+        if ( flag ) return "redirect:/admin/index";
         else return "manager/login";
     }
 
@@ -108,7 +109,7 @@ public class Manager {
      * @Author Asimple
      * @Description 后台首页
      **/
-    @RequestMapping(value = {"/", "/index.html"})
+    @RequestMapping(value = {"/", "/index"})
     public String backIndex(ModelMap map, HttpSession session) {
         return "manager/index";
     }
@@ -117,7 +118,7 @@ public class Manager {
      * @Author Asimple
      * @Description 影片资源管理
      **/
-    @RequestMapping(value = "/film.html")
+    @RequestMapping(value = "/film")
     public String film(ModelMap map, String film_id) {
         if ( film_id != null && !"".equals(film_id.trim()) ) {// 如果有id，则是编辑
             // 获取电影信息
@@ -135,10 +136,10 @@ public class Manager {
      * @Author Asimple
      * @Description 查看所有影视信息
      **/
-    @RequestMapping(value = "/list.html")
+    @RequestMapping(value = "/list")
     public String filmList(ModelMap map, HttpServletRequest request) {
-//        getFilmList(map, request, 0);
-        getFilmOfSolr(map, request);
+        getFilmList(map, request);
+//        getFilmOfSolr(map, request);
         return "manager/allFilm";
     }
 
@@ -146,7 +147,7 @@ public class Manager {
      * @Author Asimple
      * @Description 用户管理
      **/
-    @RequestMapping( value = "/userList.html")
+    @RequestMapping( value = "/userList")
     public String userList(String page, ModelMap map) {
         if( Tools.isEmpty(page) ) page = "1";
         int pc = Integer.parseInt(page);
@@ -161,7 +162,7 @@ public class Manager {
      * @Author Asimple
      * @Description 更新用户信息
      **/
-    @RequestMapping( value = "/updateUser.html", method = RequestMethod.POST)
+    @RequestMapping( value = "/updateUser", method = RequestMethod.POST)
     @ResponseBody
     public String updateUser(String uid, String key) {
         JSONObject jsonObject = new JSONObject();
@@ -182,7 +183,7 @@ public class Manager {
      * @Author Asimple
      * @Description 添加影片
      **/
-    @RequestMapping( value = "/addFilm.html", produces = "text/html;charset=UTF-8")
+    @RequestMapping( value = "/addFilm", produces = "text/html;charset=UTF-8")
     @ResponseBody
     public String addFilm(Film film, HttpSession session) {
         User user = (User) session.getAttribute("adminUser");
@@ -198,7 +199,7 @@ public class Manager {
      * @Author Asimple
      * @Description 删除影片
      **/
-    @RequestMapping( value = "/delFilm.html")
+    @RequestMapping( value = "/delFilm")
     @ResponseBody
     public String delFilm(String film_id) {
         LogUtil.info(Manager.class, "film_id = " + film_id);
@@ -216,43 +217,11 @@ public class Manager {
      * @Author Asimple
      * @Description 添加资源
      **/
-    @RequestMapping(value = "/addRes.html")
+    @RequestMapping(value = "/addRes")
     @ResponseBody
     public String addRes(Res res, String film_id) {
         JSONObject jsonObject = new JSONObject();
-        // 初始化
-        res.setIsUse(1);
-        Film film = filmService.load(film_id);
-        res.setFilm(film);
-        res.setUpdateTime(DateUtil.getTime());
-
-        // 多资源上传
-        String id = "";
-        if ( res.getName().contains("@@") ) {
-            //  xxxx@@集##集数开始##集数结束##分割符号
-           String resName[] = res.getName().trim().split("##");
-           // 视频名称
-           String name = resName[0];
-           // 开始集数与结束集数
-           int begin = Integer.parseInt(resName[1]);
-           int end = Integer.parseInt(resName[2]);
-           // 链接分割标志
-            String flag = "";
-           if( resName.length > 3 ) {
-               flag = resName[3];
-               String res_links[] = res.getLink().replaceAll("\\n","").split(flag);
-               int cz = begin - 1;
-               for(int i=begin; i<=end; i++) {
-                   res.setName(name.replace("@@", ""));
-                   res.setEpisodes(i);
-                   if( "Flh".equals(res.getLinkType()) ) flag = "";
-                   res.setLink(flag+res_links[i-cz]);
-                   id = resService.add(res);
-               }
-           }
-        } else id = resService.add(res);
-        film.setUpdateTime(DateUtil.getTime());
-        filmService.update(film);
+        String id = resService.addRes(res, film_id);
         jsonObject.put("id", id);
         return jsonObject.toString();
     }
@@ -261,7 +230,7 @@ public class Manager {
      * @Author Asimple
      * @Description 删除资源
      **/
-    @RequestMapping( value = "/delRes.html")
+    @RequestMapping( value = "/delRes")
     @ResponseBody
     public String delRes(String res_id) {
         JSONObject jsonObject = new JSONObject();
@@ -274,7 +243,7 @@ public class Manager {
      * @Author Asimple
      * @Description 更改在离线状态
      **/
-    @RequestMapping( value = "/updateIsUse.html")
+    @RequestMapping( value = "/updateIsUse")
     @ResponseBody
     public String updateIsUse(String res_id) {
         JSONObject jsonObject = new JSONObject();
@@ -291,7 +260,7 @@ public class Manager {
      * @Author Asimple
      * @Description 更新影片信息
      **/
-    @RequestMapping( value = "/updateFilmInfo.html")
+    @RequestMapping( value = "/updateFilmInfo")
     @ResponseBody
     public String updateFilmInfo(String film_id, String val, String key, HttpSession session) {
         JSONObject jsonObject = new JSONObject();
@@ -353,7 +322,7 @@ public class Manager {
      * @Author Asimple
      * @Description 目录管理
      **/
-    @RequestMapping( value = "/catalog.html")
+    @RequestMapping( value = "/catalog")
     public String catalog(ModelMap map) {
         map = commonService.getCatalog(map);
         return "manager/catalog";
@@ -363,7 +332,7 @@ public class Manager {
      * @Author Asimple
      * @Description 目录查看与修改
      **/
-    @RequestMapping( value = "/editCatalog.html")
+    @RequestMapping( value = "/editCatalog")
     public String editCatalog(ModelMap map) {
         map = commonService.getCatalog(map);
         return "manager/editCatalog";
@@ -373,7 +342,7 @@ public class Manager {
      * @Author Asimple
      * @Description 添加年列表
      **/
-    @RequestMapping( value = "addDecade.html")
+    @RequestMapping( value = "addDecade")
     @ResponseBody
     public String addDecade(Decade decade) {
         decade.setIsUse(1);
@@ -386,7 +355,7 @@ public class Manager {
      * @Author Asimple
      * @Description 添加级别
      **/
-    @RequestMapping( value = "/addLevel.html")
+    @RequestMapping( value = "/addLevel")
     @ResponseBody
     public String addLevel(Level level) {
         level.setIsUse(1);
@@ -399,7 +368,7 @@ public class Manager {
      * @Author Asimple
      * @Description 添加地区
      **/
-    @RequestMapping( value = "/addLoc.html")
+    @RequestMapping( value = "/addLoc")
     @ResponseBody
     public String addLoc(Loc loc) {
         loc.setIsUse(1);
@@ -412,7 +381,7 @@ public class Manager {
      * @Author Asimple
      * @Description 添加一级分类
      **/
-    @RequestMapping(value = "/addCataLog.html")
+    @RequestMapping(value = "/addCataLog")
     @ResponseBody
     public String addCataLog(CataLog cataLog) {
         cataLog.setIsUse(1);
@@ -426,7 +395,7 @@ public class Manager {
      * @Author Asimple
      * @Description 添加二级分类
      **/
-    @RequestMapping(value = "/addSubClass.html")
+    @RequestMapping(value = "/addSubClass")
     @ResponseBody
     public String addSubClass(SubClass subClass, String cataLog_id) {
         subClass.setIsUse(1);
@@ -440,7 +409,7 @@ public class Manager {
      * @Author Asimple
      * @Description 添加类型
      **/
-    @RequestMapping(value = "/addType.html")
+    @RequestMapping(value = "/addType")
     @ResponseBody
     public String addType(Type type,String subClass_id) {
         type.setIsUse(1);
@@ -454,7 +423,7 @@ public class Manager {
      * @Author Asimple
      * @Description VIP管理
      **/
-    @RequestMapping(value = "/vipCode.html")
+    @RequestMapping(value = "/vipCode")
     public String vipCode(ModelMap map) {
         List<VipCode> list = vipCodeService.listIsUse();
         map.addAttribute("vip_codes",list);
@@ -465,11 +434,11 @@ public class Manager {
      * @Author Asimple
      * @Description 创建VIP卡号
      **/
-    @RequestMapping(value = "/createVipCode.html", method = RequestMethod.POST)
+    @RequestMapping(value = "/createVipCode", method = RequestMethod.POST)
     @ResponseBody
     public String createVipCode(String num) {
         JSONObject jsonObject = new JSONObject();
-        if( StringUtils.isNoneBlank(num) ) {
+        if( StringUtils.isNotBlank(num) ) {
             int n = Integer.parseInt(num);
             VipCode vipCode;
             List<VipCode> vipCodes = new ArrayList<>();
@@ -495,7 +464,7 @@ public class Manager {
      * @Author Asimple
      * @Description 数据导入页面
      **/
-    @RequestMapping(value = "/loadInSolrPage.html")
+    @RequestMapping(value = "/loadInSolrPage")
     public String loadSolr() {
         return "manager/loadSolr";
     }
@@ -504,7 +473,7 @@ public class Manager {
      * @Author Asimple
      * @Description 导入Solr库
      **/
-    @RequestMapping(value = "/loadIn.html", produces = "text/html;charset=UTF-8")
+    @RequestMapping(value = "/loadIn", produces = "text/html;charset=UTF-8")
     @ResponseBody
     public String loadInSolr() {
         solrTask.pushToSolr();
@@ -517,6 +486,8 @@ public class Manager {
         User user = users.get(0);
         if( MD5Auth.validatePassword(user.getUserPasswd(), password+key, "UTF-8") && user.getIsManager() == 1 ) { // 登录成功
             session.setAttribute("adminUser", user);
+            session.setAttribute(userKey, user);
+            System.out.println(userKey);
             return true;
         } else {
             map.addAttribute("msg", "请登录正确的管理员账号！");
@@ -524,7 +495,7 @@ public class Manager {
         }
     }
 
-    private void getFilmList(ModelMap map, HttpServletRequest request, int flag) {
+    private void getFilmList(ModelMap map, HttpServletRequest request) {
         String name = request.getParameter("name");
         if( !Tools.isEmpty(name) ) map.addAttribute("name", name);
         // 分页查询所有电影列表
@@ -542,13 +513,17 @@ public class Manager {
         int ps = 27;
             // 获取页面传递的查询条件
         Film ob = Tools.toBean(request.getParameterMap(), Film.class);
-        if( flag != 0 ) ob.setIsUse(1);
 
         PageBean<Film> pageBean = filmService.getPage(ob, pc, ps);
         pageBean.setUrl(url);
         map.addAttribute("pb", pageBean);
     }
 
+    /**
+     * TODO SpringBoot Solr整合有问题，还在解决中
+     * 报错信息：org.apache.solr.client.solrj.impl.HttpSolrClient$RemoteSolrException: Error from server at http://127.0.0.1:8090/solr/video: Expected mime type application/octet-stream but got text/html.
+     * 未改成SpringBoot的时候，是正常运行的。
+     */
     private void getFilmOfSolr(ModelMap map, HttpServletRequest request) {
         PageBean<Film> pageBean = new PageBean<>();
         String name = request.getParameter("name");
@@ -619,9 +594,7 @@ public class Manager {
     }
 
     private void updateRedisList(String id) {
-        if( !"0".equals(id) ) {
-            rankTask.addListInfoToRedis();
-        }
+        commonService.cleanRedisCache();
     }
 
 }

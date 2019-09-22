@@ -10,14 +10,14 @@
 
     <!-- 头部begin -->
     <nav class="navbar navbar-expand-md bg-dark navbar-dark fixed-top">
-        <a class="navbar-brand" href="/video/">欢迎来到<f:message key="siteName"/>最新影片资源</a>
+        <a class="navbar-brand" href="/video/">欢迎来到${siteName}最新影片资源</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
             <ul class="nav navbar-nav navbar-right" >
                 <li class="nav-item">
-                    <a class="nav-link" href="/video/note.html">留言</a>
+                    <a class="nav-link" href="/video/note">留言</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" onclick="alert('请点击Ctrl+D收藏')" href="#">收藏网站</a>
@@ -41,7 +41,7 @@
                         <a class="nav-link" onclick="fuelFilling()"  href="javascript:;">使用加油卡</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link"  href="/video/profile/profilePage.html">个人中心</a>
+                        <a class="nav-link"  href="/video/profile/profilePage">个人中心</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" id="globalLoginBtn_loginOut" href="javascript:;">退出</a>
@@ -52,14 +52,14 @@
                         <a class="nav-link" data-toggle="modal" data-target="#myModal" href="javascript:;">登录</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="globalLoginBtn_register_input" href="registerInput.html">注册</a>
+                        <a class="nav-link" id="globalLoginBtn_register_input" href="registerInput">注册</a>
                     </li>
                 </c:if>
                 <li class="nav-item">
                     <a class="nav-link" href="javascript:;">|</a>
                 </li>
                 <li class="nav-item">
-                    <a  class="nav-link" href="index.html">首页</a>
+                    <a  class="nav-link" href="/video/">首页</a>
                 </li>
                 <c:forEach items="${cataLogList}" var="vo">
                     <li class="nav-item">
@@ -119,7 +119,7 @@
         /**登录*/
         $("#login_btn").click(function () {
             $.ajax({
-                url:"login.html",
+                url:"login",
                 type:"POST",
                 dataType:"json",
                 data:$("#login_form").serialize(),
@@ -141,7 +141,7 @@
         /**登出*/
         $("#globalLoginBtn_loginOut").click(function () {
             $.ajax({
-                url:"logout.html",
+                url:"logout",
                 type:"POST",
                 dataType:"json",
                 success:function (data) {
@@ -165,7 +165,7 @@
         var vip_code =  prompt("请输入你的加油卡号：");
         if(vip_code!='' && vip_code!=undefined){
             $.ajax({
-                url:"vipCodeVerification.html",
+                url:"vipCodeVerification",
                 type:"POST",
                 dataType:"json",
                 data:{

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asimple.mapper.VipCodeMapper">
+    <resultMap id="myVipCode" type="com.asimple.entity.VipCode">
+        <id column="id" property="id"></id>
+        <result column="code" property="code"></result>
+        <result column="is_use" property="isUse"></result>
+        <result column="create_time" property="create_time"></result>
+        <result column="expire_time" property="expire_time"></result>
+    </resultMap>
+
+    <select id="findByIsUse" resultMap="myVipCode">
+        SELECT * FROM `t_vipcode` WHERE `is_use`=1
+    </select>
+
+    <insert id="add" parameterType="com.asimple.entity.VipCode">
+        INSERT INTO `t_vipcode` (`id`,`code`,`is_use`,`create_time`,`expire_time`) VALUES (#{id},#{code},#{isUse},#{create_time},#{expire_time})
+    </insert>
+
+    <select id="findByVipCode" resultMap="myVipCode">
+        SELECT * FROM `t_vipcode` WHERE `code`=#{vip_code}
+    </select>
+
+    <update id="update" parameterType="com.asimple.entity.VipCode">
+        UPDATE `t_vipcode` SET `code`=#{code}, `is_use`=#{isUse}, `create_time`=#{create_time},`expire_time`=#{expire_time} WHERE `id`=#{id}
+    </update>
+
+</mapper>

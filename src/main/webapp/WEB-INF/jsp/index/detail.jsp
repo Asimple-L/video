@@ -11,7 +11,7 @@
 <html>
 <head>
     <base href="<%=basePath%>">
-    <title>${film.name}-${film.subClassName}-${film.typeName}-<f:message key="siteName"/></title>
+    <title>${film.name}-${film.subClassName}-${film.typeName}-${siteName}/></title>
     <jsp:include page="/WEB-INF/jsp/pub/head_meta.jsp"/>
     <jsp:include page="/WEB-INF/jsp/pub/head_link.jsp"/>
     <jsp:include page="/WEB-INF/jsp/pub/head_script.jsp"/>
@@ -77,7 +77,7 @@
     <c:if test="${u_skl==null}">
         <div class="row">
             <div class="col">
-                <marquee  onmouseover='this.stop()' onmouseout='this.start()'><a id="globalLoginBtn_register_input" href="registerInput.html">注册</a>|<a data-toggle="modal" data-target="#myModal" href="javascript:;">登录</a>后观看更多高清无码视频</marquee>
+                <marquee  onmouseover='this.stop()' onmouseout='this.start()'><a id="globalLoginBtn_register_input" href="registerInput">注册</a>|<a data-toggle="modal" data-target="#myModal" href="javascript:;">登录</a>后观看更多高清无码视频</marquee>
             </div>
         </div>
     </c:if>
@@ -101,7 +101,7 @@
                 <div class="col-sm-4" style="margin-top: 10px;margin-bottom: 10px;">
                     <div class="pic">
                         <img class="lazy" data-original="${film.image}" alt="${film.name}">
-                        <a href="xl/detail.html?film_id=${film.id}#kan">立即播放</a>
+                        <a href="xl/detail?film_id=${film.id}#kan">立即播放</a>
                     </div>
                 </div>
                 <div class="col-sm-8" style="margin-top: 10px;margin-bottom: 10px;">
@@ -127,7 +127,7 @@
                                 <span>更新日期：</span>${film.updateTime}&nbsp;&nbsp;
                             </li>
                             <li>
-                                <span>剧情：</span>${fn:substring(film.plot, 0, 100)}[<a href="xl/detail.html?film_id=${film.id}#desc">详细</a>]
+                                <span>剧情：</span>${fn:substring(film.plot, 0, 100)}[<a href="xl/detail?film_id=${film.id}#desc">详细</a>]
                             </li>
                             <div class="pfen">
                                 <p>影片评价</p>
@@ -217,14 +217,14 @@
                     <div class="title"><span>猜你喜欢</span></div>
                     <ul class="img-list imglist clearfix">
                         <c:forEach items="${films}" var="list" begin="0" end="8">
-                            <li><a class="play-img" href="xl/detail.html?film_id=${list.id}" title="${list.name}"
+                            <li><a class="play-img" href="xl/detail?film_id=${list.id}" title="${list.name}"
                                    target="_blank">
                                 <img class="lazy" data-original="${list.image}" src="" alt="${list.name}"><i></i><em>
                                 <c:if test="${list.resolution=='1080'}">1280高清</c:if>
                                 <c:if test="${list.resolution!='1080'}">${list.resolution}P</c:if>
                             </em>
                             </a>
-                                <h5><a href="xl/detail.html?film_id=${list.id}" title="${list.name}"
+                                <h5><a href="xl/detail?film_id=${list.id}" title="${list.name}"
                                        target="_blank">${list.name}</a></h5></li>
                         </c:forEach>
                     </ul>
@@ -321,7 +321,7 @@
                                                         uclass = "";
                                                     }
                                                     xmhref = "https://d.miwifi.com/d2r/?url=" + Base64.encodeURI(ThunderEncode(GvodUrlArray[i])) + "&src=xunbo";
-                                                    document.writeln('<li><div class="row" style="padding: 4px 0px;"><div class="col-sm-6"><a style="margin-left: 10px;" oncontextmenu=ThunderNetwork_SetHref_b(this) onclick="return xunbotask(this)" href="javascript:void(0)" thunderResTitle="" thunderType="" thunderPid="20369" thunderHref="' + ThunderEncode(GvodUrlArray[i]) + '" >' + getSubstr(GvodUrlArray[i]) + '</a></div><div class="col-sm-6"><span><a class=d5 href="' + ThunderEncode(GvodUrlArray[i]) + '" target=_blank title="迅雷高速下载">迅雷</a><a class=d1 href="javascript:video(0);" onclick="start(\'' + GvodUrlArray[i] + '\')" title="迅雷影音播放">看看</a><a class=d2 href="http://lixian.vip.xunlei.com/lixian_login.html?referfrom=union&ucid=20369&furl=' + encodeURIComponent(ThunderEncode(GvodUrlArray[i])) + '" target=_blank title="迅雷离线下载">离线</a><a href="###" qhref="' + GvodUrlArray[i] + '" onclick="XFLIB.startDownload(this,event,21590)" oncontextmenu = "OnContextClick(this, event)" class=d3 title="QQ旋风下载">旋风</a><a href="' + xmhref + '" target=_blank class=d4 title="小米路由下载">小米</a></span></div></div></li>');
+                                                    document.writeln('<li><div class="row" style="padding: 4px 0px;"><div class="col-sm-6"><a style="margin-left: 10px;" oncontextmenu=ThunderNetwork_SetHref_b(this) onclick="return xunbotask(this)" href="javascript:void(0)" thunderResTitle="" thunderType="" thunderPid="20369" thunderHref="' + ThunderEncode(GvodUrlArray[i]) + '" >' + getSubstr(GvodUrlArray[i]) + '</a></div><div class="col-sm-6"><span><a class=d5 href="' + ThunderEncode(GvodUrlArray[i]) + '" target=_blank title="迅雷高速下载">迅雷</a><a class=d1 href="javascript:video(0);" onclick="start(\'' + GvodUrlArray[i] + '\')" title="迅雷影音播放">看看</a><a class=d2 href="http://lixian.vip.xunlei.com/lixian_login?referfrom=union&ucid=20369&furl=' + encodeURIComponent(ThunderEncode(GvodUrlArray[i])) + '" target=_blank title="迅雷离线下载">离线</a><a href="###" qhref="' + GvodUrlArray[i] + '" onclick="XFLIB.startDownload(this,event,21590)" oncontextmenu = "OnContextClick(this, event)" class=d3 title="QQ旋风下载">旋风</a><a href="' + xmhref + '" target=_blank class=d4 title="小米路由下载">小米</a></span></div></div></li>');
                                                 }
                                             </script>
                                         </ul>
@@ -475,7 +475,7 @@
         var f = $(e).attr("data");
         var j = $(e).attr("j");
         if (f != "") {
-            location.href = "${prourl}xl/detail.html?film_id=${film.id}&src=" + Base64.encodeURI(f) + "&j=" + j + "#kan";
+            location.href = "${prourl}xl/detail?film_id=${film.id}&src=" + Base64.encodeURI(f) + "&j=" + j + "#kan";
         }
     }
     /*在线播放*/
@@ -509,7 +509,7 @@
 
     function saveRaty(film_id, score) {
         $.ajax({
-            url: "xl/addRaty.html",
+            url: "xl/addRaty",
             type: "post",
             dataType: "json",
             data: "film_id=" + film_id + "&score=" + score,
@@ -538,19 +538,19 @@
             switch (e) {
                 case "y1":
                     title = "在线点播1失效反馈";
-                    content = "胖哥温馨提示：你好，有一位本网站忠实粉丝惊奇的发现${film.cataLogName}-${film.subClassName}-${film.typeName}-<span  style='color:#00AFE4;'>[${film.name}]</span>的在线点播1已失效，请前往<a href='${prourl}xl/detail.html?film_id=${film.id}'>查看</a>是否失效，若失效请去<a href='${prourl}film.html?film_id=${film.id}'>更改</a>";
+                    content = "胖哥温馨提示：你好，有一位本网站忠实粉丝惊奇的发现${film.cataLogName}-${film.subClassName}-${film.typeName}-<span  style='color:#00AFE4;'>[${film.name}]</span>的在线点播1已失效，请前往<a href='${prourl}xl/detail?film_id=${film.id}'>查看</a>是否失效，若失效请去<a href='${prourl}film?film_id=${film.id}'>更改</a>";
                     break;
                 case "y2":
                     title = "在线点播2失效反馈";
-                    content = "胖哥温馨提示：你好，有一位本网站忠实粉丝惊奇的发现${film.cataLogName}-${film.subClassName}-${film.typeName}-<span  style='color:#00AFE4;'>[${film.name}]</span>的在线点播2已失效，请前往<a href='${prourl}xl/detail.html?film_id=${film.id}'>查看</a>是否失效，若失效请去<a href='${prourl}film.html?film_id=${film.id}'>更改</a>";
+                    content = "胖哥温馨提示：你好，有一位本网站忠实粉丝惊奇的发现${film.cataLogName}-${film.subClassName}-${film.typeName}-<span  style='color:#00AFE4;'>[${film.name}]</span>的在线点播2已失效，请前往<a href='${prourl}xl/detail?film_id=${film.id}'>查看</a>是否失效，若失效请去<a href='${prourl}film?film_id=${film.id}'>更改</a>";
                     break;
                 case "x1":
                     title = "下载地址1失效反馈";
-                    content = "胖哥温馨提示：你好，有一位本网站忠实粉丝惊奇的发现${film.cataLogName}-${film.subClassName}-${film.typeName}-<span  style='color:#00AFE4;'>[${film.name}]</span>的下载地址1已失效，请前往<a href='${prourl}xl/detail.html?film_id=${film.id}'>查看</a>是否失效，若失效请去<a href='${prourl}film.html?film_id=${film.id}'>更改</a>";
+                    content = "胖哥温馨提示：你好，有一位本网站忠实粉丝惊奇的发现${film.cataLogName}-${film.subClassName}-${film.typeName}-<span  style='color:#00AFE4;'>[${film.name}]</span>的下载地址1已失效，请前往<a href='${prourl}xl/detail?film_id=${film.id}'>查看</a>是否失效，若失效请去<a href='${prourl}film?film_id=${film.id}'>更改</a>";
                     break;
                 case "x2":
                     title = "下载地址2失效反馈";
-                    content = "胖哥温馨提示：你好，有一位本网站忠实粉丝惊奇的发现${film.cataLogName}-${film.subClassName}-${film.typeName}-<span  style='color:#00AFE4;>[${film.name}]</span>的下载地址2已失效，请前往<a href='${prourl}xl/detail.html?film_id=${film.id}'>查看</a>是否失效，若失效请去<a href='${prourl}film.html?film_id=${film.id}'>更改</a>";
+                    content = "胖哥温馨提示：你好，有一位本网站忠实粉丝惊奇的发现${film.cataLogName}-${film.subClassName}-${film.typeName}-<span  style='color:#00AFE4;>[${film.name}]</span>的下载地址2已失效，请前往<a href='${prourl}xl/detail?film_id=${film.id}'>查看</a>是否失效，若失效请去<a href='${prourl}film?film_id=${film.id}'>更改</a>";
                     break;
                 default:
                     alert("参数错误");
@@ -558,7 +558,7 @@
             }
             if(title!=""&&content!=""){
                 $.ajax({
-                    url: "sendEmail.html",
+                    url: "sendEmail",
                     type: "post",
                     dataType: "json",
                     data: "title=" + title + "&content=" + content,

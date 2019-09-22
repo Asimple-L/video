@@ -87,7 +87,7 @@
             var htmlStr = editor.txt.html();
             if( text!=null && text.trim()!="" ) {
                 $.ajax({
-                    url:"/video/saveComment.html",
+                    url:"/video/saveComment",
                     type:"POST",
                     dataType:"JSON",
                     data:{context:htmlStr},
@@ -130,7 +130,7 @@
 
         function changeNum(type, id) {
             $.ajax({
-                url:"/video/changeLikeNum.html",
+                url:"/video/changeLikeNum",
                 type:"POST",
                 dataType:"JSON",
                 data:{type:type, id: id},

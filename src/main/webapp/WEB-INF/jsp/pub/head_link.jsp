@@ -4,7 +4,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <f:setBundle basename="ApplicationResources"/>
 <c:set var="version" value="<%=new Date().getTime()%>"></c:set>
-<link rel="shortcut icon" href="<f:message key='pageIcon'/>">
+<link rel="shortcut icon" href="${pageIcon}">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/public/static/css/base.css?v=${version}"/>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/plugins/topNav/css/head.css?v=${version}" />
 

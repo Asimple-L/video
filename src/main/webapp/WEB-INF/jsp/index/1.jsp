@@ -78,20 +78,20 @@
     <c:if test="${u_skl==null}">
         <div class="row">
             <div class="col">
-                <marquee  onmouseover='this.stop()' onmouseout='this.start()'><a id="globalLoginBtn_register_input" href="registerInput.html">注册</a>|<a data-toggle="modal" data-target="#myModal" href="javascript:;">登录</a>后观看更多高清无码视频</marquee>
+                <marquee  onmouseover='this.stop()' onmouseout='this.start()'><a id="globalLoginBtn_register_input" href="registerInput">注册</a>|<a data-toggle="modal" data-target="#myModal" href="javascript:;">登录</a>后观看更多高清无码视频</marquee>
             </div>
         </div>
     </c:if>
     <div class="row">
         <div class="col-sm-2">
             <ul class="user-nav">
-                <a href="xl/1.html"><div class="user-nav-title">全部分类</div></a>
+                <a href="${pageurl}"><div class="user-nav-title">全部分类</div></a>
                 <c:forEach items="${cataLogList}" var="list">
                     <c:if test="${list.id == cataLog_id}">
-                    <a href="xl/1.html?cataLog_id=${list.id}" ><li style="color: #343a40;background: #b5b5b5;">${list.name}</li></a>
+                    <a href="${pageurl}?cataLog_id=${list.id}" ><li style="color: #343a40;background: #b5b5b5;">${list.name}</li></a>
                     </c:if>
                     <c:if test="${list.id != cataLog_id}">
-                        <a href="xl/1.html?cataLog_id=${list.id}"><li>${list.name}</li></a>
+                        <a href="${pageurl}?cataLog_id=${list.id}"><li>${list.name}</li></a>
                     </c:if>
                 </c:forEach>
             </ul>
@@ -167,12 +167,12 @@
                 <ul class="film-list">
                     <c:forEach items="${pb.beanList}" var="list">
                         <li>
-                            <a href="xl/detail.html?film_id=${list.id}">
+                            <a href="xl/detail?film_id=${list.id}">
                                 <div  class="note-left" title="${list.name}"><img class="lazy rounded img-fluids" data-original="${list.image}" /></div>
                             </a>
                             <div class="film-info">
                                 <div class="info">
-                                    <h2><a class="film-info-a" href="xl/detail.html?film_id=${list.id}"
+                                    <h2><a class="film-info-a" href="xl/detail?film_id=${list.id}"
                                            title="${list.name}"
                                            target="_blank">${list.name}</a><em> ${list.onDecade}</em></h2>
                                     <em class="star star<c:if test="${list.evaluation>=1&&list.evaluation<2}">1</c:if><c:if test="${list.evaluation>=2&&list.evaluation<4}">2</c:if><c:if test="${list.evaluation>=4&&list.evaluation<6}">3</c:if><c:if test="${list.evaluation>=6&&list.evaluation<8}">4</c:if><c:if test="${list.evaluation>=8&&list.evaluation<=10}">5</c:if>"></em>
@@ -181,8 +181,8 @@
                                     <p><i>类型：${list.typeName}</i><i>更新：${fn:substring(list.updateTime,5,10)}</i></p>
                                     <p></p>
                                     <span>
-                                <a href="xl/detail.html?film_id=${list.id}#kan" class="watch-btn" target="_blank">观看</a>
-                                <a href="xl/detail.html?film_id=${list.id}#down" class="download-btn" target="_blank">下载</a>
+                                <a href="xl/detail?film_id=${list.id}#kan" class="watch-btn" target="_blank">观看</a>
+                                <a href="xl/detail?film_id=${list.id}#down" class="download-btn" target="_blank">下载</a>
                             </span>
                                 </div>
                             </div>
@@ -191,7 +191,7 @@
                 </ul>
             </c:if>
             <c:if test="${pb.tr==0}">
-                <ul class="mlist">对不起，没有找到任何记录,<a target="_blank" href="/video/note.html"><font color="red"><b>请您在此留言</b></font></a>，我们尽快为你添加喜欢的数据<div class="cr"></div></ul>
+                <ul class="mlist">对不起，没有找到任何记录,<a target="_blank" href="/video/note"><font color="red"><b>请您在此留言</b></font></a>，我们尽快为你添加喜欢的数据<div class="cr"></div></ul>
             </c:if>
             <div style="width:100%;margin: 5px auto;height: auto;overflow: hidden;">
                 <c:if test="${pb.tr!=0}">

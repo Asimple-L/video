@@ -8,6 +8,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 import net.sf.json.util.PropertyFilter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,30 +28,31 @@ import java.util.Map;
 @Controller
 @RequestMapping("/profile")
 public class Profile {
-    private final static String USER_KEY = "u_skl";
+    @Value("${userKey}")
+    private String userKey;
     @Resource
-    private IResService resService;
+    private ResService resService;
     @Resource
-    private IFilmService filmService;
+    private FilmService filmService;
     @Resource
-    private ISubClassService subClassService;
+    private SubClassService subClassService;
     @Resource
-    private ITypeService typeService;
+    private TypeService typeService;
     @Resource
     private RankTask rankTask;
     @Resource
-    private ICommonService commonService;
+    private CommonService commonService;
     @Resource
-    private ICommentService commentService;
+    private CommentService commentService;
 
     /**
      * @Author Asimple
      * @Description 进入个人中心页面
      **/
-    @RequestMapping(value = "/profilePage.html")
+    @RequestMapping(value = "/profilePage")
     public String profile(ModelMap map, HttpSession session) {
         map = commonService.getCatalog(map);
-        User user = (User) session.getAttribute(USER_KEY);
+        User user = (User) session.getAttribute(userKey);
         String uid = user.getId();
         // 我的视频
         List<Film> list = filmService.listByUser(uid, 1, 5);
@@ -88,7 +90,7 @@ public class Profile {
      * @Author Asimple
      * @Description 视频分享页面
      **/
-    @RequestMapping(value = "/share.html")
+    @RequestMapping(value = "/share")
     public String shareVideo(HttpServletRequest request, ModelMap map) {
         String film_id = request.getParameter("film_id");
         Film film = filmService.load(film_id);
@@ -106,11 +108,11 @@ public class Profile {
      * @Author Asimple
      * @Description 添加影片
      **/
-    @RequestMapping( value = "/addFilm.html", produces = "text/html;charset=UTF-8")
+    @RequestMapping( value = "/addFilm", produces = "text/html;charset=UTF-8")
     @ResponseBody
     public String addFilm(Film film, HttpSession session) {
         JSONObject jsonObject = new JSONObject();
-        User user = (User) session.getAttribute(USER_KEY);
+        User user = (User) session.getAttribute(userKey);
         film.setUser(user);
         String id = filmService.save(film);
         this.updateRedis(id);
@@ -122,7 +124,7 @@ public class Profile {
      * @Author Asimple
      * @Description 删除影片
      **/
-    @RequestMapping( value = "/delFilm.html")
+    @RequestMapping( value = "/delFilm")
     @ResponseBody
     public String delFilm(String film_id) {
         LogUtil.info(Manager.class, "film_id = " + film_id);
@@ -139,42 +141,11 @@ public class Profile {
      * @Author Asimple
      * @Description 添加资源
      **/
-    @RequestMapping(value = "/addRes.html")
+    @RequestMapping(value = "/addRes")
     @ResponseBody
     public String addRes(Res res, String film_id) {
         JSONObject jsonObject = new JSONObject();
-        // 初始化
-        res.setIsUse(1);
-        Film film = filmService.load(film_id);
-        res.setFilm(film);
-        res.setUpdateTime(DateUtil.getTime());
-
-        // 多资源上传
-        String id = "";
-        if ( res.getName().contains("@@") ) {
-            //  xxxx@@集##集数开始##集数结束##分割符号
-            String resName[] = res.getName().trim().split("##");
-            String name = resName[0];
-            int begin = Integer.parseInt(resName[1]);
-            int end = Integer.parseInt(resName[2]);
-            String flag = "";
-            if( resName.length > 3 ) {
-                flag = resName[3];
-                String res_links[] = res.getLink().replaceAll("\\n","").split(flag);
-                int cz = begin - 1;
-                for(int i=begin; i<=end; i++) {
-                    res.setName(name.replace("@@", ""));
-                    res.setEpisodes(i);
-                    if( "Flh".equals(res.getLinkType()) ) flag = "";
-                    res.setLink(flag+res_links[i-cz]);
-                    id = resService.add(res);
-                }
-            }
-        } else {
-            id = resService.add(res);
-        }
-        film.setUpdateTime(DateUtil.getTime());
-        filmService.update(film);
+        String id = resService.addRes(res, film_id);
         jsonObject.put("id", id);
         return jsonObject.toString();
     }
@@ -183,7 +154,7 @@ public class Profile {
      * @Author Asimple
      * @Description 删除资源
      **/
-    @RequestMapping( value = "/delRes.html")
+    @RequestMapping( value = "/delRes")
     @ResponseBody
     public String delRes(String res_id) {
         JSONObject jsonObject = new JSONObject();
@@ -196,7 +167,7 @@ public class Profile {
      * @Author Asimple
      * @Description 更改在离线状态
      **/
-    @RequestMapping( value = "/updateIsUse.html")
+    @RequestMapping( value = "/updateIsUse")
     @ResponseBody
     public String updateIsUse(String res_id) {
         JSONObject jsonObject = new JSONObject();
@@ -213,7 +184,7 @@ public class Profile {
      * @Author Asimple
      * @Description 更新影片信息
      **/
-    @RequestMapping( value = "/updateFilmInfo.html")
+    @RequestMapping( value = "/updateFilmInfo")
     @ResponseBody
     public String updateFilmInfo(String film_id, String val, String key, HttpSession session) {
         JSONObject jsonObject = new JSONObject();
@@ -275,7 +246,7 @@ public class Profile {
      * @Author Asimple
      * @Description 获取二级目录信息
      **/
-    @RequestMapping(value = "/getSubClass.html", produces = "text/html;charset=UTF-8")
+    @RequestMapping(value = "/getSubClass", produces = "text/html;charset=UTF-8")
     @ResponseBody
     public String getSubClass(String catalog_id) {
         List<SubClass> subClasses = subClassService.listIsUse(catalog_id);
@@ -295,7 +266,7 @@ public class Profile {
      * @Author Asimple
      * @Description 获取类型
      **/
-    @RequestMapping(value = "/getType.html", produces = "text/html;charset=UTF-8")
+    @RequestMapping(value = "/getType", produces = "text/html;charset=UTF-8")
     @ResponseBody
     public String getType(String subClass_id) {
         List<Type> types = typeService.listIsUseBySubClass_id(subClass_id);
@@ -315,10 +286,10 @@ public class Profile {
      * @Author Asimple
      * @Description 返回我的视频
      **/
-    @RequestMapping(value = "/getFilmAjax.html", produces = "text/html;charset=UTF-8")
+    @RequestMapping(value = "/getFilmAjax", produces = "text/html;charset=UTF-8")
     @ResponseBody
     public String getFilm(HttpSession session, int pc, String type) {
-        User user = (User) session.getAttribute(USER_KEY);
+        User user = (User) session.getAttribute(userKey);
         JSONObject jsonObject = new JSONObject();
         if( "my-films".equalsIgnoreCase(type) ) {
             int total = filmService.countListByUser(user.getId());
@@ -335,11 +306,11 @@ public class Profile {
         return  jsonObject.toString();
     }
 
-    @RequestMapping(value = "/getMyComments.html", produces = "text/html;charset=UTF-8")
+    @RequestMapping(value = "/getMyComments", produces = "text/html;charset=UTF-8")
     @ResponseBody
     public String getMyComments(HttpSession session, int pc) {
         JSONObject jsonObject = new JSONObject();
-        User user = (User) session.getAttribute(USER_KEY);
+        User user = (User) session.getAttribute(userKey);
         jsonObject.put("commentList", commentService.getPageByUid(user.getId(), pc, 4));
         jsonObject.put("pageNo", pc);
         jsonObject.put("totalPage", commentService.getCommentsTotal(user.getId()));

@@ -9,14 +9,11 @@ import net.sf.json.util.JSONUtils;
 import org.apache.commons.beanutils.BeanUtils;
 
 import java.util.*;
-
+/**
+ * @author Asimple JSON工具类
+ */
 public class JSONUtil {
-	/**
-     * 
-     * @author Asimple JSON工具类
-     * @param 
-     * 
-     */
+
     /***
      * 将List对象序列化为JSON文本
      */

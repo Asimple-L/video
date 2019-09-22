@@ -47,8 +47,8 @@
         src:window.parent.filmSrc,
         height: "93%", //区域的高度
         width: "100%" //区域的宽度
-        ,urlToGetDanmu:"xl/queryBullet.html?film_id="+window.parent.filmId
-        ,urlToPostDanmu:"xl/saveBullet.html?film_id="+window.parent.filmId
+        ,urlToGetDanmu:"xl/queryBullet?film_id="+window.parent.filmId
+        ,urlToPostDanmu:"xl/saveBullet?film_id="+window.parent.filmId
     });
     //进入全屏
     function FullScreen() {

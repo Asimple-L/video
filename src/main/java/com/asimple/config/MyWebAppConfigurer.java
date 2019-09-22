@@ -1,0 +1,29 @@
+package com.asimple.config;
+
+import com.asimple.interceptor.AdminUserInterceptor;
+import com.asimple.interceptor.ProfileInterceptor;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
+/**
+ * @ProjectName video
+ * @Description web配置
+ * @Author Asimple
+ * @date 2019/8/31 14:39
+ */
+@Configuration
+public class MyWebAppConfigurer extends WebMvcConfigurerAdapter {
+
+    /**
+     * 添加拦截器，可以一次添加多个，下面的会覆盖上面的
+     */
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new AdminUserInterceptor()).addPathPatterns("/admin/**");
+        registry.addInterceptor(new ProfileInterceptor()).addPathPatterns("/profile/**");
+        super.addInterceptors(registry);
+    }
+}

@@ -11,7 +11,7 @@
 <head>
     <base href="<%=basePath%>">
     <title>目录查看</title>
-    <link rel="shortcut icon" href="<f:message key='pageIcon'/>">
+    <link rel="shortcut icon" href="${pageIcon}">
     <link rel="stylesheet" href="${proname}/plugins/bootflat-admin/css/site.min.css">
     <link rel="stylesheet" href="${proname}/public/static/css/manager/addCatalog.css">
     <script src="${proname}/public/static/js/jquery-2.0.0.min.js?v=${version}" type="text/javascript" charset="UTF-8" ></script>

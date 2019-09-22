@@ -11,7 +11,7 @@
 <html>
 <head>
     <base href="<%=basePath%>">
-    <title><f:message key="siteName"/></title>
+    <title>${siteName}</title>
     <jsp:include page="/WEB-INF/jsp/pub/head_meta.jsp"/>
     <jsp:include page="/WEB-INF/jsp/pub/head_link.jsp"/>
     <jsp:include page="/WEB-INF/jsp/pub/head_script.jsp"/>
@@ -65,7 +65,7 @@
     <c:if test="${u_skl==null}">
         <div class="row">
             <div class="col">
-                <marquee  onmouseover='this.stop()' onmouseout='this.start()'><a id="globalLoginBtn_register_input" href="registerInput.html">注册</a>|<a data-toggle="modal" data-target="#myModal" href="javascript:;">登录</a>后观看更多高清无码视频</marquee>
+                <marquee  onmouseover='this.stop()' onmouseout='this.start()'><a id="globalLoginBtn_register_input" href="registerInput">注册</a>|<a data-toggle="modal" data-target="#myModal" href="javascript:;">登录</a>后观看更多高清无码视频</marquee>
             </div>
         </div>
     </c:if>
@@ -78,7 +78,7 @@
                         <ul>
                             <c:forEach items="${list}" var="li">
                                 <li class="float-left">
-                                    <a href="xl/detail.html?film_id=${li.id}"><div class="t_img" title="${li.name}"><img class="lazy rounded img-fluids" data-original="${li.image}"/></div></a>
+                                    <a href="xl/detail?film_id=${li.id}"><div class="t_img" title="${li.name}"><img class="lazy rounded img-fluids" data-original="${li.image}"/></div></a>
                                     <div class="t_info">
                                         <p style="color:#00AFE4;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">${li.name}</p>
                                         <p>${li.typeName}-${li.onDecade}</p>
@@ -97,7 +97,7 @@
                         <ul>
                             <h5>最新${list.get(0).cataLogName}排行榜</h5>
                             <c:forEach items="${list}" var="li" varStatus="s">
-                                <li><c:if test="${s.index<=2}"><span class="ph1">${s.index+1}</span></c:if><c:if test="${s.index>2}"><span class="ph">${s.index+1}</span></c:if> <a href="xl/detail.html?film_id=${li.id}" target="_blank" title="${li.name}">${fn:substring(li.name,0,16)}<span style="float: right;margin-right: 10px;">${fn:substring(li.updateTime,5,10)}</span></a>
+                                <li><c:if test="${s.index<=2}"><span class="ph1">${s.index+1}</span></c:if><c:if test="${s.index>2}"><span class="ph">${s.index+1}</span></c:if> <a href="xl/detail?film_id=${li.id}" target="_blank" title="${li.name}">${fn:substring(li.name,0,16)}<span style="float: right;margin-right: 10px;">${fn:substring(li.updateTime,5,10)}</span></a>
 
                                     <div class="tips">
                                         <div class="tipscont"><img src="${li.image}" style="border:1px solid #ddd;padding: 4px;background: white;" width="200px" height="288px" alt="${li.name}"/></div>

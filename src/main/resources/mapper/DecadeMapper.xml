@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asimple.mapper.DecadeMapper">
+    <select id="findByIsUse" resultType="com.asimple.entity.Decade">
+        SELECT * FROM t_decade WHERE isUse = 1 ORDER BY `name` DESC
+    </select>
+
+    <insert id="add" parameterType="com.asimple.entity.Decade">
+        INSERT INTO `t_decade` (`id`, `isUse`, `name`) VALUES (#{id}, #{isUse}, #{name})
+    </insert>
+
+</mapper>

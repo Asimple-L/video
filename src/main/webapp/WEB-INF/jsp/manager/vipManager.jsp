@@ -11,7 +11,7 @@
 <head>
     <base href="<%=basePath%>">
     <title>VIP管理</title>
-    <link rel="shortcut icon" href="<f:message key='pageIcon'/>">
+    <link rel="shortcut icon" href="${pageIcon}">
     <link rel="stylesheet" href="${proname}/plugins/bootflat-admin/css/site.min.css">
     <script src="${proname}/public/static/js/jquery-2.0.0.min.js?v=${version}" type="text/javascript" charset="UTF-8" ></script>
     <script src="${proname}/plugins/bootflat-admin/js/site.min.js"></script>
@@ -77,7 +77,7 @@
     $(function () {
         $("#create_code").click(function () {
             $.ajax({
-                url:"admin/createVipCode.html",
+                url:"admin/createVipCode",
                 type:"POST",
                 dataType:"json",
                 data:{

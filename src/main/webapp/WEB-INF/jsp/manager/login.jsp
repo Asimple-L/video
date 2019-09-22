@@ -3,10 +3,10 @@
 <!DOCTYPE html>
 <html lang="en" class="fullscreen-bg">
 <head>
-    <title>登录</title>
+    <title>后台登录</title>
     <jsp:include page="/WEB-INF/jsp/pub/head_meta.jsp"/>
     <jsp:include page="/WEB-INF/jsp/pub/head_script.jsp"/>
-    <link rel="shortcut icon" href="<f:message key='pageIcon'/>">
+    <link rel="shortcut icon" href="${pageIcon}">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/plugins/bootstrap4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/plugins/linearicons/style.css">
@@ -56,7 +56,7 @@
                     }, 2000);
                 } else {
                     $.ajax({
-                        url: '${pageContext.request.contextPath}/verifyLogin.html',
+                        url: '${pageContext.request.contextPath}/verifyLogin',
                         type: 'POST',
                         dataType: 'json',
                         data: {
@@ -84,7 +84,7 @@
             });
         };
         $.ajax({
-            url: "${pageContext.request.contextPath}/initCaptcha.html?t=" + (new Date()).getTime(), // 加随机数防止缓存
+            url: "${pageContext.request.contextPath}/initCaptcha?t=" + (new Date()).getTime(), // 加随机数防止缓存
             type: "get",
             dataType: "json",
             success: function (data) {
@@ -111,7 +111,7 @@
                                 <div class="logo text-center" style="color: red;">${requestScope.msg}</div>
                                 <p class="lead">账号登录</p>
                             </div>
-                            <form class="form-auth-small" method="POST" action="${pageContext.request.contextPath}/admin/login.html" onsubmit="return setCookie()">
+                            <form class="form-auth-small" method="POST" action="${pageContext.request.contextPath}/admin/login" onsubmit="return setCookie()">
                                 <div class="form-group">
                                     <label for="username" class="control-label sr-only">登录名</label>
                                     <input type="text" class="form-control" name="username" id="username" placeholder="登录账号">

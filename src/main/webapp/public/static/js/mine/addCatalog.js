@@ -3,7 +3,7 @@ $(function () {
         var catalog_name = $(".catalog_name").text();
         if(catalog_name!=""){
             $.ajax({
-                url: "admin/addCataLog.html",
+                url: "admin/addCataLog",
                 type: "POST",
                 dataType: "json",
                 data: "name=" + catalog_name,
@@ -21,7 +21,7 @@ $(function () {
         var subClass_name = $(".subClass_name").text();
         if(subClass_name!="") {
             $.ajax({
-                url: "admin/addSubClass.html",
+                url: "admin/addSubClass",
                 type: "POST",
                 dataType: "json",
                 data: "cataLog_id=" + $(".cataLog_id").val() + "&name=" + $(".subClass_name").text(),
@@ -39,7 +39,7 @@ $(function () {
         var type_name = $(".type_name").text();
         if(type_name!=""){
             $.ajax({
-                url: "admin/addType.html",
+                url: "admin/addType",
                 type: "POST",
                 dataType: "json",
                 data: "subClass_id=" + $(".subClass_id").val() + "&name=" + $(".type_name").text(),
@@ -57,7 +57,7 @@ $(function () {
         var loc_name = $(".loc_name").text();
         if(loc_name!=""){
             $.ajax({
-                url: "admin/addLoc.html",
+                url: "admin/addLoc",
                 type: "POST",
                 dataType: "json",
                 data: "name=" + $(".loc_name").text(),
@@ -75,7 +75,7 @@ $(function () {
         var level_name = $(".level_name").text();
         if(level_name!="") {
             $.ajax({
-                url: "admin/addLevel.html",
+                url: "admin/addLevel",
                 type: "POST",
                 dataType: "json",
                 data: "name=" + $(".level_name").text(),
@@ -93,7 +93,7 @@ $(function () {
         var decade_name = $(".decade_name").text();
         if(decade_name!="") {
             $.ajax({
-                url: "admin/addDecade.html",
+                url: "admin/addDecade",
                 type: "POST",
                 dataType: "json",
                 data: "name=" + $(".decade_name").text(),
@@ -110,7 +110,7 @@ $(function () {
     $(".cataLog_id_subClass").change(function () {
         var catalog_id = $(this).val();
         $.ajax({
-            url: "profile/getSubClass.html",
+            url: "profile/getSubClass",
             type: "post",
             dataType: "json",
             data: "catalog_id=" + catalog_id,
@@ -130,7 +130,7 @@ $(function () {
     });
 
     $.ajax({
-        url: "profile/getSubClass.html",
+        url: "profile/getSubClass",
         type: "POST",
         dataType: "json",
         data: "catalog_id=" + $(".cataLog_id_subClass").val(),

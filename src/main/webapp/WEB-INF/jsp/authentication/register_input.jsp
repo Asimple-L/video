@@ -45,7 +45,7 @@
 </div>
 <script type="text/javascript" src="plugins/register/js/script.js?v=${v}"></script>
 <script type="text/javascript">
-    window.register_path = "register.html";
+    window.register_path = "register";
     window.head_page_path = "/video/";
 </script>
 </body>

@@ -1,0 +1,38 @@
+# 页面默认前缀目录
+spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+  # mysql配置
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    password: root
+    username: root
+    url: jdbc:mysql:///video?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+    driver-class-name: com.mysql.jdbc.Driver
+  data:
+    # solr配置
+    solr:
+      host: http://127.0.0.1:8090/solr/video
+  # redis设置
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    pool:
+      max-idle: 200
+      max-active: 1024
+      max-wait: 10000
+    timeout: 0
+  http:
+    multipart:
+      max-file-size: 30Mb
+      max-request-size: 1024Mb
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml
+  type-aliases-package: com.asimple.mapper
+server:
+  context-path: /video
+
+userKey: u_skl
+key: a1s2i3m4p5l6e7

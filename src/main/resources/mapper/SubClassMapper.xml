@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asimple.mapper.SubClassMapper">
+    <select id="listIsUse" resultType="com.asimple.entity.SubClass">
+        SELECT * FROM t_subclass WHERE catalog_id = #{id} AND isUse=1
+    </select>
+
+    <insert id="add" parameterType="com.asimple.entity.SubClass">
+        INSERT INTO `t_subclass` (`id`,`isUse`,`name`,`catalog_id`) VALUES (#{id},#{isUse},#{name},#{cataLog.id})
+    </insert>
+
+    <select id="load" resultType="com.asimple.entity.SubClass">
+        SELECT * FROM `t_subclass` WHERE id=#{subClass_id}
+    </select>
+
+</mapper>

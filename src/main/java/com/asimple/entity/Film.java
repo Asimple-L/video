@@ -1,5 +1,6 @@
 package com.asimple.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.solr.client.solrj.beans.Field;
 
 import java.io.Serializable;
@@ -43,6 +44,7 @@ public class Film implements Serializable {
     // 下载列表
     private List<Res> resList;
     // 浏览数目
+    @JsonProperty(value = "viewNumber")
     private Integer view_number;
     // 上传用户
     private User user;

@@ -1,9 +1,11 @@
 package com.asimple.task;
 
 import com.asimple.entity.Film;
-import com.asimple.service.IFilmService;
+import com.asimple.service.FilmService;
 import com.asimple.util.LogUtil;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.solr.core.SolrTemplate;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -16,10 +18,12 @@ import java.util.List;
  * @author: Asimple
  */
 @Component
+@Configuration
+@EnableScheduling
 public class SolrTask {
 
-    @Resource( name = "filmService")
-    private IFilmService filmService;
+    @Resource
+    private FilmService filmService;
 
     @Resource
     private SolrTemplate solrTemplate;

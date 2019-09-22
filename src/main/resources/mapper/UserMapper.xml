@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asimple.mapper.UserMapper">
+
+    <sql id="choose">
+        <if test="obj != null">
+            <if test="obj.userName != null ">
+                AND `userName` LIKE '%' #{obj.userName} '%'
+            </if>
+            <if test="obj.userEmail != null">
+                AND `userEmail`=#{obj.userEmail}
+            </if>
+            <if test="obj.isManager != null">
+                AND `isManager`=#{obj.isManager}
+            </if>
+            <if test="obj.isVip != null">
+                AND `isVip`=#{obj.isVip}
+            </if>
+        </if>
+    </sql>
+
+    <insert id="add" parameterType="com.asimple.entity.User">
+        <selectKey keyProperty="id" resultType="String" order="BEFORE">
+            SELECT replace(uuid(), '-', '')
+        </selectKey>
+        INSERT INTO t_user(`id`, `userName`,`createDate`, `expireDate`, `userEmail`, `userPasswd`)
+          VALUES (#{id}, #{userName}, #{createDate}, #{expireDate}, #{userEmail}, #{userPasswd})
+    </insert>
+
+    <select id="findByCondition" resultType="com.asimple.entity.User">
+        SELECT * FROM t_user
+        <where>
+            <if test="userName!=null and userName!=''">
+                AND userName = #{userName}
+            </if>
+            <if test="userEmail!=null and userEmail!=''">
+                AND userEmail = #{userEmail}
+            </if>
+        </where>
+    </select>
+
+    <update id="update" parameterType="com.asimple.entity.User">
+        UPDATE t_user SET `isVip`=#{isVip},`expireDate`=#{expireDate},`isManager`=#{isManager}
+            <if test="userPasswd != null">
+                , `userPasswd`=#{userPasswd}
+            </if>
+        WHERE id=#{id}
+    </update>
+
+    <select id="load" resultType="com.asimple.entity.User">
+        SELECT * FROM `t_user` WHERE `id`=#{id}
+    </select>
+
+    <select id="getPage" resultType="com.asimple.entity.User">
+        SELECT * FROM `t_user`
+        <where>
+            <include refid="choose"></include>
+        </where>
+        LIMIT #{start},#{count}
+    </select>
+
+    <select id="getTotalCount" resultType="Integer">
+        SELECT COUNT(*) FROM `t_user`
+    </select>
+
+</mapper>

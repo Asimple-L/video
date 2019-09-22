@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asimple.mapper.LocMapper">
+    <select id="findByIsUse" resultType="com.asimple.entity.Loc">
+        SELECT * FROM t_loc WHERE isUse = 1
+    </select>
+
+    <insert id="add" parameterType="com.asimple.entity.Loc">
+        INSERT INTO `t_loc` (`id`, `isUse`, `name`) VALUES (#{id}, #{isUse}, #{name})
+    </insert>
+
+</mapper>

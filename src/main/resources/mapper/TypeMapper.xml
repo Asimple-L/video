@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asimple.mapper.TypeMapper">
+
+    <resultMap id="myType" type="com.asimple.entity.Type">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"></result>
+        <result column="isUse" property="isUse"></result>
+        <association property="subClass" column="subclass_id" select="selectSubClass"></association>
+    </resultMap>
+
+    <resultMap id="mySubClass" type="com.asimple.entity.SubClass">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"></result>
+        <result column="isUse" property="isUse"></result>
+        <association property="cataLog" column="catalog_id" select="selectCataLog"></association>
+    </resultMap>
+
+
+    <select id="listIsUseBySubClass_id" resultType="com.asimple.entity.Type">
+        SELECT * FROM `t_type` WHERE isUse=1 AND subclass_id=#{id}
+    </select>
+
+    <select id="load" resultMap="myType">
+        SELECT * FROM `t_type` WHERE `id` = #{id}
+    </select>
+
+    <select id="selectSubClass" resultMap="mySubClass">
+        SELECT * FROM `t_subclass` WHERE `id` = #{subclass_id}
+    </select>
+
+    <select id="selectCataLog" resultType="com.asimple.entity.CataLog">
+        SELECT * FROM `t_catalog` WHERE `id` = #{catalog_id}
+    </select>
+
+    <insert id="add" parameterType="com.asimple.entity.Type">
+        INSERT INTO `t_type` (`id`,`isUse`,`name`,`subclass_id`) VALUES (#{id},#{isUse},#{name},#{subClass.id})
+    </insert>
+
+</mapper>

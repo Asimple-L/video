@@ -20,7 +20,7 @@
     </title>
     <jsp:include page="/WEB-INF/jsp/pub/head_meta.jsp"/>
     <jsp:include page="/WEB-INF/jsp/pub/head_link.jsp"/>
-    <link rel="shortcut icon" href="<f:message key='pageIcon'/>">
+    <link rel="shortcut icon" href="${pageIcon}">
     <link rel="stylesheet" href="${proname}/public/static/css/manager/addFilm.css">
     <link rel="stylesheet" href="${proname}/plugins/bootflat-admin/css/site.min.css">
     <script src="${proname}/plugins/bootflat-admin/js/site.min.js"></script>

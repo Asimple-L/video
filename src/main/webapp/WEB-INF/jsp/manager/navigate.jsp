@@ -4,10 +4,10 @@
     <li class="nav1-li">
         <h4 class="nav-title"><i class="nav-icon">&nbsp;</i>影片管理</h4>
         <ul class="nav2-ul">
-            <a href="film.html">
+            <a href="film">
                 <li class="nav2-li">添加影片</li>
             </a>
-            <a href="list.html">
+            <a href="list">
                 <li class="nav2-li">所有影片</li>
             </a>
         </ul>
@@ -15,10 +15,10 @@
     <li class="nav1-li">
         <h4 class="nav-title"><i class="nav-icon">&nbsp;</i>目录管理</h4>
         <ul class="nav2-ul">
-            <a href="catalog.html">
+            <a href="catalog">
                 <li class="nav2-li">添加目录</li>
             </a>
-            <a href="vipCode.html">
+            <a href="vipCode">
             <li class="nav2-li">VIP管理</li>
             </a>
         </ul>

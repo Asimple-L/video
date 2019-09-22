@@ -11,7 +11,7 @@
 <head>
     <base href="<%=basePath%>">
     <title>用户管理</title>
-    <link rel="shortcut icon" href="<f:message key='pageIcon'/>">
+    <link rel="shortcut icon" href="${pageIcon}">
     <link rel="stylesheet" href="${proname}/plugins/bootflat-admin/css/site.min.css">
     <script src="${proname}/public/static/js/jquery-2.0.0.min.js?v=${version}" type="text/javascript" charset="UTF-8" ></script>
     <script src="${proname}/plugins/bootflat-admin/js/site.min.js"></script>
@@ -114,11 +114,11 @@
                                     <div class="col-md-4"></div>
                                     <div class="col-md-8">
                                         <ul class="pagination">
-                                            <li><a href="admin/userList.html?pc=1">首页</a></li>
+                                            <li><a href="admin/userList?pc=1">首页</a></li>
                                             <c:choose>
                                                 <c:when test="${pb.pc!=pb.tp}">
                                                     <li class="active">
-                                                        <a href="admin/userList.html?pc=${pb.pc-1}">上一页</a>
+                                                        <a href="admin/userList?pc=${pb.pc-1}">上一页</a>
                                                     </li>
                                                 </c:when>
                                                 <c:otherwise>
@@ -126,31 +126,31 @@
                                                 </c:otherwise>
                                             </c:choose>
                                             <c:if test="${pb.pc-2>0}">
-                                                <li><a href="admin/userList.html?pc=${pb.pc-2}">${pb.pc-2}</a></li>
+                                                <li><a href="admin/userList?pc=${pb.pc-2}">${pb.pc-2}</a></li>
                                             </c:if>
                                             <c:if test="${pb.pc-1>0}">
-                                                <li><a href="admin/userList.html?pc=${pb.pc-1}">${pb.pc-1}</a></li>
+                                                <li><a href="admin/userList?pc=${pb.pc-1}">${pb.pc-1}</a></li>
                                             </c:if>
                                             <li class="active"><a href="javascript:void(0);">${pb.pc}</a></li>
                                             <c:if test="${pb.pc+1<=pb.tp}">
-                                                <li><a href="admin/userList.html?pc=${pb.pc+1}">${pb.pc+1}</a></li>
+                                                <li><a href="admin/userList?pc=${pb.pc+1}">${pb.pc+1}</a></li>
                                             </c:if>
                                             <c:if test="${pb.pc+2<=pb.tp}">
-                                                <li><a href="admin/userList.html?pc=${pb.pc+2}">${pb.pc+2}</a></li>
+                                                <li><a href="admin/userList?pc=${pb.pc+2}">${pb.pc+2}</a></li>
                                             </c:if>
                                             <c:if test="${pb.pc+2<pb.tp}">
                                                 <li><a href="javascript:void(0);">...</a></li>
-                                                <li><a href="dmin/userList.html?pc=${pb.tp}">${pb.tp}</a></li>
+                                                <li><a href="dmin/userList?pc=${pb.tp}">${pb.tp}</a></li>
                                             </c:if>
                                             <c:choose>
                                                 <c:when test="${pb.pc!=pb.tp}">
-                                                    <li class="active"><a href="admin/userList.html?pc=${pb.pc+1}">下一页</a></li>
+                                                    <li class="active"><a href="admin/userList?pc=${pb.pc+1}">下一页</a></li>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <li class="disabled"><a href="javascript:void(0);">下一页</a></li>
                                                 </c:otherwise>
                                             </c:choose>
-                                            <li><a href="admin/userList.html?pc=${pb.tp}">尾页</a></li>
+                                            <li><a href="admin/userList?pc=${pb.tp}">尾页</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -171,7 +171,7 @@
     function changeInfo(obj, context) {
         var uid = $(obj).attr("data");
         $.ajax({
-           url:'admin/updateUser.html',
+           url:'admin/updateUser',
            type:"POST",
            data:{
                uid: uid,

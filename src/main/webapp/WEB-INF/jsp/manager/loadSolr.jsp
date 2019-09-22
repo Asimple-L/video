@@ -10,8 +10,8 @@
 <html>
 <head>
     <base href="<%=basePath%>">
-    <title>后台首页</title>
-    <link rel="shortcut icon" href="<f:message key='pageIcon'/>">
+    <title>数据导入</title>
+    <link rel="shortcut icon" href="${pageIcon}">
     <link rel="stylesheet" href="${proname}/plugins/bootflat-admin/css/site.min.css">
     <script src="${proname}/public/static/js/jquery-2.0.0.min.js?v=${version}" type="text/javascript" charset="UTF-8" ></script>
     <script src="${proname}/plugins/bootflat-admin/js/site.min.js"></script>
@@ -36,7 +36,7 @@
                     <div class="content-row">
                         <div class="row">
                             <div class="text-center">
-                                <span class="btn btn-primary" onclick="loadIn()">一键导入</span>
+                                <span class="btn btn-primary" onclick="loadIn(false)">一键导入</span>
                             </div>
                         </div>
                     </div>
@@ -47,20 +47,24 @@
 </div>
 <script src="${proname}/public/static/js/mine/backHeader.js"></script>
 <script>
-    function loadIn() {
-        $.ajax({
-            url: "/video/admin/loadIn.html",
-            type: "POST",
-            dataType: "json",
-            success:function (data) {
-                if ( typeof data == "string" ) data = JSON.parse(data);
-                if( data.code=="1" ) {
-                    alert("导入数据成功~~");
-                } else {
-                    alert("导入出错~");
+    function loadIn(flag) {
+        if( flag ) {
+            $.ajax({
+                url: "/video/admin/loadIn",
+                type: "POST",
+                dataType: "json",
+                success:function (data) {
+                    if ( typeof data == "string" ) data = JSON.parse(data);
+                    if( data.code=="1" ) {
+                        alert("导入数据成功~~");
+                    } else {
+                        alert("导入出错~");
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            alert("功能禁用!");
+        }
     }
 </script>
 </body>

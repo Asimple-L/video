@@ -11,7 +11,7 @@
 <head>
     <base href="<%=basePath%>">
     <title>后台首页</title>
-    <link rel="shortcut icon" href="<f:message key='pageIcon'/>">
+    <link rel="shortcut icon" href="${pageIcon}">
     <link rel="stylesheet" href="${proname}/plugins/bootflat-admin/css/site.min.css">
     <script src="${proname}/public/static/js/jquery-2.0.0.min.js?v=${version}" type="text/javascript" charset="UTF-8" ></script>
     <script src="${proname}/plugins/bootflat-admin/js/site.min.js"></script>
@@ -53,7 +53,7 @@
                                                     </ul>
                                                 </div>
                                                 <div class="price-foot">
-                                                    <a href="${proname}/admin/index.html">
+                                                    <a href="${proname}/admin/index">
                                                         <button type="button" class="btn btn-primary">前去目录管理</button>
                                                     </a>
                                                 </div>
@@ -72,7 +72,7 @@
                                                     </ul>
                                                 </div>
                                                 <div class="price-foot">
-                                                    <a href="${proname}/admin/index.html">
+                                                    <a href="${proname}/admin/index">
                                                         <button type="button" class="btn btn-success">前去影音管理</button>
                                                     </a>
                                                 </div>
@@ -91,7 +91,7 @@
                                                     </ul>
                                                 </div>
                                                 <div class="price-foot">
-                                                    <a href="${proname}/admin/index.html">
+                                                    <a href="${proname}/admin/index">
                                                         <button type="button" class="btn btn-warning">前去用户管理</button>
                                                     </a>
                                                 </div>

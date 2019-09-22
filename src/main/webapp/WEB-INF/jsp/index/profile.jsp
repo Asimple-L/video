@@ -216,7 +216,7 @@
                                     <%-- 我的视频 --%>
                                     <div class="tab-pane in active" id="video-mine">
                                         <div class="text-center" style="width: 100%;">
-                                            <a href="/video/profile/share.html">
+                                            <a href="/video/profile/share">
                                                 <button class="btn-primary btn" style="border-radius: 15%;">我要上传</button>
                                             </a>
                                         </div>
@@ -267,7 +267,7 @@
                                                 // 分页AJAX请求
                                                 function changePage(pc) {
                                                     $.ajax({
-                                                        url:"/video/profile/getFilmAjax.html",
+                                                        url:"/video/profile/getFilmAjax",
                                                         type: "POST",
                                                         dataType: "json",
                                                         data:{pc:pc, type:'my-films'},
@@ -358,7 +358,7 @@
                                                 // 分页AJAX请求
                                                 function changeViewHistoryPage(pc) {
                                                     $.ajax({
-                                                        url:"/video/profile/getFilmAjax.html",
+                                                        url:"/video/profile/getFilmAjax",
                                                         type: "POST",
                                                         dataType: "json",
                                                         data:{pc:pc, type:'view-history'},
@@ -442,7 +442,7 @@
                                             // 分页AJAX请求
                                             function changeComment(pc) {
                                                 $.ajax({
-                                                    url:"/video/profile/getMyComments.html",
+                                                    url:"/video/profile/getMyComments",
                                                     type: "POST",
                                                     dataType: "json",
                                                     data:{pc:pc},
@@ -506,7 +506,7 @@
                                                     alert("两次旧密码输入不一致,请重新输入!");
                                                 } else {
                                                     $.ajax({
-                                                       url:"/video/updatePassword.html",
+                                                       url:"/video/updatePassword",
                                                        type:"POST",
                                                        dataType: "json",
                                                        data:{oldPwd:oldPwd, newPwd:newPwd},
@@ -515,7 +515,7 @@
                                                            var code = data.code;
                                                            if( code=='1' ) {
                                                                alert("修改成功!请使用新密码重新登录~~")
-                                                               location.href='/video/index.html';
+                                                               location.href='/video/index';
                                                            } else {
                                                                alert(data.msg);
                                                            }

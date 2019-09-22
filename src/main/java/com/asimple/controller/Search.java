@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.asimple.entity.*;
 import com.asimple.service.*;
 import com.asimple.util.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,21 +26,22 @@ import java.util.*;
 @Controller
 @RequestMapping("/xl")
 public class Search {
-    private final static String USER_KEY = "u_skl";
+    @Value("${userKey}")
+    private String userKey;
     @Resource
-    private IFilmService filmService;
+    private FilmService filmService;
     @Resource
-    private ICataLogService cataLogService;
+    private CataLogService cataLogService;
     @Resource
-    private ISubClassService subClassService;
+    private SubClassService subClassService;
     @Resource
-    private ITypeService typeService;
+    private TypeService typeService;
     @Resource
-    private IRatyService ratyService;
+    private RatyService ratyService;
     @Resource
-    private IResService resService;
+    private ResService resService;
     @Resource
-    private ICommonService commonService;
+    private CommonService commonService;
 
     /**
      * @Author Asimple
@@ -67,14 +69,14 @@ public class Search {
      * @Author Asimple
      * @Description 影片详情
      **/
-    @RequestMapping("/detail.html")
+    @RequestMapping("/detail")
     public String detail(ModelMap map, String film_id, String src, String j, HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) {
         if (film_id == null) return "index/error";
         Film film = filmService.load(film_id);
         film.setResList(resService.getListByFilmId(film_id));
         // VIP资源校验
         if (film.getIsVip() == 1) {
-            User u_sk1 = (User) session.getAttribute(USER_KEY);
+            User u_sk1 = (User) session.getAttribute(userKey);
             // 得到发送请求的页面
             String referer = request.getHeader("referer");
             if (u_sk1 != null) {
@@ -168,7 +170,7 @@ public class Search {
         map.addAttribute("resListOther", resListOther);
 
         // 添加浏览记录
-        User user =(User) session.getAttribute(USER_KEY);
+        User user =(User) session.getAttribute(userKey);
         if( user!=null ) {
             filmService.addViewHistory(film.getId(), user.getId());
         }
@@ -180,7 +182,7 @@ public class Search {
      * @Author Asimple
      * @Description 添加评分
      **/
-    @RequestMapping("/addRaty.html")
+    @RequestMapping("/addRaty")
     @ResponseBody
     public String addRaty(Raty raty) {
         JSONObject jsonObject = new JSONObject();
@@ -221,7 +223,7 @@ public class Search {
      * @Author Asimple
      * @Description 查询弹幕
      **/
-    @RequestMapping(value = "/queryBullet.html")
+    @RequestMapping(value = "/queryBullet")
     @ResponseBody
     public String queryBullet(String film_id) {
         StringBuilder stringBuilder = new StringBuilder("[");
@@ -239,16 +241,16 @@ public class Search {
      * @Author Asimple
      * @Description 保存弹幕
      **/
-    @RequestMapping(value = "/saveBullet.html")
+    @RequestMapping(value = "/saveBullet")
     @ResponseBody
     public String saveBullet(String film_id, String danmu) {
         Map map = JSONObject.parseObject(danmu, Map.class);
-        LogUtil.info("map = " + map);
         Bullet bullet = new Bullet(null, (String) map.get("text"), (String) map.get("color"), (String) map.get("position"), (String) map.get("size"), (Integer)map.get("time"), film_id);
         boolean result = filmService.saveBullet(bullet);
         if( !result ) {
             LogUtil.error("保存弹幕失败哟~ 失败弹幕信息：" + bullet);
-        } return "callback";
+        }
+        return "callback";
     }
 
 

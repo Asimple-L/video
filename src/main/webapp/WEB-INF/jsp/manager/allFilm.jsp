@@ -11,7 +11,7 @@
 <head>
     <base href="<%=basePath%>">
     <title>所有影片</title>
-    <link rel="shortcut icon" href="<f:message key='pageIcon'/>">
+    <link rel="shortcut icon" href="${pageIcon}">
     <link rel="stylesheet" href="${proname}/plugins/bootflat-admin/css/site.min.css">
     <link rel="stylesheet" href="${proname}/public/static/css/manager/allFilm.css">
     <script src="${proname}/public/static/js/jquery-2.0.0.min.js?v=${version}" type="text/javascript" charset="UTF-8" ></script>
@@ -40,7 +40,7 @@
                             <%-- 正文开始 --%>
                                     <div style="margin:0px auto;width:100%;"></div>
                                     <div class="search-box">
-                                        <form action="/video/admin/list.html" method="post">
+                                        <form action="/video/admin/list" method="post">
                                             <input type="search" style="width: 20%;display: inline;" class="form-control search-query" name="name" value="${name}" autocomplete="off"
                                                    placeholder="请输入影片名称"/>
                                         </form>
@@ -49,11 +49,11 @@
                                         <ul class="film-list">
                                             <c:forEach items="${pb.beanList}" var="list">
                                                 <li>
-                                                    <a href="admin/film.html?film_id=${list.id}">
+                                                    <a href="admin/film?film_id=${list.id}">
                                                         <div title="${list.name}"><img src="${list.image}"></div>
                                                     </a>
                                                     <div class="film-info">
-                                                        <a href="admin/film.html?film_id=${list.id}" title="${list.name}">${list.name}</a>
+                                                        <a href="admin/film?film_id=${list.id}" title="${list.name}">${list.name}</a>
                                                         <p>${list.onDecade}-${list.typeName}</p>
                                                     </div>
                                                 </li>
@@ -63,7 +63,7 @@
                                     <div style="width:80%;margin: 30px auto;height: auto;overflow: hidden;">
                                         <c:if test="${pb.tr!=0}">
                                             <p style="text-align: center;">
-                                                <c:set var="pageurl" value="/video/admin/list.html"/>   <!--1.修改-->
+                                                <c:set var="pageurl" value="/video/admin/list"/>   <!--1.修改-->
                                                 <script type="text/javascript">
                                                     function _change() {
                                                         var select = document.getElementById("select");

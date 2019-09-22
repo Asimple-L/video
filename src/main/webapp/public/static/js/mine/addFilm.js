@@ -29,7 +29,7 @@
 
             $.ajax({
                 type: "post",
-                url: "/video/delFile.html",
+                url: "/video/delFile",
                 cache: false,
                 data: "picsPath=" + filepath,
                 dataType: 'json',     //接受数据格式
@@ -89,7 +89,7 @@
 
     function updateFilmInfo(f_id, key, val, t) {
         $.ajax({
-            url: "/video/admin/updateFilmInfo.html",
+            url: "/video/admin/updateFilmInfo",
             type: "post",
             dataType: "json",
             data: "film_id=" + f_id + "&key=" + key + "&val=" + val,
@@ -134,7 +134,7 @@ $(function () {
     $(".cataLog_id_subClass").change(function () {
         var catalog_id = $(this).val();
         $.ajax({
-            url: "/video/profile/getSubClass.html",
+            url: "/video/profile/getSubClass",
             type: "post",
             dataType: "json",
             data: "catalog_id=" + catalog_id,
@@ -164,7 +164,7 @@ $(function () {
      * 初始目录
      */
     $.ajax({
-        url: "/video/profile/getSubClass.html",
+        url: "/video/profile/getSubClass",
         type: "POST",
         dataType: "json",
         data: "catalog_id=" + $(".cataLog_id_subClass").val(),
@@ -188,7 +188,7 @@ $(function () {
      */
     function getType() {
         $.ajax({
-            url: "/video/profile/getType.html",
+            url: "/video/profile/getType",
             type: "POST",
             dataType: "json",
             data: "subClass_id=" + $(".subClass_id").val(),
@@ -268,7 +268,7 @@ $(function () {
         } else {
             //添加影片
             $.ajax({
-                url: "/video/admin/addFilm.html",
+                url: "/video/admin/addFilm",
                 type: "post",
                 dataType: "json",
                 data: "name=" + name_val +
@@ -314,7 +314,7 @@ $(function () {
             alert("信息未填写完整，请检查");
         } else {
             $.ajax({
-                url: "/video/admin/addRes.html",
+                url: "/video/admin/addRes",
                 type: "POST",
                 dataType: "json",
                 data: "film_id=" + film_id +
@@ -362,7 +362,7 @@ $(function () {
      */
     $(".updateIsUse").click(function () {
         $.ajax({
-            url: "/video/admin/updateIsUse.html",
+            url: "/video/admin/updateIsUse",
             type: "post",
             dataType: "json",
             data: "res_id=" + $(this).attr("res_id"),
@@ -386,7 +386,7 @@ $(function () {
         var isEnsure = confirm("确定删除?");
         if (isEnsure) {
             $.ajax({
-                url: "/video/admin/delRes.html",
+                url: "/video/admin/delRes",
                 type: "post",
                 dataType: "json",
                 data: "res_id=" + $(this).attr("res_id"),
@@ -412,14 +412,14 @@ $(function () {
         var isEnsure = confirm("确定删除?");
         if( isEnsure ) {
             $.ajax({
-                url:"/video/admin/delFilm.html",
+                url:"/video/admin/delFilm",
                 type:"POST",
                 data:{"film_id": film_id},
                 success: function(data){
                     console.log(data);
                     if( typeof data == "string" ) data = JSON.parse(data);
                     if( data.code == "1" ) {
-                        location.assign("/video/admin/list.html");
+                        location.assign("/video/admin/list");
                     } else {
                         alert("删除失败！");
                     }
@@ -466,7 +466,7 @@ $("#file_upload").uploadify({
     "swf": "plugins/uploadify/uploadify.swf",
     "fileObjName": "download",
     "buttonText": "上传海报",
-    "uploader": "/video/upload.html",
+    "uploader": "/video/upload",
     'cancelImg': 'plugins/uploadify/uploadify.swf',// 取消按钮图片路径
     'removeTimeout': 1,
     'method': 'post',
@@ -493,7 +493,7 @@ $("#file_upload_src").uploadify({
     "swf": "plugins/uploadify/uploadify.swf",
     "fileObjName": "download",
     "buttonText": "上传本地影片",
-    "uploader": "/video/upload.html",
+    "uploader": "/video/upload",
     'cancelImg': 'plugins/uploadify/uploadify.swf',// 取消按钮图片路径
     'removeTimeout': 1,
     'method': 'post',
@@ -549,7 +549,7 @@ function del(e,type) {
         }
         $.ajax({
             type: "post",
-            url: "/video/delFile.html",
+            url: "/video/delFile",
             cache: false,
             data: "picsPath=" + path,
             dataType: 'json',     //接受数据格式

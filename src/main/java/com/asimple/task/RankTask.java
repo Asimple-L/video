@@ -3,7 +3,8 @@ package com.asimple.task;
 import com.asimple.entity.*;
 import com.asimple.service.*;
 import com.asimple.util.LogUtil;
-import com.asimple.util.RedisUtil;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -17,20 +18,22 @@ import java.util.List;
  * @author: Asimple
  */
 @Component
+@Configuration
+@EnableScheduling
 public class RankTask {
 
-    @Resource( name = "cataLogService")
-    private ICataLogService cataLogService;
-    @Resource( name = "filmService")
-    private IFilmService filmService;
     @Resource
-    private IDecadeService decadeService;
+    private CataLogService cataLogService;
     @Resource
-    private ILocService locService;
+    private FilmService filmService;
     @Resource
-    private ILevelService levelService;
+    private DecadeService decadeService;
     @Resource
-    private RedisUtil redisUtil;
+    private LocService locService;
+    @Resource
+    private LevelService levelService;
+    @Resource
+    private CommonService commonService;
 
     /**
      * @Author Asimple
@@ -41,9 +44,11 @@ public class RankTask {
         long startTime = System.currentTimeMillis();
         LogUtil.info("start update commendRank!");
 
+        commonService.cleanIndexCache();
+
         // 查询用户菜单列表
         List<CataLog> logList = cataLogService.listIsUse();
-        redisUtil.set("index_cataLogList", logList);
+        LogUtil.info("用户菜单列表："+logList.size());
 
         // 查询推荐电影
         List<Object> list =  new ArrayList<>();
@@ -53,7 +58,7 @@ public class RankTask {
                 list.add(films);
             }
         }
-        redisUtil.set("index_filmTuijian", list);
+        LogUtil.info("推荐电影列表："+list.size());
 
         // 电影排行榜
         List<Object> list1 = new ArrayList<>();
@@ -63,29 +68,10 @@ public class RankTask {
                 list1.add(films);
             }
         }
-        redisUtil.set("index_filmPaiHang", list1);
+        LogUtil.info("电影排行榜信息："+list1.size());
 
         long endTime = System.currentTimeMillis();
         LogUtil.info("commendRank update end! run time = " + (endTime - startTime)/1000 + "s");
-    }
-
-    /**
-     * @Author Asimple
-     * @Description 更新目录等信息
-     **/
-    @Scheduled(cron = "0 20 0 * * ?")
-    public void addListInfoToRedis() {
-        long startTime = System.currentTimeMillis();
-        List<Loc> locList = locService.listIsUse();
-        List<Level> levelList = levelService.listIsUse();
-        List<Decade> decadeList = decadeService.listIsUse();
-        List<CataLog> cataLogList = cataLogService.listIsUse();
-        redisUtil.set("redis_locList", locList);
-        redisUtil.set("redis_levelList", levelList);
-        redisUtil.set("redis_decadeList", decadeList);
-        redisUtil.set("redis_cataLogList", cataLogList);
-        long endTime = System.currentTimeMillis();
-        LogUtil.info("addListInfoToRedis end! run time = " + (endTime-startTime)/1000);
     }
 
 }

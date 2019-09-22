@@ -5,12 +5,6 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
     <display-name>Asimple Video</display-name>
 
-    <!-- 指定spring配置文件的位置以及名称 -->
-    <context-param>
-        <param-name>contextConfigLocation</param-name>
-        <param-value>classpath:spring-*.xml</param-value>
-    </context-param>
-
     <!-- 注册ServletContext监听器 -->
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -34,39 +28,5 @@
         <filter-name>characterEncodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-
-    <!-- 注册中央调度器 -->
-    <servlet>
-        <display-name>asimple-skl</display-name>
-        <servlet-name>springmvc</servlet-name>
-        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <init-param>
-            <param-name>contextConfigLocation</param-name>
-            <param-value>classpath:springmvc.xml</param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>springmvc</servlet-name>
-        <url-pattern>*.html</url-pattern>
-    </servlet-mapping>
-
-    <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
-    </welcome-file-list>
-    <error-page>
-        <error-code>404</error-code>
-        <location>/error.html</location>
-    </error-page>
-
-    <error-page>
-        <error-code>505</error-code>
-        <location>/error.html</location>
-    </error-page>
-
-    <error-page>
-        <error-code>500</error-code>
-        <location>/error.html</location>
-    </error-page>
 
 </web-app>

@@ -36,12 +36,12 @@ public class Util implements ServletContextAware {
      * @Author Asimple
      * @Description 文件上传(多文件上传处理)
      **/
-    @RequestMapping(value = "/upload.html", produces = "text/html;charset=UTF-8")
+    @RequestMapping(value = "/upload", produces = "text/html;charset=UTF-8")
     @ResponseBody
     public String upload(String childPath, HttpServletRequest request) throws IOException{
         // 文件上传处理
         Properties pro = new Properties();
-        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("ApplicationResources.properties");
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("user.properties");
         try { // 加载本地存贮路径
             pro.load(inputStream);
         } catch (IOException e) {
@@ -114,7 +114,7 @@ public class Util implements ServletContextAware {
      * @Author Asimple
      * @Description 根据文件路径删除系统下的文件
      **/
-    @RequestMapping(value = "/delFile.html", produces = "text/html;charset=UTF-8")
+    @RequestMapping(value = "/delFile", produces = "text/html;charset=UTF-8")
     @ResponseBody
     public String delFile(String picsPath) {
         JSONObject jsonObject = new JSONObject();
