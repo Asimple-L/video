@@ -21,9 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @ProjectName video
@@ -84,9 +82,8 @@ public class Manager {
         // 用户名或者邮箱登录
         boolean flag = false;// 是否登录成功
         User user = new User();
-        List<User> users = null;
         user.setUserName(username);
-        users = userService.findByCondition(user);
+        List<User> users = userService.findByCondition(user);
         // 用户名登录
         if( users != null && users.size()>0 ) {
             flag = checkAccount(password, users, session, map);
@@ -263,53 +260,14 @@ public class Manager {
     @RequestMapping( value = "/updateFilmInfo")
     @ResponseBody
     public String updateFilmInfo(String film_id, String val, String key, HttpSession session) {
+        Map<String, Object> param = new HashMap<>();
         JSONObject jsonObject = new JSONObject();
         Film film = filmService.load(film_id);
-        LogUtil.info(Manager.class, "key = " + key + "   val = " + val);
-        switch ( key ) {
-            case "name":
-                film.setName(val);
-                break;
-            case "image":
-                FileOperate.delFile(session.getServletContext().getRealPath(film.getImage()));
-                film.setImage(val);
-                break;
-            case "onDecade":
-                film.setOnDecade(val);
-                break;
-            case "status":
-                film.setStatus(val);
-                break;
-            case "resolution":
-                film.setResolution(val);
-                break;
-            case "typeName":
-                film.setTypeName(val);
-                break;
-            case "type_id":
-                film.setType_id(val);
-                Type type = typeService.load(val);
-                LogUtil.info(Manager.class, "type = " + type);
-                film.setSubClass_id(type.getSubClass().getId());
-                film.setSubClassName(type.getSubClass().getName());
-                film.setCataLog_id(type.getSubClass().getCataLog().getId());
-                film.setCataLogName(type.getSubClass().getCataLog().getName());
-                break;
-            case "actor":
-                film.setActor(val);
-                break;
-            case "loc_id":
-                film.setLoc_id(val);
-                break;
-            case "plot":
-                film.setPlot(val);
-                break;
-            case "isVip":
-                film.setIsVip(Integer.valueOf(val));
-                break;
-        }
-        LogUtil.info(Manager.class, "film = " + film);
-        if( filmService.update(film) ) {
+        param.put("key", key);
+        param.put("val", val);
+        param.put("film", film);
+        param.put("filePath", session.getServletContext().getRealPath(film.getImage()));
+        if( commonService.updateFilmInfo(param) ) {
             jsonObject.put("code", "1");
             this.updateRedis("1");
         } else {

@@ -11,7 +11,7 @@
 <html>
 <head>
     <base href="<%=basePath%>">
-    <title>${film.name}-${film.subClassName}-${film.typeName}-${siteName}/></title>
+    <title>${film.name}-${film.subClassName}-${film.typeName}-${siteName}</title>
     <jsp:include page="/WEB-INF/jsp/pub/head_meta.jsp"/>
     <jsp:include page="/WEB-INF/jsp/pub/head_link.jsp"/>
     <jsp:include page="/WEB-INF/jsp/pub/head_script.jsp"/>

@@ -1,16 +1,18 @@
 package com.asimple.service;
 
-import com.asimple.entity.CataLog;
-import com.asimple.entity.Decade;
-import com.asimple.entity.Level;
-import com.asimple.entity.Loc;
+import com.asimple.controller.Manager;
+import com.asimple.controller.Profile;
+import com.asimple.entity.*;
+import com.asimple.util.FileOperate;
 import com.asimple.util.LogUtil;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ProjectName video
@@ -27,6 +29,62 @@ public class CommonService {
     private LocService locService;
     @Resource
     private LevelService levelService;
+    @Resource
+    private FilmService filmService;
+    @Resource
+    private TypeService typeService;
+
+    public boolean updateFilmInfo(Map params) {
+        String key = (String) params.get("key");
+        String val = (String) params.get("val");
+        String filePath = (String) params.get("filePath");
+        Film film = (Film) params.get("film");
+        LogUtil.info(CommonService.class, "key = " + key + "   val = " + val);
+        switch ( key ) {
+            case "name":
+                film.setName(val);
+                break;
+            case "image":
+                FileOperate.delFile(filePath);
+                film.setImage(val);
+                break;
+            case "onDecade":
+                film.setOnDecade(val);
+                break;
+            case "status":
+                film.setStatus(val);
+                break;
+            case "resolution":
+                film.setResolution(val);
+                break;
+            case "typeName":
+                film.setTypeName(val);
+                break;
+            case "type_id":
+                film.setType_id(val);
+                Type type = typeService.load(val);
+                LogUtil.info(CommonService.class, "type = " + type);
+                film.setSubClass_id(type.getSubClass().getId());
+                film.setSubClassName(type.getSubClass().getName());
+                film.setCataLog_id(type.getSubClass().getCataLog().getId());
+                film.setCataLogName(type.getSubClass().getCataLog().getName());
+                break;
+            case "actor":
+                film.setActor(val);
+                break;
+            case "loc_id":
+                film.setLoc_id(val);
+                break;
+            case "plot":
+                film.setPlot(val);
+                break;
+            case "isVip":
+                film.setIsVip(Integer.valueOf(val));
+                break;
+        }
+        LogUtil.info(CommonService.class, "film = " + film);
+        return filmService.update(film);
+    }
 
 
     public ModelMap getCatalog(ModelMap model) {
