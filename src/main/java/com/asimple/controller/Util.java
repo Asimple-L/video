@@ -20,8 +20,8 @@ import java.util.*;
 
 /**
  * @ProjectName video
- * @Description: 工具访问，文件上传，邮件发送等等
- * @author: Asimple
+ * @description 工具访问，文件上传，邮件发送等等
+ * @author Asimple
  */
 @Controller
 public class Util implements ServletContextAware {
@@ -33,8 +33,8 @@ public class Util implements ServletContextAware {
     }
 
     /**
-     * @Author Asimple
-     * @Description 文件上传(多文件上传处理)
+     * @author Asimple
+     * @description 文件上传(多文件上传处理)
      **/
     @RequestMapping(value = "/upload", produces = "text/html;charset=UTF-8")
     @ResponseBody
@@ -111,8 +111,8 @@ public class Util implements ServletContextAware {
     }
 
     /**
-     * @Author Asimple
-     * @Description 根据文件路径删除系统下的文件
+     * @author Asimple
+     * @description 根据文件路径删除系统下的文件
      **/
     @RequestMapping(value = "/delFile", produces = "text/html;charset=UTF-8")
     @ResponseBody

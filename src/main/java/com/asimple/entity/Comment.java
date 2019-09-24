@@ -5,8 +5,8 @@ import java.util.Date;
 
 /**
  * @ProjectName video
- * @Description: 评论
- * @author: Asimple
+ * @description 评论
+ * @author Asimple
  */
 public class Comment implements Serializable {
 

@@ -9,8 +9,8 @@ import java.util.List;
 
 /**
  * @ProjectName video
- * @Description: 评分服务层实现
- * @author: Asimple
+ * @description 评分服务层实现
+ * @author Asimple
  */
 @Service
 public class RatyService {

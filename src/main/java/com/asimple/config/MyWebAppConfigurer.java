@@ -8,8 +8,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 /**
  * @ProjectName video
- * @Description web配置
- * @Author Asimple
+ * @description web配置
+ * @author Asimple
  * @date 2019/8/31 14:39
  */
 @Configuration

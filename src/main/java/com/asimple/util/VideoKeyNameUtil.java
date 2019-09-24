@@ -1,8 +1,8 @@
 package com.asimple.util;
 
 /**
- * @Description 关键字类
- * @Author Asimple
+ * @description 关键字类
+ * @author Asimple
  * @date 2019/9/23 20:10
  */
 public class VideoKeyNameUtil {

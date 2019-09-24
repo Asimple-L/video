@@ -6,8 +6,8 @@ import javax.servlet.ServletContext;
 import java.io.*;
 
 /**
- * @Author Asimple
- * @Description 文件读写操作
+ * @author Asimple
+ * @description 文件读写操作
  **/
 public class FileOperate implements ServletContextAware {
 

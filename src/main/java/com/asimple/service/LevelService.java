@@ -12,8 +12,8 @@ import java.util.List;
 
 /**
  * @ProjectName video
- * @Description: 等级服务实现类
- * @author: Asimple
+ * @description 等级服务实现类
+ * @author Asimple
  */
 @Service
 public class LevelService {
@@ -21,8 +21,8 @@ public class LevelService {
     private LevelMapper levelMapper;
 
     /**
-     * @Author Asimple
-     * @Description 查询所有在使用的等级
+     * @author Asimple
+     * @description 查询所有在使用的等级
      **/
     @Cacheable( value = "redis_levelList")
     public List<Level> listIsUse() {
@@ -35,8 +35,8 @@ public class LevelService {
     }
 
     /**
-     * @Author Asimple
-     * @Description 添加一个等级信息并返回id
+     * @author Asimple
+     * @description 添加一个等级信息并返回id
      **/
     public String add(Level level) {
         if(Tools.isEmpty(level.getId()) ) {

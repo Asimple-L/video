@@ -8,8 +8,8 @@ import java.util.List;
 
 /**
  * @ProjectName video
- * @Description: 电影实体
- * @author: Asimple
+ * @description 电影实体
+ * @author Asimple
  */
 public class Film implements Serializable {
     @Field

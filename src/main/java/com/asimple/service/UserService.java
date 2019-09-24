@@ -10,8 +10,8 @@ import java.util.List;
 
 /**
  * @ProjectName video
- * @Description: 用户Service实现类
- * @author: Asimple
+ * @description 用户Service实现类
+ * @author Asimple
  */
 @Service
 public class UserService {
@@ -20,16 +20,16 @@ public class UserService {
     private UserMapper userMapper;
 
     /**
-     * @Author Asimple
-     * @Description 有条件查询用户
+     * @author Asimple
+     * @description 有条件查询用户
      **/
     public List<User> findByCondition(User user) {
         return userMapper.findByCondition(user);
     }
 
     /**
-     * @Author Asimple
-     * @Description 添加用户
+     * @author Asimple
+     * @description 添加用户
      **/
     public User add(User user) {
         int f = userMapper.add(user);
@@ -38,24 +38,24 @@ public class UserService {
     }
 
     /**
-     * @Author Asimple
-     * @Description 更新用户信息
+     * @author Asimple
+     * @description 更新用户信息
      **/
     public Boolean update(User userDb) {
         return userMapper.update(userDb)==1;
     }
 
     /**
-     * @Author Asimple
-     * @Description 加载用户
+     * @author Asimple
+     * @description 加载用户
      **/
     public User load(String id) {
         return userMapper.load(id);
     }
 
     /**
-     * @Author Asimple
-     * @Description 带分页查询所有用户
+     * @author Asimple
+     * @description 带分页查询所有用户
      **/
     public PageBean<User> getPage(User user, int pc, int pageSize) {
         PageBean<User> pageBean = new PageBean<>();

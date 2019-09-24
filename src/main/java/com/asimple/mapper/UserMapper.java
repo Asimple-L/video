@@ -6,8 +6,8 @@ import org.springframework.stereotype.Repository;
 
 /**
  * @ProjectName video
- * @Description: 用户Dao层代码
- * @author: Asimple
+ * @description 用户Dao层代码
+ * @author Asimple
  */
 @Repository
 public interface UserMapper extends IBaseDao<User> {

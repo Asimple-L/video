@@ -11,8 +11,8 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 /**
  * @version 2.0
  * @ProjectName video
- * @Description SpringBoot启动类
- * @Author Asimple
+ * @description SpringBoot启动类
+ * @author Asimple
  * @date 2019/8/30 21:05
  */
 @SpringBootApplication

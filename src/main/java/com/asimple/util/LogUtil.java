@@ -4,8 +4,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @ProjectName video
- * @Description: 日志工具类
- * @author: Asimple
+ * @description 日志工具类
+ * @author Asimple
  */
 public class LogUtil {
 

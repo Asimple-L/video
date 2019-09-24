@@ -13,8 +13,8 @@ import java.util.Map;
 
 /**
  * @ProjectName video
- * @Description: 公共方法包括Redis和Solr的相关操作实现
- * @author: Asimple
+ * @description 公共方法包括Redis和Solr的相关操作实现
+ * @author Asimple
  */
 @Service
 public class CommonService {

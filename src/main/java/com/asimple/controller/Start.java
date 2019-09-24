@@ -22,8 +22,8 @@ import java.util.List;
 
 /**
  * @ProjectName video
- * @Description: 系统开始
- * @author: Asimple
+ * @description 系统开始
+ * @author Asimple
  */
 @Controller
 public class Start {
@@ -37,8 +37,8 @@ public class Start {
     private CommentService commentService;
 
     /**
-     * @Author Asimple
-     * @Description 首页访问
+     * @author Asimple
+     * @description 首页访问
      **/
     @RequestMapping(value = { "/index", "/"})
     public String index(ModelMap model) {
@@ -70,8 +70,8 @@ public class Start {
     }
 
     /**
-     * @Author Asimple
-     * @Description 留言
+     * @author Asimple
+     * @description 留言
      **/
     @RequestMapping("/note")
     public String note(ModelMap map) {
@@ -83,8 +83,8 @@ public class Start {
     }
 
     /**
-     * @Author Asimple
-     * @Description 保存留言
+     * @author Asimple
+     * @description 保存留言
      **/
     @RequestMapping(value = "/saveComment", produces = "text/html;charset=UTF-8")
     @ResponseBody
@@ -107,8 +107,8 @@ public class Start {
     }
 
     /**
-     * @Author Asimple
-     * @Description 评论点赞或者踩
+     * @author Asimple
+     * @description 评论点赞或者踩
      **/
     @RequestMapping(value = "/changeLikeNum", produces = "text/html;charset=UTF-8")
     @ResponseBody

@@ -5,8 +5,8 @@ import java.util.Date;
 
 /**
  * @ProjectName video
- * @Description: 用户实体类
- * @author: Asimple
+ * @description 用户实体类
+ * @author Asimple
  */
 public class User implements Serializable {
     private String id;// 主键

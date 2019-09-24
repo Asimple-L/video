@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 /**
  * @ProjectName video
- * @Description: 弹幕实体类
- * @author: Asimple
+ * @description 弹幕实体类
+ * @author Asimple
  */
 public class Bullet implements Serializable {
 

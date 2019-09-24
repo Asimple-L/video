@@ -17,8 +17,8 @@ import java.util.*;
 
 /**
  * @ProjectName video
- * @Description: 查询首页
- * @author: Asimple
+ * @description 查询首页
+ * @author Asimple
  */
 
 @Controller
@@ -40,8 +40,8 @@ public class Search {
     private CommonService commonService;
 
     /**
-     * @Author Asimple
-     * @Description 查询页面
+     * @author Asimple
+     * @description 查询页面
      **/
     @RequestMapping("/1.html")
     public String index(ModelMap model, HttpServletRequest request) {
@@ -62,8 +62,8 @@ public class Search {
     }
 
     /**
-     * @Author Asimple
-     * @Description 影片详情
+     * @author Asimple
+     * @description 影片详情
      **/
     @RequestMapping("/detail")
     public String detail(ModelMap map, String film_id, String src, String j, HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) {
@@ -175,8 +175,8 @@ public class Search {
     }
 
     /**
-     * @Author Asimple
-     * @Description 添加评分
+     * @author Asimple
+     * @description 添加评分
      **/
     @RequestMapping("/addRaty")
     @ResponseBody
@@ -207,8 +207,8 @@ public class Search {
     }
 
     /**
-     * @Author Asimple
-     * @Description 播放器
+     * @author Asimple
+     * @description 播放器
      **/
     @RequestMapping(value = "/pc.html")
     public String pc(ModelMap map, HttpServletRequest request) {
@@ -216,8 +216,8 @@ public class Search {
     }
 
     /**
-     * @Author Asimple
-     * @Description 查询弹幕
+     * @author Asimple
+     * @description 查询弹幕
      **/
     @RequestMapping(value = "/queryBullet")
     @ResponseBody
@@ -234,8 +234,8 @@ public class Search {
     }
 
     /**
-     * @Author Asimple
-     * @Description 保存弹幕
+     * @author Asimple
+     * @description 保存弹幕
      **/
     @RequestMapping(value = "/saveBullet")
     @ResponseBody

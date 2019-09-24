@@ -5,8 +5,8 @@ import java.util.Date;
 
 /**
  * @ProjectName video
- * @Description: VIP码
- * @author: Asimple
+ * @description VIP码
+ * @author Asimple
  */
 public class VipCode implements Serializable {
     private String id; // 主键id

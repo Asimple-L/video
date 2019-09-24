@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 /**
  * @ProjectName video
- * @Description: 年份实体类
- * @author: Asimple
+ * @description 年份实体类
+ * @author Asimple
  */
 public class Decade implements Serializable {
     private String id; // 主键id

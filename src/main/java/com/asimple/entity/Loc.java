@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 /**
  * @ProjectName video
- * @Description: 地区分类实体
- * @author: Asimple
+ * @description 地区分类实体
+ * @author Asimple
  */
 public class Loc implements Serializable {
     private String id; // 主键id

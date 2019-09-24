@@ -12,8 +12,8 @@ import java.util.List;
 
 /**
  * @ProjectName video
- * @Description: 资源服务层实现类
- * @author: Asimple
+ * @description 资源服务层实现类
+ * @author Asimple
  */
 @Service
 public class ResService {
@@ -23,16 +23,16 @@ public class ResService {
     private ResMapper resMapper;
 
     /**
-     * @Author Asimple
-     * @Description 根据film_id查找所有资源
+     * @author Asimple
+     * @description 根据film_id查找所有资源
      **/
     public List<Res> getListByFilmId(String film_id) {
         return resMapper.getListByFilmId(film_id);
     }
 
     /**
-     * @Author Asimple
-     * @Description 添加资源
+     * @author Asimple
+     * @description 添加资源
      **/
     public String add(Res res) {
         if(Tools.isEmpty(res.getId()) ) {
@@ -42,8 +42,8 @@ public class ResService {
     }
 
     /**
-     * @Author Asimple
-     * @Description 上传资源，如果是
+     * @author Asimple
+     * @description 上传资源，如果是
      **/
     public String addRes(Res res, String film_id) {
         // 初始化
@@ -85,16 +85,16 @@ public class ResService {
     }
 
     /**
-     * @Author Asimple
-     * @Description 删除资源
+     * @author Asimple
+     * @description 删除资源
      **/
     public boolean delete(String res_id) {
         return resMapper.deleteById(res_id)==1;
     }
 
     /**
-     * @Author Asimple
-     * @Description 更改资源在离线状态
+     * @author Asimple
+     * @description 更改资源在离线状态
      **/
     public boolean updateIsUse(String res_id) {
         Res res = resMapper.load(res_id);

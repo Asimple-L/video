@@ -12,8 +12,8 @@ import java.util.List;
 
 /**
  * @ProjectName video
- * @Description: 地区服务实现类
- * @author: Asimple
+ * @description 地区服务实现类
+ * @author Asimple
  */
 @Service
 public class LocService {
@@ -21,8 +21,8 @@ public class LocService {
     private LocMapper locMapper;
 
     /**
-     * @Author Asimple
-     * @Description 查询所有在使用的地区信息
+     * @author Asimple
+     * @description 查询所有在使用的地区信息
      **/
     @Cacheable( value = "redis_locList")
     public List<Loc> listIsUse() {
@@ -35,8 +35,8 @@ public class LocService {
     }
 
     /**
-     * @Author Asimple
-     * @Description 添加地区信息并返回id
+     * @author Asimple
+     * @description 添加地区信息并返回id
      **/
     public String add(Loc loc) {
         if(Tools.isEmpty(loc.getId()) ) {

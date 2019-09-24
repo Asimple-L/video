@@ -5,8 +5,8 @@ import java.util.List;
 
 /**
  * @ProjectName video
- * @Description: 一级分类实体类
- * @author: Asimple
+ * @description 一级分类实体类
+ * @author Asimple
  */
 public class CataLog implements Serializable {
     private String id; // 主键id

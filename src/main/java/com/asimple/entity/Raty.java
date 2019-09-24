@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 /**
  * @ProjectName video
- * @Description: 评分实体类
- * @author: Asimple
+ * @description 评分实体类
+ * @author Asimple
  */
 public class Raty implements Serializable {
     private String id;//主键id

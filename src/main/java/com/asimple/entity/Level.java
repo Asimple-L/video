@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 /**
  * @ProjectName video
- * @Description: 级别实体
- * @author: Asimple
+ * @description 级别实体
+ * @author Asimple
  */
 public class Level implements Serializable {
     private String id; // 主键id

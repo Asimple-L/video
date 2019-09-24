@@ -5,8 +5,8 @@ import java.util.List;
 
 /**
  * @ProjectName video
- * @Description: 二级子类目录
- * @author: Asimple
+ * @description 二级子类目录
+ * @author Asimple
  */
 
 public class SubClass implements Serializable {

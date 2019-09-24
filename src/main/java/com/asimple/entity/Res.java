@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 /**
  * @ProjectName video
- * @Description: 资源实体类
- * @author: Asimple
+ * @description 资源实体类
+ * @author Asimple
  */
 public class Res implements Serializable {
     private String id; // 主键id

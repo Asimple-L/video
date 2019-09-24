@@ -12,8 +12,8 @@ import java.util.List;
 
 /**
  * @ProjectName video
- * @Description: 一级分类Service实现类
- * @author: Asimple
+ * @description 一级分类Service实现类
+ * @author Asimple
  */
 @Service
 public class CataLogService {
@@ -21,8 +21,8 @@ public class CataLogService {
     private CataLogMapper cataLogMapper;
 
     /**
-     * @Author Asimple
-     * @Description 查找可用的列表
+     * @author Asimple
+     * @description 查找可用的列表
      **/
     @Cacheable(value = "redis_cataLogList")
     public List<CataLog> listIsUse() {
@@ -35,8 +35,8 @@ public class CataLogService {
     }
 
     /**
-     * @Author Asimple
-     * @Description 添加一级分类并返回id
+     * @author Asimple
+     * @description 添加一级分类并返回id
      **/
     public String add(CataLog cataLog) {
         if(Tools.isEmpty(cataLog.getId()) ) {
@@ -46,8 +46,8 @@ public class CataLogService {
     }
 
     /**
-     * @Author Asimple
-     * @Description 根据id查询一级分类
+     * @author Asimple
+     * @description 根据id查询一级分类
      **/
     public CataLog load(String cataLog_id) {
         return cataLogMapper.load(cataLog_id);

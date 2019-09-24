@@ -12,8 +12,8 @@ import java.util.List;
 
 /**
  * @ProjectName video
- * @Description: 评论Service实现类
- * @author: Asimple
+ * @description 评论Service实现类
+ * @author Asimple
  */
 @Service
 public class CommentService {
@@ -21,8 +21,8 @@ public class CommentService {
     private CommentMapper commentMapper;
 
     /**
-     * @Author Asimple
-     * @Description 分页获取评论
+     * @author Asimple
+     * @description 分页获取评论
      **/
     public PageBean<Comment> getPage(Comment comment, int pc, int ps) {
         if( comment == null ) comment = new Comment();
@@ -35,8 +35,8 @@ public class CommentService {
     }
 
     /**
-     * @Author Asimple
-     * @Description 保存评论
+     * @author Asimple
+     * @description 保存评论
      **/
     public boolean save(Comment comment) {
         comment.setId(Tools.UUID());
@@ -48,32 +48,32 @@ public class CommentService {
     }
 
     /**
-     * @Author Asimple
-     * @Description 更新评论
+     * @author Asimple
+     * @description 更新评论
      **/
     public boolean update(Comment comment) {
         return commentMapper.update(comment)==1;
     }
 
     /**
-     * @Author Asimple
-     * @Description 根据id获取评论
+     * @author Asimple
+     * @description 根据id获取评论
      **/
     public Comment load(String id) {
         return commentMapper.load(id);
     }
 
     /**
-     * @Author Asimple
-     * @Description 分页获取用户评论
+     * @author Asimple
+     * @description 分页获取用户评论
      **/
     public List<Comment> getPageByUid(String uid, int pc, int ps) {
         return commentMapper.getPageByUid(uid, (pc-1)*ps, ps);
     }
 
     /**
-     * @Author Asimple
-     * @Description 获取用户评论数目
+     * @author Asimple
+     * @description 获取用户评论数目
      **/
     public int getCommentsTotal(String uid) {
         return commentMapper.getCommentsTotal(uid);

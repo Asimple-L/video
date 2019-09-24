@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * @Description 返回数据包装类
- * @Author Asimple
+ * @description 返回数据包装类
+ * @author Asimple
  * @date 2019/9/23 21:43
  */
 public class ResponseReturnUtil {

@@ -22,8 +22,8 @@ import java.util.List;
 
 /**
  * @ProjectName video
- * @Description: 用户登录注册以及等级验证、个人中心
- * @author: Asimple
+ * @description 用户登录注册以及等级验证、个人中心
+ * @author Asimple
  */
 
 @Controller
@@ -37,8 +37,8 @@ public class Authentication {
 
 
     /**
-     * @Author Asimple
-     * @Description 进入注册页面
+     * @author Asimple
+     * @description 进入注册页面
      **/
     @RequestMapping(value = "/registerInput")
     public String registerInput() {
@@ -46,8 +46,8 @@ public class Authentication {
     }
 
     /**
-     * @Author Asimple
-     * @Description 用户注册
+     * @author Asimple
+     * @description 用户注册
      **/
     @RequestMapping(value = "/register")
     @ResponseBody
@@ -85,8 +85,8 @@ public class Authentication {
     }
 
     /**
-     * @Author Asimple
-     * @Description 用户登录
+     * @author Asimple
+     * @description 用户登录
      **/
     @RequestMapping(value = "/login")
     @ResponseBody
@@ -99,8 +99,8 @@ public class Authentication {
         return ResponseReturnUtil.returnErrorWithoutData("登录失败，用户不存在或密码错误！");
     }
     /**
-     * @Author Asimple
-     * @Description 登出
+     * @author Asimple
+     * @description 登出
      **/
     @RequestMapping( value = "/logout")
     @ResponseBody
@@ -113,8 +113,8 @@ public class Authentication {
     }
 
     /**
-     * @Author Asimple
-     * @Description 修改密码
+     * @author Asimple
+     * @description 修改密码
      **/
     @RequestMapping(value = "/updatePassword", produces = "text/html;charset=UTF-8")
     @ResponseBody
@@ -134,8 +134,8 @@ public class Authentication {
     }
 
     /**
-     * @Author Asimple
-     * @Description 使用VIP卡号
+     * @author Asimple
+     * @description 使用VIP卡号
      **/
     @RequestMapping( value = "/vipCodeVerification")
     @ResponseBody
@@ -190,8 +190,8 @@ public class Authentication {
     }
 
     /**
-     * @Author Asimple
-     * @Description 初始化验证码
+     * @author Asimple
+     * @description 初始化验证码
      **/
     @RequestMapping( value = "/initCaptcha")
     @ResponseBody
@@ -221,8 +221,8 @@ public class Authentication {
     }
 
     /**
-     * @Author Asimple
-     * @Description 二次验证校验
+     * @author Asimple
+     * @description 二次验证校验
      **/
     @RequestMapping( value = "/verifyLogin")
     @ResponseBody

@@ -5,8 +5,8 @@ import java.io.Serializable;
 
 /**
  * @ProjectName video
- * @Description: 类型实体
- * @author: Asimple
+ * @description 类型实体
+ * @author Asimple
  */
 public class Type implements Serializable {
     private String id;

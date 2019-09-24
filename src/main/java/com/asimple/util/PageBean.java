@@ -3,8 +3,8 @@ package com.asimple.util;
 import java.util.List;
 
 /**
- * @Author Asimple
- * @Description 分页模型类
+ * @author Asimple
+ * @description 分页模型类
  **/
 public class PageBean<T> {
 

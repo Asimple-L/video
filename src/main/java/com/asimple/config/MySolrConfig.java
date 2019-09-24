@@ -8,8 +8,8 @@ import org.springframework.data.solr.core.SolrTemplate;
 
 /**
  * @ProjectName video
- * @Description Solr 配置
- * @Author Asimple
+ * @description Solr 配置
+ * @author Asimple
  * @date 2019/8/31 22:24
  */
 @Configuration

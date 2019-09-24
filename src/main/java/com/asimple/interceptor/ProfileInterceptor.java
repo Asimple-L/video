@@ -11,8 +11,8 @@ import javax.servlet.http.HttpSession;
 
 /**
  * @ProjectName video
- * @Description: 个人中心拦截器
- * @author: Asimple
+ * @description 个人中心拦截器
+ * @author Asimple
  */
 public class ProfileInterceptor implements HandlerInterceptor {
     @Override

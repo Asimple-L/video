@@ -24,8 +24,8 @@ import java.util.*;
 
 /**
  * @ProjectName video
- * @Description: 后台管理
- * @author: Asimple
+ * @description 后台管理
+ * @author Asimple
  */
 @Controller
 @RequestMapping("/admin")
@@ -60,8 +60,8 @@ public class Manager {
     private SolrTemplate solrTemplate;
 
     /**
-     * @Author Asimple
-     * @Description 跳转到后台登录页面
+     * @author Asimple
+     * @description 跳转到后台登录页面
      **/
     @RequestMapping(value = "/login", method = { RequestMethod.GET })
     public String adminLoginPage() {
@@ -69,8 +69,8 @@ public class Manager {
     }
 
     /**
-     * @Author Asimple
-     * @Description 管理员登录
+     * @author Asimple
+     * @description 管理员登录
      **/
     @RequestMapping(value = "/login", method = { RequestMethod.POST })
     public String adminLogin(String username, String password, ModelMap map, HttpSession session) {
@@ -87,8 +87,8 @@ public class Manager {
     }
 
     /**
-     * @Author Asimple
-     * @Description 后台首页
+     * @author Asimple
+     * @description 后台首页
      **/
     @RequestMapping(value = {"/", "/index"})
     public String backIndex(ModelMap map, HttpSession session) {
@@ -96,8 +96,8 @@ public class Manager {
     }
 
     /**
-     * @Author Asimple
-     * @Description 影片资源管理
+     * @author Asimple
+     * @description 影片资源管理
      **/
     @RequestMapping(value = "/film")
     public String film(ModelMap map, String film_id) {
@@ -114,8 +114,8 @@ public class Manager {
     }
 
     /**
-     * @Author Asimple
-     * @Description 查看所有影视信息
+     * @author Asimple
+     * @description 查看所有影视信息
      **/
     @RequestMapping(value = "/list")
     public String filmList(ModelMap map, HttpServletRequest request) {
@@ -125,8 +125,8 @@ public class Manager {
     }
 
     /**
-     * @Author Asimple
-     * @Description 用户管理
+     * @author Asimple
+     * @description 用户管理
      **/
     @RequestMapping( value = "/userList")
     public String userList(String page, ModelMap map) {
@@ -140,8 +140,8 @@ public class Manager {
     }
 
     /**
-     * @Author Asimple
-     * @Description 更新用户信息
+     * @author Asimple
+     * @description 更新用户信息
      **/
     @RequestMapping( value = "/updateUser", method = RequestMethod.POST)
     @ResponseBody
@@ -161,8 +161,8 @@ public class Manager {
     }
 
     /**
-     * @Author Asimple
-     * @Description 添加影片
+     * @author Asimple
+     * @description 添加影片
      **/
     @RequestMapping( value = "/addFilm", produces = "text/html;charset=UTF-8")
     @ResponseBody
@@ -177,8 +177,8 @@ public class Manager {
     }
 
     /**
-     * @Author Asimple
-     * @Description 删除影片
+     * @author Asimple
+     * @description 删除影片
      **/
     @RequestMapping( value = "/delFilm")
     @ResponseBody
@@ -195,8 +195,8 @@ public class Manager {
 
 
     /**
-     * @Author Asimple
-     * @Description 添加资源
+     * @author Asimple
+     * @description 添加资源
      **/
     @RequestMapping(value = "/addRes")
     @ResponseBody
@@ -208,8 +208,8 @@ public class Manager {
     }
 
     /**
-     * @Author Asimple
-     * @Description 删除资源
+     * @author Asimple
+     * @description 删除资源
      **/
     @RequestMapping( value = "/delRes")
     @ResponseBody
@@ -221,8 +221,8 @@ public class Manager {
     }
 
     /**
-     * @Author Asimple
-     * @Description 更改在离线状态
+     * @author Asimple
+     * @description 更改在离线状态
      **/
     @RequestMapping( value = "/updateIsUse")
     @ResponseBody
@@ -238,8 +238,8 @@ public class Manager {
     }
 
     /**
-     * @Author Asimple
-     * @Description 更新影片信息
+     * @author Asimple
+     * @description 更新影片信息
      **/
     @RequestMapping( value = "/updateFilmInfo")
     @ResponseBody
@@ -261,8 +261,8 @@ public class Manager {
     }
 
     /**
-     * @Author Asimple
-     * @Description 目录管理
+     * @author Asimple
+     * @description 目录管理
      **/
     @RequestMapping( value = "/catalog")
     public String catalog(ModelMap map) {
@@ -271,8 +271,8 @@ public class Manager {
     }
 
     /**
-     * @Author Asimple
-     * @Description 目录查看与修改
+     * @author Asimple
+     * @description 目录查看与修改
      **/
     @RequestMapping( value = "/editCatalog")
     public String editCatalog(ModelMap map) {
@@ -281,8 +281,8 @@ public class Manager {
     }
 
     /**
-     * @Author Asimple
-     * @Description 添加年列表
+     * @author Asimple
+     * @description 添加年列表
      **/
     @RequestMapping( value = "addDecade")
     @ResponseBody
@@ -293,9 +293,9 @@ public class Manager {
         return addReturned(id);
     }
 
-    /*
-     * @Author Asimple
-     * @Description 添加级别
+    /**
+     * @author Asimple
+     * @description 添加级别
      **/
     @RequestMapping( value = "/addLevel")
     @ResponseBody
@@ -306,9 +306,9 @@ public class Manager {
         return addReturned(id);
     }
 
-    /*
-     * @Author Asimple
-     * @Description 添加地区
+    /**
+     * @author Asimple
+     * @description 添加地区
      **/
     @RequestMapping( value = "/addLoc")
     @ResponseBody
@@ -320,8 +320,8 @@ public class Manager {
     }
 
     /**
-     * @Author Asimple
-     * @Description 添加一级分类
+     * @author Asimple
+     * @description 添加一级分类
      **/
     @RequestMapping(value = "/addCataLog")
     @ResponseBody
@@ -334,8 +334,8 @@ public class Manager {
     }
 
     /**
-     * @Author Asimple
-     * @Description 添加二级分类
+     * @author Asimple
+     * @description 添加二级分类
      **/
     @RequestMapping(value = "/addSubClass")
     @ResponseBody
@@ -348,8 +348,8 @@ public class Manager {
     }
 
     /**
-     * @Author Asimple
-     * @Description 添加类型
+     * @author Asimple
+     * @description 添加类型
      **/
     @RequestMapping(value = "/addType")
     @ResponseBody
@@ -362,8 +362,8 @@ public class Manager {
     }
 
     /**
-     * @Author Asimple
-     * @Description VIP管理
+     * @author Asimple
+     * @description VIP管理
      **/
     @RequestMapping(value = "/vipCode")
     public String vipCode(ModelMap map) {
@@ -373,8 +373,8 @@ public class Manager {
     }
 
     /**
-     * @Author Asimple
-     * @Description 创建VIP卡号
+     * @author Asimple
+     * @description 创建VIP卡号
      **/
     @RequestMapping(value = "/createVipCode", method = RequestMethod.POST)
     @ResponseBody
@@ -403,8 +403,8 @@ public class Manager {
     }
 
     /**
-     * @Author Asimple
-     * @Description 数据导入页面
+     * @author Asimple
+     * @description 数据导入页面
      **/
     @RequestMapping(value = "/loadInSolrPage")
     public String loadSolr() {
@@ -412,8 +412,8 @@ public class Manager {
     }
 
     /**
-     * @Author Asimple
-     * @Description 导入Solr库
+     * @author Asimple
+     * @description 导入Solr库
      **/
     @RequestMapping(value = "/loadIn", produces = "text/html;charset=UTF-8")
     @ResponseBody

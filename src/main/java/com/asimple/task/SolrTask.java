@@ -14,8 +14,8 @@ import java.util.List;
 
 /**
  * @ProjectName video
- * @Description: solr数据导入
- * @author: Asimple
+ * @description solr数据导入
+ * @author Asimple
  */
 @Component
 @Configuration

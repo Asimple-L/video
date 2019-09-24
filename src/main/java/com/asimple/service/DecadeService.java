@@ -12,8 +12,8 @@ import java.util.List;
 
 /**
  * @ProjectName video
- * @Description: 年份服务实现类
- * @author: Asimple
+ * @description 年份服务实现类
+ * @author Asimple
  */
 @Service
 public class DecadeService {
@@ -22,8 +22,8 @@ public class DecadeService {
     private DecadeMapper decadeMapper;
 
     /**
-     * @Author Asimple
-     * @Description 查找在使用年份
+     * @author Asimple
+     * @description 查找在使用年份
      **/
     @Cacheable( value = "redis_decadeList")
     public List<Decade> listIsUse() {
@@ -36,8 +36,8 @@ public class DecadeService {
     }
 
     /**
-     * @Author Asimple
-     * @Description 添加年份
+     * @author Asimple
+     * @description 添加年份
      **/
     public String add(Decade decade) {
         if( decade.getId() == null || "".equals(decade.getId()) ) {

@@ -19,49 +19,43 @@ public class DateUtil {
 			"yyyy-MM-dd HH:mm:ss");
 
 	/**
-	 * 获取YYYY格式
-	 * 
-	 * @return
+	 * @description 获取YYYY格式
+	 * @author Asimple
 	 */
 	public static String getYear() {
 		return sdfYear.format(new Date());
 	}
 
 	/**
-	 * 获取YYYY-MM-DD格式
-	 * 
-	 * @return
+	 * @description 获取YYYY-MM-DD格式
+	 * @author Asimple
 	 */
 	public static String getDay() {
 		return sdfDay.format(new Date());
 	}
 	
 	/**
-	 * 获取YYYYMMDD格式
-	 * 
-	 * @return
+	 * @description 获取YYYYMMDD格式
+	 * @author Asimple
 	 */
 	public static String getDays(){
 		return sdfDays.format(new Date());
 	}
 
 	/**
-	 * 获取YYYY-MM-DD HH:mm:ss格式
-	 * 
-	 * @return
+	 * @description 获取YYYY-MM-DD HH:mm:ss格式
+	 * @return String
 	 */
 	public static String getTime() {
 		return sdfTime.format(new Date());
 	}
 
 	/**
-	* @Title: compareDate
-	* @Description: TODO(日期比较，如果s>=e 返回true 否则返回false)
-	* @param s
-	* @param e
-	* @return boolean  
-	* @throws
-	* @author luguosui
+	* @description 日期比较，如果s>=e 返回true 否则返回false
+	* @param s 日期1（字符串形式）
+	* @param e 日期2（字符串形式）
+	* @return boolean
+	* @author Asimple
 	 */
 	public static boolean compareDate(String s, String e) {
 		if(fomatDate(s)==null||fomatDate(e)==null){
@@ -71,9 +65,8 @@ public class DateUtil {
 	}
 
 	/**
-	 * 格式化日期
-	 * 
-	 * @return
+	 * @description 格式化日期
+	 * @author Asimple
 	 */
 	public static Date fomatDate(String date) {
 		DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
@@ -86,9 +79,8 @@ public class DateUtil {
 	}
 
 	/**
-	 * 校验日期是否合法
-	 * 
-	 * @return
+	 * @description 校验日期是否合法
+	 * @author Asimple
 	 */
 	public static boolean isValidDate(String s) {
 		DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
@@ -117,7 +109,7 @@ public class DateUtil {
      * @param endDateStr
      * @return
      * long 
-     * @author Administrator
+     * @author Asimple
      */
     public static long getDaySub(String beginDateStr,String endDateStr){
         long day=0;
@@ -138,9 +130,9 @@ public class DateUtil {
     }
     
     /**
-     * 得到n天之后的日期
-     * @param days
-     * @return
+     * @description 得到n天之后的日期
+     * @param days 之后几天
+     * @return String yyyy-MM-dd HH:mm:ss格式的时间
      */
     public static String getAfterDayDate(String days) {
     	int daysInt = Integer.parseInt(days);
@@ -156,9 +148,8 @@ public class DateUtil {
     }
     
     /**
-     * 得到n天之后是周几
-     * @param days
-     * @return
+     * @description 得到n天之后是周几
+     * @param days 之后几天
      */
     public static String getAfterDayWeek(String days) {
     	int daysInt = Integer.parseInt(days);
@@ -175,14 +166,9 @@ public class DateUtil {
 
 
 	public static String getTimeBucket(String furtherTime){
-		/*
-		* Java代码计算时间差
-		* 现在是：2004-03-26 13：31：40
-		* 过去是：2004-01-02 11：30：24
-		*/
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date now = new Date();
-		Date date = null;/* df.parse(furtherTime);*/
+		Date date = null;
 		try {
 			if (!"".equals(furtherTime)&&furtherTime!=null){
 				date = df.parse(furtherTime);
@@ -198,8 +184,6 @@ public class DateUtil {
 		long min=((l/(60*1000))-day*24*60-hour*60);
 		long s=(l/1000-day*24*60*60-hour*60*60-min*60);
 		String restTime =""+day+"天"+hour+"小时"+min+"分"+s+"秒";
-		/*System.out.println(""+day+"天"+hour+"小时"+min+"分"+s+"秒");*/
-		//现在要获得两个日期差，差的形式为：XX天XX小时XX分XX秒
 		return restTime;
 	}
 	public static int getAge(Date birthDate) {

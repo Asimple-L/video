@@ -3,8 +3,8 @@ package com.asimple.util;
 import java.io.UnsupportedEncodingException;
 
 /**
- * @Author Asimple
- * @Description 编码转换
+ * @author Asimple
+ * @description 编码转换
  **/
 public class CodeConvert {
 

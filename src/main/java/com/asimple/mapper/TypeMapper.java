@@ -8,8 +8,8 @@ import java.util.List;
 
 /**
  * @ProjectName video
- * @Description: 类型Dao层
- * @author: Asimple
+ * @description 类型Dao层
+ * @author Asimple
  */
 @Repository
 public interface TypeMapper extends IBaseDao<Type> {

@@ -1,9 +1,10 @@
 package com.asimple.util.mail;
+
+import java.util.Properties;
 /**
- * @Author Asimple
- * @Description 发送邮件需要使用的基本信息
+ * @author Asimple
+ * @description 发送邮件需要使用的基本信息
  **/
-import java.util.Properties;    
 public class MailSenderInfo {    
     // 发送邮件的服务器的IP和端口    
     private String mailServerHost;    

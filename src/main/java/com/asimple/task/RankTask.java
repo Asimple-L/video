@@ -14,8 +14,8 @@ import java.util.List;
 
 /**
  * @ProjectName video
- * @Description: 排行榜每日更新任务
- * @author: Asimple
+ * @description 排行榜每日更新任务
+ * @author Asimple
  */
 @Component
 @Configuration
@@ -36,8 +36,8 @@ public class RankTask {
     private CommonService commonService;
 
     /**
-     * @Author Asimple
-     * @Description 每日零点推荐榜更新
+     * @author Asimple
+     * @description 每日零点推荐榜更新
      **/
     @Scheduled(cron = "0 0 0 * * ?")
     public void commendRank() {

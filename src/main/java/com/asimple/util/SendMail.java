@@ -6,8 +6,8 @@ import com.asimple.util.mail.SimpleMailSender;
 import java.util.List;
 
 /**
- * @Author Asimple
- * @Description 发送邮件
+ * @author Asimple
+ * @description 发送邮件
  **/
 public class SendMail {
 

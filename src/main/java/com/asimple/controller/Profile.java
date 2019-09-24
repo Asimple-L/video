@@ -22,8 +22,8 @@ import java.util.Map;
 
 /**
  * @ProjectName video
- * @Description: 个人中心
- * @author: Asimple
+ * @description 个人中心
+ * @author Asimple
  */
 @Controller
 @RequestMapping("/profile")
@@ -44,8 +44,8 @@ public class Profile {
     private CommentService commentService;
 
     /**
-     * @Author Asimple
-     * @Description 进入个人中心页面
+     * @author Asimple
+     * @description 进入个人中心页面
      **/
     @RequestMapping(value = "/profilePage")
     public String profile(ModelMap map, HttpSession session) {
@@ -85,8 +85,8 @@ public class Profile {
     }
 
     /**
-     * @Author Asimple
-     * @Description 视频分享页面
+     * @author Asimple
+     * @description 视频分享页面
      **/
     @RequestMapping(value = "/share")
     public String shareVideo(HttpServletRequest request, ModelMap map) {
@@ -103,8 +103,8 @@ public class Profile {
     }
 
     /**
-     * @Author Asimple
-     * @Description 添加影片
+     * @author Asimple
+     * @description 添加影片
      **/
     @RequestMapping( value = "/addFilm", produces = "text/html;charset=UTF-8")
     @ResponseBody
@@ -119,8 +119,8 @@ public class Profile {
     }
 
     /**
-     * @Author Asimple
-     * @Description 删除影片
+     * @author Asimple
+     * @description 删除影片
      **/
     @RequestMapping( value = "/delFilm")
     @ResponseBody
@@ -136,8 +136,8 @@ public class Profile {
     }
 
     /**
-     * @Author Asimple
-     * @Description 添加资源
+     * @author Asimple
+     * @description 添加资源
      **/
     @RequestMapping(value = "/addRes")
     @ResponseBody
@@ -149,8 +149,8 @@ public class Profile {
     }
 
     /**
-     * @Author Asimple
-     * @Description 删除资源
+     * @author Asimple
+     * @description 删除资源
      **/
     @RequestMapping( value = "/delRes")
     @ResponseBody
@@ -162,8 +162,8 @@ public class Profile {
     }
 
     /**
-     * @Author Asimple
-     * @Description 更改在离线状态
+     * @author Asimple
+     * @description 更改在离线状态
      **/
     @RequestMapping( value = "/updateIsUse")
     @ResponseBody
@@ -179,8 +179,8 @@ public class Profile {
     }
 
     /**
-     * @Author Asimple
-     * @Description 更新影片信息
+     * @author Asimple
+     * @description 更新影片信息
      **/
     @RequestMapping( value = "/updateFilmInfo")
     @ResponseBody
@@ -202,8 +202,8 @@ public class Profile {
     }
 
     /**
-     * @Author Asimple
-     * @Description 获取二级目录信息
+     * @author Asimple
+     * @description 获取二级目录信息
      **/
     @RequestMapping(value = "/getSubClass", produces = "text/html;charset=UTF-8")
     @ResponseBody
@@ -222,8 +222,8 @@ public class Profile {
     }
 
     /**
-     * @Author Asimple
-     * @Description 获取类型
+     * @author Asimple
+     * @description 获取类型
      **/
     @RequestMapping(value = "/getType", produces = "text/html;charset=UTF-8")
     @ResponseBody
@@ -242,8 +242,8 @@ public class Profile {
     }
 
     /**
-     * @Author Asimple
-     * @Description 返回我的视频
+     * @author Asimple
+     * @description 返回我的视频
      **/
     @RequestMapping(value = "/getFilmAjax", produces = "text/html;charset=UTF-8")
     @ResponseBody

@@ -11,8 +11,8 @@ import javax.servlet.http.HttpSession;
 
 /**
  * @ProjectName video
- * @Description: 后台拦截器
- * @author: Asimple
+ * @description 后台拦截器
+ * @author Asimple
  */
 public class AdminUserInterceptor implements HandlerInterceptor {
     @Override

@@ -8,8 +8,8 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * @Author Asimple
- * @Description VIP管理业务层实现
+ * @author Asimple
+ * @description VIP管理业务层实现
  **/
 @Service
 public class VipCodeService {
@@ -17,16 +17,16 @@ public class VipCodeService {
     private VipCodeMapper vipCodeMapper;
 
     /**
-     * @Author Asimple
-     * @Description 查询所有可用的卡号
+     * @author Asimple
+     * @description 查询所有可用的卡号
      **/
     public List<VipCode> listIsUse() {
         return vipCodeMapper.findByIsUse();
     }
 
     /**
-     * @Author Asimple
-     * @Description 批量保存VIPCODE
+     * @author Asimple
+     * @description 批量保存VIPCODE
      **/
     public int saveAll(List<VipCode> vipCodes) {
         int count = 0, len = vipCodes.size();
@@ -37,16 +37,16 @@ public class VipCodeService {
     }
 
     /**
-     * @Author Asimple
-     * @Description 通过VIP卡号查找VIPCODE对象
+     * @author Asimple
+     * @description 通过VIP卡号查找VIPCODE对象
      **/
     public VipCode findByVipCode(String vip_code) {
         return vipCodeMapper.findByVipCode(vip_code);
     }
 
     /**
-     * @Author Asimple
-     * @Description 更新VIPCODE信息
+     * @author Asimple
+     * @description 更新VIPCODE信息
      **/
     public boolean update(VipCode vipCode) {
         return vipCodeMapper.update(vipCode)==1;

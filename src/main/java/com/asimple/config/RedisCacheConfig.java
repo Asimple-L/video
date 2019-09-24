@@ -16,8 +16,8 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
  * @ProjectName video
- * @Description  redis 缓存配置
- * @Author Asimple
+ * @description  redis 缓存配置
+ * @author Asimple
  * @date 2019/9/1 14:44
  */
 @Configuration

@@ -19,8 +19,8 @@ import java.util.*;
 
 /**
  * @ProjectName video
- * @Description: 电影service实现类
- * @author: Asimple
+ * @description 电影service实现类
+ * @author Asimple
  */
 
 @Service
@@ -40,32 +40,32 @@ public class FilmService {
     }
 
     /**
-     * @Author Asimple
-     * @Description 通过类型查找电影
+     * @author Asimple
+     * @description 通过类型查找电影
      **/
     public List<Film> listByType_id(String type_id) {
         return filmMapper.listByTypeId(type_id);
     }
 
     /**
-     * @Author Asimple
-     * @Description 通过类型查找电影TOP榜
+     * @author Asimple
+     * @description 通过类型查找电影TOP榜
      **/
     public List<Film> listByType_id(String type_id, int top) {
         return filmMapper.listByTypeId(type_id, top);
     }
 
     /**
-     * @Author Asimple
-     * @Description 通过分类查找电影列表
+     * @author Asimple
+     * @description 通过分类查找电影列表
      **/
     public List<Film> listByCataLog_id(String id) {
         return filmMapper.listByCataLog_id(id);
     }
 
     /**
-     * @Author Asimple
-     * @Description 通过分类查找前12的电影
+     * @author Asimple
+     * @description 通过分类查找前12的电影
      **/
     @Cacheable(value = "index_filmTuijian")
     public List<Film> listByCataLog_id(String id, int top) {
@@ -73,16 +73,16 @@ public class FilmService {
     }
 
     /**
-     * @Author Asimple
-     * @Description  查找评分排行电影
+     * @author Asimple
+     * @description  查找评分排行电影
      **/
     public List<Film> listByEvaluation(String id) {
         return filmMapper.listByEvaluation(id);
     }
 
     /**
-     * @Author Asimple
-     * @Description  查找评分排行前top的电影
+     * @author Asimple
+     * @description  查找评分排行前top的电影
      **/
     @Cacheable( value = "index_filmPaiHang")
     public List<Film> listByEvaluation(String id, int top) {
@@ -90,8 +90,8 @@ public class FilmService {
     }
 
     /**
-     * @Author Asimple
-     * @Description 分页查询电影
+     * @author Asimple
+     * @description 分页查询电影
      **/
     public PageBean<Film> getPage(Film ob, int pc, int ps) {
         PageBean<Film> pb = new PageBean<>();
@@ -104,24 +104,24 @@ public class FilmService {
     }
 
     /**
-     * @Author Asimple
-     * @Description 通过id获取Film对象
+     * @author Asimple
+     * @description 通过id获取Film对象
      **/
     public Film load(String film_id) {
         return filmMapper.load(film_id);
     }
 
     /**
-     * @Author Asimple
-     * @Description 更新Film信息
+     * @author Asimple
+     * @description 更新Film信息
      **/
     public boolean update(Film film) {
         return filmMapper.update(film)==1;
     }
 
     /**
-     * @Author Asimple
-     * @Description 保存Film对象
+     * @author Asimple
+     * @description 保存Film对象
      **/
     public String save(Film film) {
         // 初始化参数
@@ -141,8 +141,8 @@ public class FilmService {
     }
 
     /**
-     * @Author Asimple
-     * @Description 删除电影
+     * @author Asimple
+     * @description 删除电影
      **/
     public boolean deleteById(String film_id) {
         // 1、删除评分信息
@@ -155,16 +155,16 @@ public class FilmService {
     }
 
     /**
-     * @Author Asimple
-     * @Description 根据视频获取弹幕
+     * @author Asimple
+     * @description 根据视频获取弹幕
      **/
     public List<Bullet> getBulletByFilmId(String filmId) {
         return filmMapper.getBulletByFilmId(filmId);
     }
 
     /**
-     * @Author Asimple
-     * @Description 保存弹幕
+     * @author Asimple
+     * @description 保存弹幕
      **/
     public boolean saveBullet(Bullet bullet) {
         bullet.setId(Tools.UUID());
@@ -172,8 +172,8 @@ public class FilmService {
     }
 
     /**
-     * @Author Asimple
-     * @Description 查找用户上传的视频
+     * @author Asimple
+     * @description 查找用户上传的视频
      **/
     public List<Film> listByUser(String uid, int pc, int ps){
         int start = (pc-1)*ps;
@@ -181,16 +181,16 @@ public class FilmService {
     }
 
     /**
-     * @Author Asimple
-     * @Description 统计用户上传的视频
+     * @author Asimple
+     * @description 统计用户上传的视频
      **/
     public int countListByUser(String uid) {
         return filmMapper.countListByUser(uid);
     }
 
     /**
-     * @Author Asimple
-     * @Description 添加用户浏览记录
+     * @author Asimple
+     * @description 添加用户浏览记录
      **/
     public void addViewHistory(String filmId, String uid){
         Map map = new HashMap();
@@ -209,8 +209,8 @@ public class FilmService {
     }
 
     /**
-     * @Author Asimple
-     * @Description 获取用户浏览记录
+     * @author Asimple
+     * @description 获取用户浏览记录
      **/
     public List<Map> getViewHistory(String uid, int pc, int ps){
         List<Map> temp = filmMapper.getViewHistory(uid, (pc-1)*ps, ps);

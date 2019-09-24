@@ -10,8 +10,8 @@ import java.util.Properties;
 
 /**
  * @ProjectName video
- * @Description 配置文件读取类设置
- * @Author Asimple
+ * @description 配置文件读取类设置
+ * @author Asimple
  * @date 2019/9/13 12:35
  */
 public class WebConfig {
