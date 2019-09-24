@@ -6,7 +6,6 @@ import com.asimple.service.*;
 import com.asimple.util.*;
 import net.sf.json.JSONObject;
 import org.json.JSONException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -29,10 +28,6 @@ import java.util.List;
 
 @Controller
 public class Authentication {
-    @Value("${userKey}")
-    private String userKey;
-    @Value("${key}")
-    private String key;
     @Resource
     private UserService userService;
     @Resource
@@ -66,12 +61,12 @@ public class Authentication {
             if( users == null || users.isEmpty() ) {
                 user.setCreateDate(new Date());
                 user.setExpireDate(new Date());
-                user.setUserPasswd(MD5Auth.MD5Encode(user.getUserPasswd()+key, "UTF-8"));
+                user.setUserPasswd(MD5Auth.MD5Encode(user.getUserPasswd()+VideoKeyNameUtil.PASSWORD_KEY, "UTF-8"));
                 User u = userService.add(user);
                 if( u != null ) {
                     jsonObject.put("code","1");
                     jsonObject.put("data",u);
-                    session.setAttribute(userKey,u);
+                    session.setAttribute(VideoKeyNameUtil.USER_KEY,u);
                 } else {
                     jsonObject.put("code","0");
                     jsonObject.put("error","注册失败！请稍后重试");
@@ -124,8 +119,8 @@ public class Authentication {
     @ResponseBody
     public String logout(HttpSession session) {
         JSONObject jsonObject = new JSONObject();
-        session.removeAttribute(userKey);
-        session.removeAttribute("adminUser");
+        session.removeAttribute(VideoKeyNameUtil.USER_KEY);
+        session.removeAttribute(VideoKeyNameUtil.ADMIN_USER_KEY);
         jsonObject.put("code","1");
         return jsonObject.toString();
     }
@@ -138,12 +133,12 @@ public class Authentication {
     @ResponseBody
     public String updatePassword(HttpSession session, String oldPwd, String newPwd) {
         JSONObject jsonObject = new JSONObject();
-        User user = (User) session.getAttribute(userKey);
-        if( MD5Auth.validatePassword(user.getUserPasswd(), oldPwd+key, "UTF-8") ) {
-            user.setUserPasswd(MD5Auth.MD5Encode(newPwd+key, "UTF-8"));
+        User user = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
+        if( MD5Auth.validatePassword(user.getUserPasswd(), oldPwd+VideoKeyNameUtil.PASSWORD_KEY, "UTF-8") ) {
+            user.setUserPasswd(MD5Auth.MD5Encode(newPwd+VideoKeyNameUtil.PASSWORD_KEY, "UTF-8"));
             userService.update(user);
             jsonObject.put("code", 1);
-            session.removeAttribute(userKey);
+            session.removeAttribute(VideoKeyNameUtil.USER_KEY);
         } else {
             jsonObject.put("code", 0);
             jsonObject.put("msg", "旧密码输入错误!");
@@ -161,7 +156,7 @@ public class Authentication {
         JSONObject jsonObject = new JSONObject();
         VipCode vipCode = vipCodeService.findByVipCode(vip_code);
         if( vip_code != null ) {// 卡是不为空
-            User user_temp = (User) session.getAttribute(userKey);
+            User user_temp = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
             User user = userService.load(user_temp.getId());
             if( user != null ) {// 用户不为空
                 // 判断当前改用户的到期时间是否比当前时间大
@@ -190,7 +185,7 @@ public class Authentication {
                         jsonObject.put("code", "0");
                         jsonObject.put("error", "系统繁忙，请稍后重试！");
                     }
-                    session.setAttribute(userKey, user);
+                    session.setAttribute(VideoKeyNameUtil.USER_KEY, user);
                 } else {
                     jsonObject.put("code", "0");
                     jsonObject.put("error", "加油失败，请稍后重试！");
@@ -301,7 +296,7 @@ public class Authentication {
     // 检查用户登录信息是否正确
     private void checkAccount(String password, HttpSession session, JSONObject jsonObject, List<User> users) {
         User userDb = users.get(0);
-        if( MD5Auth.validatePassword(userDb.getUserPasswd(), password+key, "UTF-8")) {
+        if( MD5Auth.validatePassword(userDb.getUserPasswd(), password+VideoKeyNameUtil.PASSWORD_KEY, "UTF-8")) {
             jsonObject.put("code", "1");
             /*进行VIP身份过期校验*/
             if(userDb.getExpireDate().getTime()<=new Date().getTime()){
@@ -309,7 +304,7 @@ public class Authentication {
                 userDb.setIsVip(0);
                 userService.update(userDb);
             }
-            session.setAttribute(userKey,userDb);
+            session.setAttribute(VideoKeyNameUtil.USER_KEY,userDb);
         } else {
             jsonObject.put("code", "0");
             jsonObject.put("error","用户或密码错误！");

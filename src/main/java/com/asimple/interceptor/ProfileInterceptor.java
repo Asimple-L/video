@@ -1,6 +1,7 @@
 package com.asimple.interceptor;
 
 import com.asimple.entity.User;
+import com.asimple.util.VideoKeyNameUtil;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -21,7 +22,7 @@ public class ProfileInterceptor implements HandlerInterceptor {
             return true;
         }
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("u_skl");
+        User user = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
         if( user!=null ) return true;
         response.sendRedirect("/video/index");
         return false;

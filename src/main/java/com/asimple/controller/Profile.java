@@ -8,7 +8,6 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 import net.sf.json.util.PropertyFilter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,8 +28,6 @@ import java.util.Map;
 @Controller
 @RequestMapping("/profile")
 public class Profile {
-    @Value("${userKey}")
-    private String userKey;
     @Resource
     private ResService resService;
     @Resource
@@ -53,7 +50,7 @@ public class Profile {
     @RequestMapping(value = "/profilePage")
     public String profile(ModelMap map, HttpSession session) {
         map = commonService.getCatalog(map);
-        User user = (User) session.getAttribute(userKey);
+        User user = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
         String uid = user.getId();
         // 我的视频
         List<Film> list = filmService.listByUser(uid, 1, 5);
@@ -113,7 +110,7 @@ public class Profile {
     @ResponseBody
     public String addFilm(Film film, HttpSession session) {
         JSONObject jsonObject = new JSONObject();
-        User user = (User) session.getAttribute(userKey);
+        User user = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
         film.setUser(user);
         String id = filmService.save(film);
         this.updateRedis(id);
@@ -128,7 +125,7 @@ public class Profile {
     @RequestMapping( value = "/delFilm")
     @ResponseBody
     public String delFilm(String film_id) {
-        LogUtil.info(Manager.class, "film_id = " + film_id);
+        LogUtil.info(Profile.class, "film_id = " + film_id);
         JSONObject jsonObject = new JSONObject();
         if ( filmService.deleteById(film_id) ) {
             jsonObject.put("code", "1");
@@ -251,7 +248,7 @@ public class Profile {
     @RequestMapping(value = "/getFilmAjax", produces = "text/html;charset=UTF-8")
     @ResponseBody
     public String getFilm(HttpSession session, int pc, String type) {
-        User user = (User) session.getAttribute(userKey);
+        User user = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
         JSONObject jsonObject = new JSONObject();
         if( "my-films".equalsIgnoreCase(type) ) {
             int total = filmService.countListByUser(user.getId());
@@ -272,7 +269,7 @@ public class Profile {
     @ResponseBody
     public String getMyComments(HttpSession session, int pc) {
         JSONObject jsonObject = new JSONObject();
-        User user = (User) session.getAttribute(userKey);
+        User user = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
         jsonObject.put("commentList", commentService.getPageByUid(user.getId(), pc, 4));
         jsonObject.put("pageNo", pc);
         jsonObject.put("totalPage", commentService.getCommentsTotal(user.getId()));

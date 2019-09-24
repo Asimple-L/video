@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.asimple.entity.*;
 import com.asimple.service.*;
 import com.asimple.util.*;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +13,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.tools.Tool;
 import java.util.*;
 
 /**
@@ -26,8 +24,6 @@ import java.util.*;
 @Controller
 @RequestMapping("/xl")
 public class Search {
-    @Value("${userKey}")
-    private String userKey;
     @Resource
     private FilmService filmService;
     @Resource
@@ -76,7 +72,7 @@ public class Search {
         film.setResList(resService.getListByFilmId(film_id));
         // VIP资源校验
         if (film.getIsVip() == 1) {
-            User u_sk1 = (User) session.getAttribute(userKey);
+            User u_sk1 = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
             // 得到发送请求的页面
             String referer = request.getHeader("referer");
             if (u_sk1 != null) {
@@ -170,7 +166,7 @@ public class Search {
         map.addAttribute("resListOther", resListOther);
 
         // 添加浏览记录
-        User user =(User) session.getAttribute(userKey);
+        User user =(User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
         if( user!=null ) {
             filmService.addViewHistory(film.getId(), user.getId());
         }

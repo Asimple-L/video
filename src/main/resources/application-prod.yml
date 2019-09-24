@@ -35,7 +35,3 @@ mybatis:
   type-aliases-package: com.asimple.mapper
 server:
   context-path: /video
-
-userKey: u_skl
-key: a1s2i3m4p5l6e7
-adminUserKey: adminUser

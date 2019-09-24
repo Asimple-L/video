@@ -7,7 +7,6 @@ import com.asimple.task.SolrTask;
 import com.asimple.util.*;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.data.solr.core.query.*;
 import org.springframework.data.solr.core.query.result.HighlightEntry;
@@ -31,10 +30,6 @@ import java.util.*;
 @Controller
 @RequestMapping("/admin")
 public class Manager {
-    @Value("${key}")
-    private String key;
-    @Value("${userKey}")
-    private String userKey;
     @Resource
     private UserService userService;
     @Resource
@@ -183,7 +178,7 @@ public class Manager {
     @RequestMapping( value = "/addFilm", produces = "text/html;charset=UTF-8")
     @ResponseBody
     public String addFilm(Film film, HttpSession session) {
-        User user = (User) session.getAttribute("adminUser");
+        User user = (User) session.getAttribute(VideoKeyNameUtil.ADMIN_USER_KEY);
         JSONObject jsonObject = new JSONObject();
         film.setUser(user);
         String id = filmService.save(film);
@@ -442,10 +437,10 @@ public class Manager {
 
     private boolean checkAccount(String password, List<User> users, HttpSession session, ModelMap map) {
         User user = users.get(0);
-        if( MD5Auth.validatePassword(user.getUserPasswd(), password+key, "UTF-8") && user.getIsManager() == 1 ) { // 登录成功
-            session.setAttribute("adminUser", user);
-            session.setAttribute(userKey, user);
-            System.out.println(userKey);
+        if( MD5Auth.validatePassword(user.getUserPasswd(), password+VideoKeyNameUtil.PASSWORD_KEY, "UTF-8") && user.getIsManager() == 1 ) { // 登录成功
+            session.setAttribute(VideoKeyNameUtil.ADMIN_USER_KEY, user);
+            session.setAttribute(VideoKeyNameUtil.USER_KEY, user);
+            System.out.println(VideoKeyNameUtil.USER_KEY);
             return true;
         } else {
             map.addAttribute("msg", "请登录正确的管理员账号！");

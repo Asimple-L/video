@@ -1,6 +1,7 @@
 package com.asimple.interceptor;
 
 import com.asimple.entity.User;
+import com.asimple.util.VideoKeyNameUtil;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -21,7 +22,7 @@ public class AdminUserInterceptor implements HandlerInterceptor {
             return true;
         }
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("adminUser");
+        User user = (User) session.getAttribute(VideoKeyNameUtil.ADMIN_USER_KEY);
         if( user!=null && user.getIsManager()==1 ) return true;
         request.setAttribute("msg", "请登录管理员账号!");
         request.getRequestDispatcher("/WEB-INF/jsp/manager/login.jsp").forward(request, response);
