@@ -48,4 +48,8 @@ public class ResponseReturnUtil {
         return returnErrorMsgAndData(null, data);
     }
 
+    public static JSONObject returnSuccessWithMsgAndData(){
+        return returnSuccessWithoutData(null);
+    }
+
 }

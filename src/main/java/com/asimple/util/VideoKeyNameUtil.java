@@ -12,4 +12,6 @@ public class VideoKeyNameUtil {
     public static final String USER_KEY = "u_sk1";
     // 加密串
     public static final String PASSWORD_KEY = "a1s2i3m4p5l6e7";
+    // 加密编码
+    public static final String ENCODE = "UTF-8";
 }

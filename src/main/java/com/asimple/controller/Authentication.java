@@ -32,6 +32,8 @@ public class Authentication {
     private UserService userService;
     @Resource
     private VipCodeService vipCodeService;
+    @Resource
+    private CommonService commonService;
 
 
     /**
@@ -88,28 +90,13 @@ public class Authentication {
      **/
     @RequestMapping(value = "/login")
     @ResponseBody
-    public String login(String account_l, String password_l, HttpSession session) {
-        JSONObject jsonObject = new JSONObject();
-        User user = new User();
-        List<User> users = null;
-        // 用户登录可以是邮箱或者用户名，需要进行两次匹配
-        if ( Tools.notEmpty(account_l) ) {
-            user.setUserName(account_l);
-            users = userService.findByCondition(user);
+    public Object login(String account_l, String password_l, HttpSession session) {
+        User user = commonService.checkUser(account_l, password_l);
+        if( null != user ) {
+            session.setAttribute(VideoKeyNameUtil.USER_KEY, user);
+            return ResponseReturnUtil.returnSuccessWithMsgAndData();
         }
-        if ( users!=null && users.size()>0 ) {
-            checkAccount(password_l, session, jsonObject, users);
-        } else {
-            user.setUserEmail(account_l);
-            users = userService.findByCondition(user);
-            if( users!=null && users.size()>0 ) {
-                checkAccount(password_l, session, jsonObject, users);
-            } else {
-                jsonObject.put("code", "0");
-                jsonObject.put("error","登录失败，用户不存在或密码错误！");
-            }
-        }
-        return jsonObject.toString();
+        return ResponseReturnUtil.returnErrorWithoutData("登录失败，用户不存在或密码错误！");
     }
     /**
      * @Author Asimple
@@ -290,24 +277,6 @@ public class Authentication {
             }
             PrintWriter out = response.getWriter();
             out.println(data.toString());
-        }
-    }
-
-    // 检查用户登录信息是否正确
-    private void checkAccount(String password, HttpSession session, JSONObject jsonObject, List<User> users) {
-        User userDb = users.get(0);
-        if( MD5Auth.validatePassword(userDb.getUserPasswd(), password+VideoKeyNameUtil.PASSWORD_KEY, "UTF-8")) {
-            jsonObject.put("code", "1");
-            /*进行VIP身份过期校验*/
-            if(userDb.getExpireDate().getTime()<=new Date().getTime()){
-                /*当前过期时间与当前的时间小，则表示已经过期*/
-                userDb.setIsVip(0);
-                userService.update(userDb);
-            }
-            session.setAttribute(VideoKeyNameUtil.USER_KEY,userDb);
-        } else {
-            jsonObject.put("code", "0");
-            jsonObject.put("error","用户或密码错误！");
         }
     }
 

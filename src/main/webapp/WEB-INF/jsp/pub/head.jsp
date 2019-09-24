@@ -128,11 +128,7 @@
                     if(data.code=="1"){
                         location.reload();
                     }else{
-                        if(data.error){
-                            alert(data.error);
-                        }else{
-                            alert("用户名或密码错误！");
-                        }
+                        alert(data.msg);
                     }
                 }
             });

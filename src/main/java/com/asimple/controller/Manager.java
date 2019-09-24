@@ -75,26 +75,15 @@ public class Manager {
     @RequestMapping(value = "/login", method = { RequestMethod.POST })
     public String adminLogin(String username, String password, ModelMap map, HttpSession session) {
         // 用户名或者邮箱登录
-        boolean flag = false;// 是否登录成功
-        User user = new User();
-        user.setUserName(username);
-        List<User> users = userService.findByCondition(user);
-        // 用户名登录
-        if( users != null && users.size()>0 ) {
-            flag = checkAccount(password, users, session, map);
-        } else { // 邮箱登录
-            user.setUserName(null);
-            user.setUserEmail(username);
-            users = userService.findByCondition(user);
-            if( users!=null && users.size()>0 ) {
-                flag = checkAccount(password, users, session, map);
-            } else {
-                map.addAttribute("msg", "请登录正确的管理员账号！");
-            }
-        }
+        User user = commonService.checkUser(username, password);
         // 登录成功重定向到后台首页
-        if ( flag ) return "redirect:/admin/index";
-        else return "manager/login";
+        if ( null != user ) {
+            session.setAttribute(VideoKeyNameUtil.ADMIN_USER_KEY, user);
+            session.setAttribute(VideoKeyNameUtil.USER_KEY, user);
+            return "redirect:/admin/index";
+        }
+        map.addAttribute("msg", "请登录正确的管理员账号！");
+        return "manager/login";
     }
 
     /**
@@ -433,19 +422,6 @@ public class Manager {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("code", "1");
         return jsonObject.toString();
-    }
-
-    private boolean checkAccount(String password, List<User> users, HttpSession session, ModelMap map) {
-        User user = users.get(0);
-        if( MD5Auth.validatePassword(user.getUserPasswd(), password+VideoKeyNameUtil.PASSWORD_KEY, "UTF-8") && user.getIsManager() == 1 ) { // 登录成功
-            session.setAttribute(VideoKeyNameUtil.ADMIN_USER_KEY, user);
-            session.setAttribute(VideoKeyNameUtil.USER_KEY, user);
-            System.out.println(VideoKeyNameUtil.USER_KEY);
-            return true;
-        } else {
-            map.addAttribute("msg", "请登录正确的管理员账号！");
-            return false;
-        }
     }
 
     private void getFilmList(ModelMap map, HttpServletRequest request) {

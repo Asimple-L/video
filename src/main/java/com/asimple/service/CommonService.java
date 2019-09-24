@@ -1,16 +1,13 @@
 package com.asimple.service;
 
-import com.asimple.controller.Manager;
-import com.asimple.controller.Profile;
 import com.asimple.entity.*;
-import com.asimple.util.FileOperate;
-import com.asimple.util.LogUtil;
+import com.asimple.util.*;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +30,8 @@ public class CommonService {
     private FilmService filmService;
     @Resource
     private TypeService typeService;
+    @Resource
+    private UserService userService;
 
     public boolean updateFilmInfo(Map params) {
         String key = (String) params.get("key");
@@ -86,6 +85,25 @@ public class CommonService {
         return filmService.update(film);
     }
 
+    public User checkUser(String account_l, String password_l) {
+        User user = new User();
+        List<User> users = null;
+        // 用户登录可以是邮箱或者用户名，需要进行两次匹配
+        if ( Tools.notEmpty(account_l) ) {
+            user.setUserName(account_l);
+            users = userService.findByCondition(user);
+        }
+        if ( users!=null && users.size()>0 ) {
+            return checkAccount(password_l, users);
+        } else {
+            user.setUserEmail(account_l);
+            users = userService.findByCondition(user);
+            if( users!=null && users.size()>0 ) {
+                return checkAccount(password_l, users);
+            }
+        }
+        return null;
+    }
 
     public ModelMap getCatalog(ModelMap model) {
         List<Loc> locList =  locService.listIsUse();
@@ -125,4 +143,18 @@ public class CommonService {
         LogUtil.info("从redis清除首页排行缓存!");
     }
 
+    // 检查用户登录信息是否正确
+    private User checkAccount(String password, List<User> users) {
+        User userDb = users.get(0);
+        if( MD5Auth.validatePassword(userDb.getUserPasswd(), password+ VideoKeyNameUtil.PASSWORD_KEY, VideoKeyNameUtil.ENCODE)) {
+            /*进行VIP身份过期校验*/
+            if(userDb.getExpireDate().getTime()<=new Date().getTime()){
+                /*当前过期时间与当前的时间小，则表示已经过期*/
+                userDb.setIsVip(0);
+                userService.update(userDb);
+            }
+            return userDb;
+        }
+        return null;
+    }
 }
