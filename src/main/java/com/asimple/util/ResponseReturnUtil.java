@@ -25,11 +25,11 @@ public class ResponseReturnUtil {
     }
 
     public static JSONObject returnSuccessMsgAndData(String msg, Object data) {
-        return returnData("1", msg, data);
+        return returnData("111111", msg, data);
     }
 
     public static JSONObject returnErrorMsgAndData(String msg, Object data) {
-        return returnData("0", msg, data);
+        return returnData("000000", msg, data);
     }
 
     public static JSONObject returnSuccessWithoutData(String msg) {
@@ -48,7 +48,7 @@ public class ResponseReturnUtil {
         return returnErrorMsgAndData(null, data);
     }
 
-    public static JSONObject returnSuccessWithMsgAndData(){
+    public static JSONObject returnSuccessWithoutMsgAndData(){
         return returnSuccessWithoutData(null);
     }
 

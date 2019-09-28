@@ -3,9 +3,9 @@ package com.asimple.controller;
 import com.asimple.util.FileOperate;
 import com.asimple.util.JSONUtil;
 import net.sf.json.JSONObject;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -23,7 +23,7 @@ import java.util.*;
  * @description 工具访问，文件上传，邮件发送等等
  * @author Asimple
  */
-@Controller
+@RestController
 public class Util implements ServletContextAware {
     private ServletContext servletContext;
 
@@ -37,7 +37,6 @@ public class Util implements ServletContextAware {
      * @description 文件上传(多文件上传处理)
      **/
     @RequestMapping(value = "/upload", produces = "text/html;charset=UTF-8")
-    @ResponseBody
     public String upload(String childPath, HttpServletRequest request) throws IOException{
         // 文件上传处理
         Properties pro = new Properties();
@@ -115,7 +114,6 @@ public class Util implements ServletContextAware {
      * @description 根据文件路径删除系统下的文件
      **/
     @RequestMapping(value = "/delFile", produces = "text/html;charset=UTF-8")
-    @ResponseBody
     public String delFile(String picsPath) {
         JSONObject jsonObject = new JSONObject();
         if( picsPath.startsWith("/video/") ) picsPath = picsPath.substring(picsPath.lastIndexOf("/video/")+"/video/".length());

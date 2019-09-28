@@ -6,19 +6,16 @@ import com.asimple.service.*;
 import com.asimple.util.*;
 import net.sf.json.JSONObject;
 import org.json.JSONException;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.PrintWriter;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 
 /**
  * @ProjectName video
@@ -26,7 +23,7 @@ import java.util.List;
  * @author Asimple
  */
 
-@Controller
+@RestController
 public class Authentication {
     @Resource
     private UserService userService;
@@ -35,53 +32,19 @@ public class Authentication {
     @Resource
     private CommonService commonService;
 
-
-    /**
-     * @author Asimple
-     * @description 进入注册页面
-     **/
-    @RequestMapping(value = "/registerInput")
-    public String registerInput() {
-        return "authentication/register_input";
-    }
-
     /**
      * @author Asimple
      * @description 用户注册
      **/
     @RequestMapping(value = "/register")
-    @ResponseBody
-    public String register(User user, HttpSession session) {
-        JSONObject jsonObject = new JSONObject();
-        User userCondition = new User();
-        userCondition.setUserEmail(user.getUserEmail());
-        List<User> users = userService.findByCondition(userCondition);
-        if( users == null || users.isEmpty() ) {
-            userCondition = new User();
-            userCondition.setUserName(user.getUserName());
-            users = userService.findByCondition(user);
-            if( users == null || users.isEmpty() ) {
-                user.setCreateDate(new Date());
-                user.setExpireDate(new Date());
-                user.setUserPasswd(MD5Auth.MD5Encode(user.getUserPasswd()+VideoKeyNameUtil.PASSWORD_KEY, "UTF-8"));
-                User u = userService.add(user);
-                if( u != null ) {
-                    jsonObject.put("code","1");
-                    jsonObject.put("data",u);
-                    session.setAttribute(VideoKeyNameUtil.USER_KEY,u);
-                } else {
-                    jsonObject.put("code","0");
-                    jsonObject.put("error","注册失败！请稍后重试");
-                }
-            } else {
-                jsonObject.put("code","0");
-                jsonObject.put("error","该用户名已存在！");
-            }
+    public Object register(User user, HttpSession session) {
+        User userDb = userService.register(user);
+        if( null == userDb ) {
+            return ResponseReturnUtil.returnErrorWithoutData("注册失败！邮箱或者用户名已存在!");
         } else {
-            jsonObject.put("code", "0");
-            jsonObject.put("error", "该邮箱已经被注册！");
+            session.setAttribute(VideoKeyNameUtil.USER_KEY, userDb);
+            return ResponseReturnUtil.returnSuccessMsgAndData("注册成功,已自动登录!", user);
         }
-        return jsonObject.toString();
     }
 
     /**
@@ -89,12 +52,11 @@ public class Authentication {
      * @description 用户登录
      **/
     @RequestMapping(value = "/login")
-    @ResponseBody
-    public Object login(String account_l, String password_l, HttpSession session) {
-        User user = commonService.checkUser(account_l, password_l);
+    public Object login(String account, String password, HttpSession session) {
+        User user = commonService.checkUser(account, password);
         if( null != user ) {
             session.setAttribute(VideoKeyNameUtil.USER_KEY, user);
-            return ResponseReturnUtil.returnSuccessWithMsgAndData();
+            return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
         }
         return ResponseReturnUtil.returnErrorWithoutData("登录失败，用户不存在或密码错误！");
     }
@@ -103,13 +65,10 @@ public class Authentication {
      * @description 登出
      **/
     @RequestMapping( value = "/logout")
-    @ResponseBody
-    public String logout(HttpSession session) {
-        JSONObject jsonObject = new JSONObject();
+    public Object logout(HttpSession session) {
         session.removeAttribute(VideoKeyNameUtil.USER_KEY);
         session.removeAttribute(VideoKeyNameUtil.ADMIN_USER_KEY);
-        jsonObject.put("code","1");
-        return jsonObject.toString();
+        return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
     }
 
     /**
@@ -117,20 +76,17 @@ public class Authentication {
      * @description 修改密码
      **/
     @RequestMapping(value = "/updatePassword", produces = "text/html;charset=UTF-8")
-    @ResponseBody
-    public String updatePassword(HttpSession session, String oldPwd, String newPwd) {
-        JSONObject jsonObject = new JSONObject();
+    public Object updatePassword(HttpSession session, String oldPwd, String newPwd) {
         User user = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
-        if( MD5Auth.validatePassword(user.getUserPasswd(), oldPwd+VideoKeyNameUtil.PASSWORD_KEY, "UTF-8") ) {
-            user.setUserPasswd(MD5Auth.MD5Encode(newPwd+VideoKeyNameUtil.PASSWORD_KEY, "UTF-8"));
-            userService.update(user);
-            jsonObject.put("code", 1);
+        if( userService.checkPassword(user.getUserPasswd(), oldPwd) ) {
+            Map<String, Object> param = new HashMap<>(1);
+            param.put("user", user);
+            param.put("newPwd", newPwd);
+            userService.update(param);
             session.removeAttribute(VideoKeyNameUtil.USER_KEY);
-        } else {
-            jsonObject.put("code", 0);
-            jsonObject.put("msg", "旧密码输入错误!");
+            return ResponseReturnUtil.returnSuccessWithoutData("修改成功");
         }
-        return jsonObject.toString();
+        return ResponseReturnUtil.returnErrorWithoutData("旧密码输入错误!");
     }
 
     /**
@@ -138,55 +94,22 @@ public class Authentication {
      * @description 使用VIP卡号
      **/
     @RequestMapping( value = "/vipCodeVerification")
-    @ResponseBody
-    public String vipCodeVerification(String vip_code, HttpSession session) {
-        JSONObject jsonObject = new JSONObject();
-        VipCode vipCode = vipCodeService.findByVipCode(vip_code);
-        if( vip_code != null ) {// 卡是不为空
-            User user_temp = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
-            User user = userService.load(user_temp.getId());
-            if( user != null ) {// 用户不为空
-                // 判断当前改用户的到期时间是否比当前时间大
-                Date expireTime = user.getExpireDate();
-                Date expireTimeTemp = expireTime;
-                long isVip = user.getIsVip();
-                // 使用Calendar类操作时间会简洁很多
-                Calendar rightNow = Calendar.getInstance();
-                if( expireTime.getTime() > new Date().getTime() ) rightNow.setTime(expireTime);
-                // 添加一个月的时间
-                rightNow.add(Calendar.MONTH,1);
-                expireTime = rightNow.getTime();
-                // 重新设置VIP到期时间
-                user.setExpireDate(expireTime);
-                user.setIsVip(1);
-                if( userService.update(user) ) { // 更新用户信息成功
-                    // 设置VIP卡为不可用
-                    vipCode.setExpire_time(new Date());
-                    vipCode.setIsUse(0);
-                    if( vipCodeService.update(vipCode) ) {
-                        jsonObject.put("code", "1");
-                    } else {
-                        user.setExpireDate(expireTimeTemp);
-                        user.setIsVip(isVip);
-                        userService.update(user);
-                        jsonObject.put("code", "0");
-                        jsonObject.put("error", "系统繁忙，请稍后重试！");
-                    }
-                    session.setAttribute(VideoKeyNameUtil.USER_KEY, user);
-                } else {
-                    jsonObject.put("code", "0");
-                    jsonObject.put("error", "加油失败，请稍后重试！");
-                }
+    public Object vipCodeVerification(String vipCode, HttpSession session) {
+        VipCode code = vipCodeService.findByVipCode(vipCode);
+        User userTemp = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
+        User user = userService.load(userTemp.getId());
+        if( null != code && null!=user ) {
+            Map<String, Object> param = new HashMap<>(1);
+            param.put("user", user);
+            param.put("vipCode", code);
+            if( vipCodeService.useCode(param) ) {
+                session.setAttribute(VideoKeyNameUtil.USER_KEY, user);
+                return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
             } else {
-                jsonObject.put("code","0");
-                jsonObject.put("error","用户信息错误！");
+                return ResponseReturnUtil.returnErrorWithoutData("加油失败，请稍后重试!");
             }
-        } else {
-            jsonObject.put("code", "0");
-            jsonObject.put("error", "VIP加油卡号不存在");
         }
-
-        return jsonObject.toString();
+        return ResponseReturnUtil.returnErrorWithoutData("VIP加油卡号不存在!");
     }
 
     /**
@@ -194,14 +117,13 @@ public class Authentication {
      * @description 初始化验证码
      **/
     @RequestMapping( value = "/initCaptcha")
-    @ResponseBody
-    public void StartCaptcha(HttpServletRequest request, HttpServletResponse response) {
+    public void startCaptcha(HttpServletRequest request, HttpServletResponse response) {
        try {
            GeetestLib gtSdk = new GeetestLib(GeetestConfig.getGeetest_id(), GeetestConfig.getGeetest_key(),
                    GeetestConfig.isnewfailback());
-           String resStr = "{}";
+           String resStr;
            //自定义参数,可选择添加
-           HashMap<String, String> param = new HashMap<String, String>();
+           HashMap<String, String> param = new HashMap<>(16);
            param.put("user_id", "Asimple");
            param.put("client_type", "web");
            param.put("ip_address", "127.0.0.1");
@@ -225,8 +147,7 @@ public class Authentication {
      * @description 二次验证校验
      **/
     @RequestMapping( value = "/verifyLogin")
-    @ResponseBody
-    public void VerifyLogin(HttpServletRequest request, HttpServletResponse response) throws Exception{
+    public void verifyLogin(HttpServletRequest request, HttpServletResponse response) throws Exception{
         GeetestLib gtSdk = new GeetestLib(GeetestConfig.getGeetest_id(), GeetestConfig.getGeetest_key(),
                 GeetestConfig.isnewfailback());
         String challenge = request.getParameter(GeetestLib.fn_geetest_challenge);
@@ -234,17 +155,20 @@ public class Authentication {
         String seccode = request.getParameter(GeetestLib.fn_geetest_seccode);
 
         //从session中获取gt-server状态
-        int gt_server_status_code = (Integer) request.getSession().getAttribute(gtSdk.gtServerStatusSessionKey);
-        //从session中获取userid
-        String userid = (String)request.getSession().getAttribute("userid");
+        int gtServerStatusCode = (Integer) request.getSession().getAttribute(gtSdk.gtServerStatusSessionKey);
+        //从session中获取userId
+        String userId = (String)request.getSession().getAttribute("userid");
         //自定义参数,可选择添加
-        HashMap<String, String> param = new HashMap<>();
-        param.put("user_id", userid); //网站用户id
-        param.put("client_type", "web"); //web:电脑上的浏览器；h5:手机上的浏览器，包括移动应用内完全内置的web_view；native：通过原生SDK植入APP应用的方式
-        param.put("ip_address", "127.0.0.1"); //传输用户请求验证时所携带的IP
+        HashMap<String, String> param = new HashMap<>(16);
+        //网站用户id
+        param.put("user_id", userId);
+        //web:电脑上的浏览器；h5:手机上的浏览器，包括移动应用内完全内置的web_view；native：通过原生SDK植入APP应用的方式
+        param.put("client_type", "web");
+        //传输用户请求验证时所携带的IP
+        param.put("ip_address", "127.0.0.1");
 
-        int gtResult = 0;
-        if (gt_server_status_code == 1) {
+        int gtResult;
+        if (gtServerStatusCode == 1) {
             //gt-server正常，向gt-server进行二次验证
             gtResult = gtSdk.enhencedValidateRequest(challenge, validate, seccode, param);
             System.out.println(gtResult);
