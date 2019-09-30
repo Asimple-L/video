@@ -12,9 +12,15 @@ import com.asimple.util.LogUtil;
 import com.asimple.util.PageBean;
 import com.asimple.util.Tools;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.solr.core.SolrTemplate;
+import org.springframework.data.solr.core.query.*;
+import org.springframework.data.solr.core.query.result.HighlightEntry;
+import org.springframework.data.solr.core.query.result.HighlightPage;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.ModelMap;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -34,6 +40,8 @@ public class FilmService {
     private RatyMapper ratyMapper;
     @Resource
     private ResMapper resMapper;
+    @Resource
+    private SolrTemplate solrTemplate;
 
     public List<Film> findAll() {
         return filmMapper.getAll();
@@ -104,11 +112,12 @@ public class FilmService {
     }
 
     /**
-     * @author Asimple
-     * @description 通过id获取Film对象
-     **/
-    public Film load(String film_id) {
-        return filmMapper.load(film_id);
+     * 通过id获取Film对象
+     * @param filmId 根据id记载影片对象
+     * @return 影片对象
+     */
+    public Film load(String filmId) {
+        return filmMapper.load(filmId);
     }
 
     /**
@@ -120,9 +129,10 @@ public class FilmService {
     }
 
     /**
-     * @author Asimple
-     * @description 保存Film对象
-     **/
+     * 保存Film对象
+     * @param film 电影对象
+     * @return 保存成功返回id
+     */
     public String save(Film film) {
         // 初始化参数
         film.setIsUse(1);
@@ -229,5 +239,109 @@ public class FilmService {
         map.put("uid", uid);
         return filmMapper.countViewHistory(map);
     }
+
+    public Map<String, Object> getFilmList(HttpServletRequest request) {
+        String name = request.getParameter("name");
+        Map<String, Object> result = new HashMap<>(8);
+        if( !Tools.isEmpty(name) ) {
+            result.put("name", name);
+        }
+        // 分页查询所有电影列表
+        // 获取url条件信息
+        String url = request.getQueryString();
+        if( url != null ) {
+            int index = url.indexOf("&pc=");
+            if( index != -1 ) {
+                url = url.substring(0, index);
+            }
+        }
+        // 当前页面数
+        String value = request.getParameter("pc");
+        int pc = 1;
+        if( Tools.notEmpty(value) ) {
+            pc = Integer.parseInt(value);
+        }
+        // 每页显示数目
+        int ps = 27;
+        // 获取页面传递的查询条件
+        Film ob = Tools.toBean(request.getParameterMap(), Film.class);
+
+        PageBean<Film> pageBean = getPage(ob, pc, ps);
+        pageBean.setUrl(url);
+        result.put("pb", pageBean);
+        return result;
+    }
+
+    /**
+     * TODO SpringBoot Solr整合有问题，还在解决中
+     * 报错信息：org.apache.solr.client.solrj.impl.HttpSolrClient$RemoteSolrException: Error from server at http://127.0.0.1:8090/solr/video: Expected mime type application/octet-stream but got text/html.
+     * 未改成SpringBoot的时候，是正常运行的。
+     */
+    public Map<String, Object> getFilmOfSolr(HttpServletRequest request) {
+        Map<String, Object> result = new HashMap<>(8);
+        PageBean<Film> pageBean = new PageBean<>();
+        String name = request.getParameter("name");
+        if( !Tools.isEmpty(name) ) {
+            result.put("name", name);
+        }
+        // 待改进
+        String url = request.getQueryString();
+        if( url != null ) {
+            int index = url.indexOf("&pc=");
+            if( index != -1 ) {
+                url = url.substring(0, index);
+            }
+        }
+        // 当前页面数
+        String value = request.getParameter("pc");
+        int pc = 1;
+        if( Tools.notEmpty(value) ) {
+            pc = Integer.parseInt(value);
+        }
+        pageBean.setPc(pc);
+        // 每页显示数目
+        int ps = 27;
+        pageBean.setPs(ps);
+        // 获取页面传递的查询条件
+        Film ob = Tools.toBean(request.getParameterMap(), Film.class);
+        pageBean.setUrl(url);
+
+        HighlightQuery query = new SimpleHighlightQuery(new SimpleStringCriteria("*:*"));
+        if( Tools.notEmpty(name) ) {
+            Criteria filterCriteria = new Criteria("video_film_name").is("\"*"+name+"*\"");
+            FilterQuery filterQuery = new SimpleFilterQuery(filterCriteria);
+            query.addFilterQuery(filterQuery);
+        }
+        query.setOffset((pc-1)*ps);//开始索引（默认0）
+        query.setRows(ps);//每页记录数(默认10)
+
+        //***********************高亮设置***********************
+        //设置高亮的域
+        HighlightOptions highlightOptions = new HighlightOptions().addField("video_film_name");
+        //高亮前缀
+        highlightOptions.setSimplePrefix("<em style='color:red'>");
+        //高亮后缀
+        highlightOptions.setSimplePostfix("</em>");
+        //设置高亮选项
+        query.setHighlightOptions(highlightOptions);
+
+        //***********************获取数据***********************
+        HighlightPage<Film> page = solrTemplate.queryForHighlightPage(query, Film.class);
+
+        //***********************设置高亮结果***********************
+        List<HighlightEntry<Film>> highlighted = page.getHighlighted();
+        for (HighlightEntry<Film> h : highlighted) {//循环高亮入口集合
+            Film item = h.getEntity();//获取原实体类
+            if (h.getHighlights().size() > 0 && h.getHighlights().get(0).getSnipplets().size() > 0) {
+                item.setName(h.getHighlights().get(0).getSnipplets().get(0));//设置高亮的结果
+            }
+        }
+        System.err.println(page.getContent());
+        pageBean.setBeanList(page.getContent());
+        pageBean.setTr((int)page.getTotalElements());
+        result.put("pb", pageBean);
+        return result;
+    }
+
 
 }

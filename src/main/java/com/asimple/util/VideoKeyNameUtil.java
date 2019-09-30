@@ -14,4 +14,8 @@ public class VideoKeyNameUtil {
     public static final String PASSWORD_KEY = "a1s2i3m4p5l6e7";
     // 加密编码
     public static final String ENCODE = "UTF-8";
+    // 影片分割符
+    public static final String RES_NAME_SPLIT = "@@";
+
+    public static final String EPISODES_NAME_SPLIT = "##";
 }

@@ -8,6 +8,7 @@ import org.springframework.ui.ModelMap;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +34,11 @@ public class CommonService {
     @Resource
     private UserService userService;
 
+    /**
+     * 更新影片信息
+     * @param params 参数
+     * @return 是否更新成功
+     */
     public boolean updateFilmInfo(Map params) {
         String key = (String) params.get("key");
         String val = (String) params.get("val");
@@ -85,40 +91,50 @@ public class CommonService {
         return filmService.update(film);
     }
 
-    public User checkUser(String account_l, String password_l) {
+    /**
+     * 检查用户登录
+     * @param account 账户名称
+     * @param password 登录密码
+     * @return 登录成功返回user对象 否则返回null
+     */
+    public User checkUser(String account, String password) {
         User user = new User();
         List<User> users = null;
         // 用户登录可以是邮箱或者用户名，需要进行两次匹配
-        if ( Tools.notEmpty(account_l) ) {
-            user.setUserName(account_l);
+        if ( Tools.notEmpty(account) ) {
+            user.setUserName(account);
             users = userService.findByCondition(user);
         }
         if ( users!=null && users.size()>0 ) {
-            return checkAccount(password_l, users);
+            return checkAccount(password, users);
         } else {
-            user.setUserEmail(account_l);
+            user.setUserEmail(account);
             users = userService.findByCondition(user);
             if( users!=null && users.size()>0 ) {
-                return checkAccount(password_l, users);
+                return checkAccount(password, users);
             }
         }
         return null;
     }
 
-    public ModelMap getCatalog(ModelMap model) {
+    public Map<String, Object> getCatalog() {
+        Map<String, Object> result = new HashMap<>(4);
         List<Loc> locList =  locService.listIsUse();
         List<Level> levelList = levelService.listIsUse();
         List<Decade> decadeList = decadeService.listIsUse();
         List<CataLog> cataLogList = cataLogService.listIsUse();
 
         //读取路径下的文件返回UTF-8类型json字符串
-        model.addAttribute("locList", locList);
-        model.addAttribute("levelList", levelList);
-        model.addAttribute("decadeList", decadeList);
-        model.addAttribute("cataLogList", cataLogList);
-        return model;
+        result.put("locList", locList);
+        result.put("levelList", levelList);
+        result.put("decadeList", decadeList);
+        result.put("cataLogList", cataLogList);
+        return result;
     }
 
+    /**
+     * 清空所有缓存
+     */
     public void cleanRedisCache() {
         cataLogService.cleanRedisCache();
         locService.cleanLocList();
@@ -127,6 +143,9 @@ public class CommonService {
         this.cleanIndexCache();
     }
 
+    /**
+     * 清空首页缓存
+     */
     public void cleanIndexCache() {
         this.cleanIndexCachePaiHang();
         this.cleanIndexCacheTuiJian();
@@ -143,15 +162,22 @@ public class CommonService {
         LogUtil.info("从redis清除首页排行缓存!");
     }
 
-    // 检查用户登录信息是否正确
+    /**
+     * 检查用户登录信息是否正确
+     * @param password 密码
+     * @param users 用户信息
+     * @return 更新成功返回更新后的user对象 否则返回null
+     */
     private User checkAccount(String password, List<User> users) {
         User userDb = users.get(0);
         if( MD5Auth.validatePassword(userDb.getUserPasswd(), password+ VideoKeyNameUtil.PASSWORD_KEY, VideoKeyNameUtil.ENCODE)) {
             /*进行VIP身份过期校验*/
-            if(userDb.getExpireDate().getTime()<=new Date().getTime()){
+            if(userDb.getExpireDate().getTime()<= System.currentTimeMillis()){
                 /*当前过期时间与当前的时间小，则表示已经过期*/
                 userDb.setIsVip(0);
-                userService.update(userDb);
+                Map<String, Object> param = new HashMap<>(2);
+                param.put("user", userDb);
+                userService.update(param);
             }
             return userDb;
         }

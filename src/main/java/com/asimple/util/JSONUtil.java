@@ -36,7 +36,7 @@ public class JSONUtil {
     }
 
     public static Map<String,Object> toStringForMap(String jsonString){
-        HashMap<String, Object> data = new HashMap<>();
+        HashMap<String, Object> data = new HashMap<>(4);
         JSONObject jsonObject = JSONUtil.toJSONObject(jsonString);
         Iterator it = jsonObject.keys();
         while (it.hasNext()) {
@@ -134,7 +134,7 @@ public class JSONUtil {
      * @return
      */
     public static HashMap toHashMap(Object object) {
-        HashMap<String, Object> data = new HashMap<>();
+        HashMap<String, Object> data = new HashMap<>(16);
         JSONObject jsonObject = JSONUtil.toJSONObject(object);
         Iterator it = jsonObject.keys();
         while (it.hasNext()) {
@@ -158,7 +158,7 @@ public class JSONUtil {
         for (Object obj : jsonArray)
         {
             JSONObject jsonObject = (JSONObject) obj;
-            Map<String, Object> map = new HashMap<>();
+            Map<String, Object> map = new HashMap<>(16);
             Iterator it = jsonObject.keys();
             while (it.hasNext()) {
                 String key = (String) it.next();

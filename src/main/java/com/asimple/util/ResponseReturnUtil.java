@@ -32,24 +32,24 @@ public class ResponseReturnUtil {
         return returnData("000000", msg, data);
     }
 
-    public static JSONObject returnSuccessWithoutData(String msg) {
+    public static JSONObject returnSuccessWithMsg(String msg) {
         return returnSuccessMsgAndData(msg, null);
     }
 
-    public static JSONObject returnErrorWithoutData(String msg) {
+    public static JSONObject returnErrorWithMsg(String msg) {
         return returnErrorMsgAndData(msg, null);
     }
 
-    public static JSONObject returnSuccessWithoutMsg(Object data) {
+    public static JSONObject returnSuccessWithData(Object data) {
         return returnSuccessMsgAndData(null, data);
     }
 
-    public static JSONObject returnErrorWithoutMsg(Object data) {
+    public static JSONObject returnErrorWithData(Object data) {
         return returnErrorMsgAndData(null, data);
     }
 
     public static JSONObject returnSuccessWithoutMsgAndData(){
-        return returnSuccessWithoutData(null);
+        return returnSuccessWithMsg(null);
     }
 
 }

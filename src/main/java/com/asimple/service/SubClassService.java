@@ -1,5 +1,6 @@
 package com.asimple.service;
 
+import com.asimple.entity.CataLog;
 import com.asimple.entity.SubClass;
 import com.asimple.mapper.SubClassMapper;
 import com.asimple.util.Tools;
@@ -18,6 +19,8 @@ public class SubClassService {
 
     @Resource
     private SubClassMapper subClassMapper;
+    @Resource
+    private CataLogService cataLogService;
 
     /**
      * @author Asimple
@@ -28,10 +31,15 @@ public class SubClassService {
     }
 
     /**
-     * @author Asimple
-     * @description 添加二级分类
-     **/
-    public String add(SubClass subClass) {
+     * 添加二级分类
+     * @param subClass 二级分类对象
+     * @param cataLogId 对应的一级分类id
+     * @return 添加成功返回id，否则返回0
+     */
+    public String add(SubClass subClass, String cataLogId) {
+        CataLog cataLog = cataLogService.load(cataLogId);
+        subClass.setCataLog(cataLog);
+        subClass.setIsUse(1);
         if(Tools.isEmpty(subClass.getId()) ) {
             subClass.setId(Tools.UUID());
         }

@@ -2,20 +2,12 @@ package com.asimple.controller;
 
 import com.asimple.entity.*;
 import com.asimple.service.*;
-import com.asimple.task.RankTask;
 import com.asimple.task.SolrTask;
 import com.asimple.util.*;
-import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.solr.core.SolrTemplate;
-import org.springframework.data.solr.core.query.*;
-import org.springframework.data.solr.core.query.result.HighlightEntry;
-import org.springframework.data.solr.core.query.result.HighlightPage;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +19,7 @@ import java.util.*;
  * @description 后台管理
  * @author Asimple
  */
-@Controller
+@RestController
 @RequestMapping("/admin")
 public class Manager {
     @Resource
@@ -53,46 +45,23 @@ public class Manager {
     @Resource
     private CommonService commonService;
     @Resource
-    private RankTask rankTask;
-    @Resource
     private SolrTask solrTask;
-    @Resource
-    private SolrTemplate solrTemplate;
-
-    /**
-     * @author Asimple
-     * @description 跳转到后台登录页面
-     **/
-    @RequestMapping(value = "/login", method = { RequestMethod.GET })
-    public String adminLoginPage() {
-        return "manager/login";
-    }
 
     /**
      * @author Asimple
      * @description 管理员登录
      **/
     @RequestMapping(value = "/login", method = { RequestMethod.POST })
-    public String adminLogin(String username, String password, ModelMap map, HttpSession session) {
+    public Object adminLogin(String username, String password, HttpSession session) {
         // 用户名或者邮箱登录
         User user = commonService.checkUser(username, password);
         // 登录成功重定向到后台首页
         if ( null != user ) {
             session.setAttribute(VideoKeyNameUtil.ADMIN_USER_KEY, user);
             session.setAttribute(VideoKeyNameUtil.USER_KEY, user);
-            return "redirect:/admin/index";
+            return ResponseReturnUtil.returnSuccessWithMsg("登录成功!");
         }
-        map.addAttribute("msg", "请登录正确的管理员账号！");
-        return "manager/login";
-    }
-
-    /**
-     * @author Asimple
-     * @description 后台首页
-     **/
-    @RequestMapping(value = {"/", "/index"})
-    public String backIndex(ModelMap map, HttpSession session) {
-        return "manager/index";
+        return ResponseReturnUtil.returnErrorWithMsg("请登录正确的管理员账号或密码!");
     }
 
     /**
@@ -100,17 +69,22 @@ public class Manager {
      * @description 影片资源管理
      **/
     @RequestMapping(value = "/film")
-    public String film(ModelMap map, String film_id) {
-        if ( film_id != null && !"".equals(film_id.trim()) ) {// 如果有id，则是编辑
+    public Object film(String filmId) {
+        // 如果有id，则是编辑
+        Map<String, Object> result = new HashMap<>(4);
+        if ( StringUtils.isNotEmpty(filmId) ) {
             // 获取电影信息
-            map.addAttribute("film", filmService.load(film_id));
+            result.put("film", filmService.load(filmId));
             // 获取资源信息
-            List<Res> list = resService.getListByFilmId(film_id);
-            if( list.size()== 0 )  map.addAttribute("res", null);
-            else map.addAttribute("res", list);
+            List<Res> list = resService.getListByFilmId(filmId);
+            if( list.size()== 0 ) {
+                result.put("res", null);
+            } else {
+                result.put("res", list);
+            }
         }
-        map = commonService.getCatalog(map);
-        return "manager/addFilm";
+        result.putAll(commonService.getCatalog());
+        return ResponseReturnUtil.returnSuccessWithData(result);
     }
 
     /**
@@ -118,10 +92,11 @@ public class Manager {
      * @description 查看所有影视信息
      **/
     @RequestMapping(value = "/list")
-    public String filmList(ModelMap map, HttpServletRequest request) {
-        getFilmList(map, request);
-//        getFilmOfSolr(map, request);
-        return "manager/allFilm";
+    public Object filmList(HttpServletRequest request) {
+        Map<String, Object> result = new HashMap<>(8);
+        result.putAll(filmService.getFilmList(request));
+//        result.putAll(filmService.getFilmOfSolr(request));
+        return ResponseReturnUtil.returnSuccessWithData(result);
     }
 
     /**
@@ -129,14 +104,14 @@ public class Manager {
      * @description 用户管理
      **/
     @RequestMapping( value = "/userList")
-    public String userList(String page, ModelMap map) {
-        if( Tools.isEmpty(page) ) page = "1";
-        int pc = Integer.parseInt(page);
-        // 设置每页的条数
-        int pageSize = 10;
-        PageBean<User> pageBean = userService.getPage(null, pc, pageSize);
-        map.addAttribute("pb", pageBean);
-        return "manager/userList";
+    public Object userList(HttpServletRequest request) {
+        Map<String, Object> result = new HashMap<>(2);
+        Map<String, Object> param = new HashMap<>(2);
+        param.put("page", request.getParameter("page"));
+        param.put("pageSize", request.getParameter("pageSize"));
+        PageBean<User> pageBean = userService.getPage(param);
+        result.put("pb", pageBean);
+        return ResponseReturnUtil.returnSuccessWithData(result);
     }
 
     /**
@@ -144,20 +119,16 @@ public class Manager {
      * @description 更新用户信息
      **/
     @RequestMapping( value = "/updateUser", method = RequestMethod.POST)
-    @ResponseBody
-    public String updateUser(String uid, String key) {
-        JSONObject jsonObject = new JSONObject();
+    public Object updateUser(String uid, String key) {
+        Map<String, Object> param = new HashMap<>(4);
         User user = userService.load(uid);
-        if( "manager".equals(key) ) {
-            int isManager = user.getIsManager();
-            user.setIsManager(1-isManager);
+        param.put("user", user);
+        param.put("key", key);
+        if( userService.update(param) ) {
+            return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
         } else {
-            long isVip = user.getIsVip();
-            user.setIsVip(1L-isVip);
+            return ResponseReturnUtil.returnErrorWithMsg("更新失败!");
         }
-        if( userService.update(user) ) jsonObject.put("code", "1");
-        else jsonObject.put("code", "0");
-        return jsonObject.toString();
     }
 
     /**
@@ -165,15 +136,14 @@ public class Manager {
      * @description 添加影片
      **/
     @RequestMapping( value = "/addFilm", produces = "text/html;charset=UTF-8")
-    @ResponseBody
-    public String addFilm(Film film, HttpSession session) {
+    public Object addFilm(Film film, HttpSession session) {
+        Map<String, Object> map = new HashMap<>(1);
         User user = (User) session.getAttribute(VideoKeyNameUtil.ADMIN_USER_KEY);
-        JSONObject jsonObject = new JSONObject();
         film.setUser(user);
         String id = filmService.save(film);
-        this.updateRedis(id);
-        jsonObject.put("id", id);
-        return jsonObject.toString();
+        commonService.cleanRedisCache();
+        map.put("id", id);
+        return ResponseReturnUtil.returnSuccessWithData(map);
     }
 
     /**
@@ -181,16 +151,15 @@ public class Manager {
      * @description 删除影片
      **/
     @RequestMapping( value = "/delFilm")
-    @ResponseBody
-    public String delFilm(String film_id) {
-        LogUtil.info(Manager.class, "film_id = " + film_id);
-        JSONObject jsonObject = new JSONObject();
-        if ( filmService.deleteById(film_id) ) {
-            jsonObject.put("code", "1");
-            this.updateRedis("1");
+    public Object delFilm(HttpServletRequest request) {
+        String filmId = request.getParameter("filmId");
+        LogUtil.info(Manager.class, "film_id = " + filmId);
+        if ( filmService.deleteById(filmId) ) {
+            commonService.cleanRedisCache();
+            return ResponseReturnUtil.returnSuccessWithMsg("更新成功!");
+        } else {
+            return ResponseReturnUtil.returnErrorWithMsg("更新失败,请稍后重试!");
         }
-        else jsonObject.put("code", "0");
-        return jsonObject.toString();
     }
 
 
@@ -199,12 +168,11 @@ public class Manager {
      * @description 添加资源
      **/
     @RequestMapping(value = "/addRes")
-    @ResponseBody
-    public String addRes(Res res, String film_id) {
-        JSONObject jsonObject = new JSONObject();
-        String id = resService.addRes(res, film_id);
-        jsonObject.put("id", id);
-        return jsonObject.toString();
+    public Object addRes(Res res, String filmId) {
+        Map<String, Object> result = new HashMap<>(1);
+        String id = resService.addRes(res, filmId);
+        result.put("id", id);
+        return ResponseReturnUtil.returnSuccessWithData(result);
     }
 
     /**
@@ -212,12 +180,12 @@ public class Manager {
      * @description 删除资源
      **/
     @RequestMapping( value = "/delRes")
-    @ResponseBody
-    public String delRes(String res_id) {
-        JSONObject jsonObject = new JSONObject();
-        if( resService.delete(res_id) ) jsonObject.put("code", "1");
-        else jsonObject.put("code", "0");
-        return jsonObject.toString();
+    public Object delRes(String resId) {
+        if( resService.delete(resId) ) {
+            return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
+        } else {
+            return ResponseReturnUtil.returnErrorWithMsg("删除失败!请稍后重试!");
+        }
     }
 
     /**
@@ -225,16 +193,14 @@ public class Manager {
      * @description 更改在离线状态
      **/
     @RequestMapping( value = "/updateIsUse")
-    @ResponseBody
-    public String updateIsUse(String res_id) {
-        JSONObject jsonObject = new JSONObject();
-        LogUtil.info(Manager.class, "res_id = " + res_id);
-        if( resService.updateIsUse(res_id) ) {
-            jsonObject.put("code", "1");
-            this.updateRedis("1");;
+    public Object updateIsUse(String resId) {
+        LogUtil.info(Manager.class, "res_id = " + resId);
+        if( resService.updateIsUse(resId) ) {
+            commonService.cleanRedisCache();
+            return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
+        } else {
+            return ResponseReturnUtil.returnErrorWithMsg("更新失败,请稍后重试!");
         }
-        else jsonObject.put("code", "0");
-        return jsonObject.toString();
     }
 
     /**
@@ -242,42 +208,30 @@ public class Manager {
      * @description 更新影片信息
      **/
     @RequestMapping( value = "/updateFilmInfo")
-    @ResponseBody
-    public String updateFilmInfo(String film_id, String val, String key, HttpSession session) {
-        Map<String, Object> param = new HashMap<>();
-        JSONObject jsonObject = new JSONObject();
-        Film film = filmService.load(film_id);
+    public Object updateFilmInfo(String filmId, String val, String key, HttpSession session) {
+        Map<String, Object> param = new HashMap<>(16);
+        Film film = filmService.load(filmId);
         param.put("key", key);
         param.put("val", val);
         param.put("film", film);
         param.put("filePath", session.getServletContext().getRealPath(film.getImage()));
         if( commonService.updateFilmInfo(param) ) {
-            jsonObject.put("code", "1");
-            this.updateRedis("1");
+            commonService.cleanRedisCache();
+            return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
         } else {
-            jsonObject.put("code", "0");
+            return ResponseReturnUtil.returnErrorWithMsg("更新失败,请稍后重试!");
         }
-        return jsonObject.toString();
     }
 
     /**
      * @author Asimple
-     * @description 目录管理
+     * @description 目录管理 目录查看与修改
      **/
-    @RequestMapping( value = "/catalog")
-    public String catalog(ModelMap map) {
-        map = commonService.getCatalog(map);
-        return "manager/catalog";
-    }
-
-    /**
-     * @author Asimple
-     * @description 目录查看与修改
-     **/
-    @RequestMapping( value = "/editCatalog")
-    public String editCatalog(ModelMap map) {
-        map = commonService.getCatalog(map);
-        return "manager/editCatalog";
+    @RequestMapping( value = {"/catalog", "/editCatalog"})
+    public Object catalog() {
+        Map<String, Object> result = new HashMap<>(8);
+        result.putAll(commonService.getCatalog());
+        return ResponseReturnUtil.returnSuccessWithData(result);
     }
 
     /**
@@ -285,12 +239,11 @@ public class Manager {
      * @description 添加年列表
      **/
     @RequestMapping( value = "addDecade")
-    @ResponseBody
-    public String addDecade(Decade decade) {
-        decade.setIsUse(1);
-        String id = decadeService.add(decade);
-        this.updateRedisList(id);
-        return addReturned(id);
+    public Object addDecade(Decade decade) {
+        Map<String, Object> result = new HashMap<>(1);
+        result.put("id", decadeService.add(decade));
+        commonService.cleanRedisCache();
+        return ResponseReturnUtil.returnSuccessWithData(result);
     }
 
     /**
@@ -298,12 +251,11 @@ public class Manager {
      * @description 添加级别
      **/
     @RequestMapping( value = "/addLevel")
-    @ResponseBody
-    public String addLevel(Level level) {
-        level.setIsUse(1);
-        String id = levelService.add(level);
-        this.updateRedisList(id);
-        return addReturned(id);
+    public Object addLevel(Level level) {
+        Map<String, Object> result = new HashMap<>(1);
+        result.put("id", levelService.add(level));
+        commonService.cleanRedisCache();
+        return ResponseReturnUtil.returnSuccessWithData(result);
     }
 
     /**
@@ -311,12 +263,11 @@ public class Manager {
      * @description 添加地区
      **/
     @RequestMapping( value = "/addLoc")
-    @ResponseBody
-    public String addLoc(Loc loc) {
-        loc.setIsUse(1);
-        String id = locService.add(loc);
-        this.updateRedisList(id);
-        return addReturned(id);
+    public Object addLoc(Loc loc) {
+        Map<String, Object> result = new HashMap<>(1);
+        result.put("id", locService.add(loc));
+        commonService.cleanRedisCache();
+        return ResponseReturnUtil.returnSuccessWithData(result);
     }
 
     /**
@@ -324,13 +275,11 @@ public class Manager {
      * @description 添加一级分类
      **/
     @RequestMapping(value = "/addCataLog")
-    @ResponseBody
-    public String addCataLog(CataLog cataLog) {
-        cataLog.setIsUse(1);
-        String id = cataLogService.add(cataLog);
-        this.updateRedis(id);
-        this.updateRedisList(id);
-        return addReturned(id);
+    public Object addCataLog(CataLog cataLog) {
+        Map<String, Object> result = new HashMap<>(1);
+        result.put("id", cataLogService.add(cataLog));
+        commonService.cleanRedisCache();
+        return ResponseReturnUtil.returnSuccessWithData(result);
     }
 
     /**
@@ -338,13 +287,11 @@ public class Manager {
      * @description 添加二级分类
      **/
     @RequestMapping(value = "/addSubClass")
-    @ResponseBody
-    public String addSubClass(SubClass subClass, String cataLog_id) {
-        subClass.setIsUse(1);
-        CataLog cataLog = cataLogService.load(cataLog_id);
-        subClass.setCataLog(cataLog);
-        String id = subClassService.add(subClass);
-        return addReturned(id);
+    public Object addSubClass(SubClass subClass, String cataLogId) {
+        Map<String, Object> result = new HashMap<>(1);
+        result.put("id", subClassService.add(subClass, cataLogId));
+        commonService.cleanRedisCache();
+        return ResponseReturnUtil.returnSuccessWithData(result);
     }
 
     /**
@@ -352,13 +299,11 @@ public class Manager {
      * @description 添加类型
      **/
     @RequestMapping(value = "/addType")
-    @ResponseBody
-    public String addType(Type type,String subClass_id) {
-        type.setIsUse(1);
-        SubClass subClass = subClassService.load(subClass_id);
-        type.setSubClass(subClass);
-        String id = typeService.add(type);
-        return addReturned(id);
+    public Object addType(Type type,String subClassId) {
+        Map<String, Object> result = new HashMap<>(1);
+        result.put("id", typeService.add(type, subClassId));
+        commonService.cleanRedisCache();
+        return ResponseReturnUtil.returnSuccessWithData(result);
     }
 
     /**
@@ -366,10 +311,11 @@ public class Manager {
      * @description VIP管理
      **/
     @RequestMapping(value = "/vipCode")
-    public String vipCode(ModelMap map) {
+    public Object vipCode() {
+        Map<String, Object> map = new HashMap<>(2);
         List<VipCode> list = vipCodeService.listIsUse();
-        map.addAttribute("vip_codes",list);
-        return "manager/vipManager";
+        map.put("vip_codes",list);
+        return ResponseReturnUtil.returnSuccessWithData(map);
     }
 
     /**
@@ -377,38 +323,18 @@ public class Manager {
      * @description 创建VIP卡号
      **/
     @RequestMapping(value = "/createVipCode", method = RequestMethod.POST)
-    @ResponseBody
-    public String createVipCode(String num) {
-        JSONObject jsonObject = new JSONObject();
-        if( StringUtils.isNotBlank(num) ) {
-            int n = Integer.parseInt(num);
-            VipCode vipCode;
-            List<VipCode> vipCodes = new ArrayList<>();
-            for(int i=0; i<n; i++) {
-                vipCode = new VipCode();
-                vipCode.setId(Tools.UUID());
-                vipCode.setCreate_time(new Date());
-                vipCode.setExpire_time(new Date());
-                vipCode.setCode(Tools.UUID());
-                vipCode.setIsUse(1);
-                vipCodes.add(vipCode);
-            }
-            int cnt = vipCodeService.saveAll(vipCodes);
-            if( cnt == n ) {
-                jsonObject.put("code", "1");
-                jsonObject.put("data", vipCodes);
-            } else jsonObject.put("code", "0");
-        } else jsonObject.put("code", "0");
-        return jsonObject.toString();
-    }
-
-    /**
-     * @author Asimple
-     * @description 数据导入页面
-     **/
-    @RequestMapping(value = "/loadInSolrPage")
-    public String loadSolr() {
-        return "manager/loadSolr";
+    public Object createVipCode(String num) {
+        Map<String, Object> result = new HashMap<>(1);
+        if ( StringUtils.isEmpty(num) ) {
+            num = "5";
+        }
+        int n = Integer.parseInt(num);
+        List<VipCode> vipCodes = vipCodeService.addVipCodes(n);
+        if( vipCodes.size() == n ) {
+            result.put("data", vipCodes);
+            return ResponseReturnUtil.returnSuccessWithData(result);
+        }
+        return ResponseReturnUtil.returnErrorWithMsg("添加失败!请稍后重试!");
     }
 
     /**
@@ -416,114 +342,9 @@ public class Manager {
      * @description 导入Solr库
      **/
     @RequestMapping(value = "/loadIn", produces = "text/html;charset=UTF-8")
-    @ResponseBody
-    public String loadInSolr() {
+    public Object loadInSolr() {
         solrTask.pushToSolr();
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("code", "1");
-        return jsonObject.toString();
-    }
-
-    private void getFilmList(ModelMap map, HttpServletRequest request) {
-        String name = request.getParameter("name");
-        if( !Tools.isEmpty(name) ) map.addAttribute("name", name);
-        // 分页查询所有电影列表
-            // 获取url条件信息
-        String url = request.getQueryString();
-        if( url != null ) {
-            int index = url.indexOf("&pc=");
-            if( index != -1 ) url = url.substring(0, index);
-        }
-            // 当前页面数
-        String value = request.getParameter("pc");
-        int pc = 1;
-        if( Tools.notEmpty(value) ) pc = Integer.parseInt(value);
-            // 每页显示数目
-        int ps = 27;
-            // 获取页面传递的查询条件
-        Film ob = Tools.toBean(request.getParameterMap(), Film.class);
-
-        PageBean<Film> pageBean = filmService.getPage(ob, pc, ps);
-        pageBean.setUrl(url);
-        map.addAttribute("pb", pageBean);
-    }
-
-    /**
-     * TODO SpringBoot Solr整合有问题，还在解决中
-     * 报错信息：org.apache.solr.client.solrj.impl.HttpSolrClient$RemoteSolrException: Error from server at http://127.0.0.1:8090/solr/video: Expected mime type application/octet-stream but got text/html.
-     * 未改成SpringBoot的时候，是正常运行的。
-     */
-    private void getFilmOfSolr(ModelMap map, HttpServletRequest request) {
-        PageBean<Film> pageBean = new PageBean<>();
-        String name = request.getParameter("name");
-        if( !Tools.isEmpty(name) ) map.addAttribute("name", name);
-        String url = request.getQueryString();
-        if( url != null ) {
-            int index = url.indexOf("&pc=");
-            if( index != -1 ) url = url.substring(0, index);
-        }
-        // 当前页面数
-        String value = request.getParameter("pc");
-        int pc = 1;
-        if( Tools.notEmpty(value) ) pc = Integer.parseInt(value);
-        pageBean.setPc(pc);
-        // 每页显示数目
-        int ps = 27;
-        pageBean.setPs(ps);
-        // 获取页面传递的查询条件
-        Film ob = Tools.toBean(request.getParameterMap(), Film.class);
-        pageBean.setUrl(url);
-
-        HighlightQuery query = new SimpleHighlightQuery(new SimpleStringCriteria("*:*"));
-        if( Tools.notEmpty(name) ) {
-            Criteria filterCriteria = new Criteria("video_film_name").is("\"*"+name+"*\"");
-            FilterQuery filterQuery = new SimpleFilterQuery(filterCriteria);
-            query.addFilterQuery(filterQuery);
-        }
-        query.setOffset((pc-1)*ps);//开始索引（默认0）
-        query.setRows(ps);//每页记录数(默认10)
-
-        //***********************高亮设置***********************
-        //设置高亮的域
-        HighlightOptions highlightOptions = new HighlightOptions().addField("video_film_name");
-        //高亮前缀
-        highlightOptions.setSimplePrefix("<em style='color:red'>");
-        //高亮后缀
-        highlightOptions.setSimplePostfix("</em>");
-        //设置高亮选项
-        query.setHighlightOptions(highlightOptions);
-
-        //***********************获取数据***********************
-        HighlightPage<Film> page = solrTemplate.queryForHighlightPage(query, Film.class);
-
-        //***********************设置高亮结果***********************
-        List<HighlightEntry<Film>> highlighted = page.getHighlighted();
-        for (HighlightEntry<Film> h : highlighted) {//循环高亮入口集合
-            Film item = h.getEntity();//获取原实体类
-            if (h.getHighlights().size() > 0 && h.getHighlights().get(0).getSnipplets().size() > 0) {
-                item.setName(h.getHighlights().get(0).getSnipplets().get(0));//设置高亮的结果
-            }
-        }
-        System.err.println(page.getContent());
-        pageBean.setBeanList(page.getContent());
-        pageBean.setTr((int)page.getTotalElements());
-        map.addAttribute("pb", pageBean);
-    }
-
-    private String addReturned(String id){
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("code", id);
-        return jsonObject.toString();
-    }
-
-    private void updateRedis(String id) {
-        if( !"0".equals(id) ) {
-            rankTask.commendRank();
-        }
-    }
-
-    private void updateRedisList(String id) {
-        commonService.cleanRedisCache();
+        return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
     }
 
 }

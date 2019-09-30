@@ -28,7 +28,7 @@ public class UserService {
      * @author Asimple
      * @description 有条件查询用户
      **/
-    private List<User> findByCondition(User user) {
+    public List<User> findByCondition(User user) {
         return userMapper.findByCondition(user);
     }
 
@@ -58,6 +58,19 @@ public class UserService {
         if(StringUtils.isNotEmpty(newPwd) ) {
             userDb.setUserPasswd(MD5Auth.MD5Encode(newPwd+VideoKeyNameUtil.PASSWORD_KEY, VideoKeyNameUtil.ENCODE));
         }
+
+        String key = null;
+        if( null != param.get("key") ) {
+            key = (String) param.get("key");
+        }
+        if( StringUtils.equalsIgnoreCase("manager", key) ) {
+            int isManager = userDb.getIsManager();
+            userDb.setIsManager(1-isManager);
+        } else if( StringUtils.equalsIgnoreCase("vip", key)) {
+            long isVip = userDb.getIsVip();
+            userDb.setIsVip(1L-isVip);
+        }
+
         return userMapper.update(userDb)==1;
     }
 
@@ -70,17 +83,37 @@ public class UserService {
     }
 
     /**
-     * @author Asimple
-     * @description 带分页查询所有用户
-     **/
-    public PageBean<User> getPage(User user, int pc, int pageSize) {
+     * 带分页查询所有用户
+     * @param param 参数
+     * @return 用户分页列表
+     */
+    public PageBean<User> getPage(Map<String, Object> param) {
+        User user = null;
+        if( null != param.get("user") ) {
+            user = (User) param.get("user");
+        }
+        String page;
+        if( null == param.get("page") || StringUtils.isEmpty((String) param.get("page")) ) {
+            page = "1";
+        } else {
+            page = (String) param.get("page");
+        }
+        String pageSize;
+        if( null == param.get("pageSize") || StringUtils.isEmpty((String) param.get("pageSize")) ) {
+            pageSize = "10";
+        } else {
+            pageSize = (String) param.get("pageSize");
+        }
+        int pc = Integer.parseInt(page);
+        // 设置每页的条数
+        int ps = Integer.parseInt(pageSize);
         PageBean<User> pageBean = new PageBean<>();
         pageBean.setPc(pc);
-        pageBean.setPs(pageSize);
+        pageBean.setPs(ps);
         // 设置总数
         pageBean.setTr(userMapper.getTotalCount(user));
         // 最开始的条数
-        pageBean.setBeanList(userMapper.getPage(user, (pc-1)*pageSize, pageSize));
+        pageBean.setBeanList(userMapper.getPage(user, (pc-1)*ps, ps));
         return pageBean;
     }
 

@@ -92,7 +92,7 @@ public class Util implements ServletContextAware {
                         count ++;
 
                         // 设置返回数据
-                        Map<String, String> map = new HashMap<>();
+                        Map<String, String> map = new HashMap<>(4);
                         map.put("fileSuffix", fileSuffix);
                         map.put("fileName", fileName);
                         map.put("name", fileNameSuffix);

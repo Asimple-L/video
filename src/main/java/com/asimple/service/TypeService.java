@@ -1,5 +1,6 @@
 package com.asimple.service;
 
+import com.asimple.entity.SubClass;
 import com.asimple.entity.Type;
 import com.asimple.mapper.TypeMapper;
 import com.asimple.util.Tools;
@@ -18,6 +19,8 @@ public class TypeService {
 
     @Resource
     private TypeMapper typeMapper;
+    @Resource
+    private SubClassService subClassService;
 
     /**
      * @author Asimple
@@ -36,10 +39,15 @@ public class TypeService {
     }
 
     /**
-     * @author Asimple
-     * @description 添加type并返回id
-     **/
-    public String add(Type type) {
+     * 添加type并返回id
+     * @param type 类型对象
+     * @param subClassId 对应的二级分类id
+     * @return 添加成功返回id，否则返回0
+     */
+    public String add(Type type, String subClassId) {
+        type.setIsUse(1);
+        SubClass subClass = subClassService.load(subClassId);
+        type.setSubClass(subClass);
         if(Tools.isEmpty(type.getId()) ) {
             type.setId(Tools.UUID());
         }

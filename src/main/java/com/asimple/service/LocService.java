@@ -35,12 +35,14 @@ public class LocService {
     }
 
     /**
-     * @author Asimple
-     * @description 添加地区信息并返回id
-     **/
+     * 添加地区信息并返回id
+     * @param loc 地区对象
+     * @return 添加成功返回id 否则返回0
+     */
     public String add(Loc loc) {
         if(Tools.isEmpty(loc.getId()) ) {
             loc.setId(Tools.UUID());
+            loc.setIsUse(1);
         }
         return locMapper.add(loc)==1?loc.getId():"0";
     }

@@ -36,12 +36,14 @@ public class DecadeService {
     }
 
     /**
-     * @author Asimple
-     * @description 添加年份
-     **/
+     * 添加年份
+     * @param decade 年份对象
+     * @return 添加成功返回id，否则返回0
+     */
     public String add(Decade decade) {
         if( decade.getId() == null || "".equals(decade.getId()) ) {
             decade.setId(Tools.UUID());
+            decade.setIsUse(1);
         }
         return decadeMapper.add(decade)==1?decade.getId():"0";
     }

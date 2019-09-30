@@ -3,6 +3,7 @@ package com.asimple.service;
 import com.asimple.entity.User;
 import com.asimple.entity.VipCode;
 import com.asimple.mapper.VipCodeMapper;
+import com.asimple.util.Tools;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -20,8 +21,8 @@ public class VipCodeService {
     private UserService userService;
 
     /**
-     * 查询所有可用的卡号
-     * @return 可用卡号列表
+     * 可用卡号列表
+     * @return vipCode列表
      */
     public List<VipCode> listIsUse() {
         return vipCodeMapper.findByIsUse();
@@ -32,10 +33,10 @@ public class VipCodeService {
      * @param vipCodes vipCode列表
      * @return 返回保存成功的行数
      */
-    public int saveAll(List<VipCode> vipCodes) {
-        int count = 0, len = vipCodes.size();
-        for(int i=0; i<len; i++) {
-            count += vipCodeMapper.add(vipCodes.get(i));
+    private int saveAll(List<VipCode> vipCodes) {
+        int count = 0;
+        for (VipCode vipCode : vipCodes) {
+            count += vipCodeMapper.add(vipCode);
         }
         return count;
     }
@@ -80,7 +81,7 @@ public class VipCodeService {
             // 重新设置VIP到期时间
             user.setExpireDate(expireTime);
             user.setIsVip(1);
-            Map<String, Object> userMap = new HashMap<>();
+            Map<String, Object> userMap = new HashMap<>(4);
             userMap.put("user", user);
             if (userService.update(userMap)) {
                 // 设置VIP卡为不可用
@@ -98,5 +99,25 @@ public class VipCodeService {
             }
         }
         return false;
+    }
+
+    public List<VipCode> addVipCodes(int n) {
+        VipCode vipCode;
+        List<VipCode> vipCodes = new ArrayList<>();
+        for(int i=0; i<n; i++) {
+            vipCode = new VipCode();
+            vipCode.setId(Tools.UUID());
+            vipCode.setCreate_time(new Date());
+            vipCode.setExpire_time(new Date());
+            vipCode.setCode(Tools.UUID());
+            vipCode.setIsUse(1);
+            vipCodes.add(vipCode);
+        }
+        int num = saveAll(vipCodes);
+        if( num == n ) {
+            return vipCodes;
+        } else {
+            return new ArrayList<>();
+        }
     }
 }

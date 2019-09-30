@@ -185,7 +185,7 @@ public class Profile {
     @RequestMapping( value = "/updateFilmInfo")
     @ResponseBody
     public String updateFilmInfo(String film_id, String val, String key, HttpSession session) {
-        Map<String, Object> param = new HashMap<>();
+        Map<String, Object> param = new HashMap<>(8);
         JSONObject jsonObject = new JSONObject();
         Film film = filmService.load(film_id);
         param.put("val", val);

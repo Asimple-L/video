@@ -35,12 +35,14 @@ public class CataLogService {
     }
 
     /**
-     * @author Asimple
-     * @description 添加一级分类并返回id
-     **/
+     * 添加一级分类并返回id
+     * @param cataLog 一级分类对象
+     * @return 添加成功返回id，否则返回0
+     */
     public String add(CataLog cataLog) {
         if(Tools.isEmpty(cataLog.getId()) ) {
             cataLog.setId(Tools.UUID());
+            cataLog.setIsUse(1);
         }
         return cataLogMapper.add(cataLog)==1?cataLog.getId():"0";
     }

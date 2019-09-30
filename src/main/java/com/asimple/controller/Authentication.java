@@ -40,7 +40,7 @@ public class Authentication {
     public Object register(User user, HttpSession session) {
         User userDb = userService.register(user);
         if( null == userDb ) {
-            return ResponseReturnUtil.returnErrorWithoutData("注册失败！邮箱或者用户名已存在!");
+            return ResponseReturnUtil.returnErrorWithMsg("注册失败！邮箱或者用户名已存在!");
         } else {
             session.setAttribute(VideoKeyNameUtil.USER_KEY, userDb);
             return ResponseReturnUtil.returnSuccessMsgAndData("注册成功,已自动登录!", user);
@@ -58,7 +58,7 @@ public class Authentication {
             session.setAttribute(VideoKeyNameUtil.USER_KEY, user);
             return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
         }
-        return ResponseReturnUtil.returnErrorWithoutData("登录失败，用户不存在或密码错误！");
+        return ResponseReturnUtil.returnErrorWithMsg("登录失败，用户不存在或密码错误！");
     }
     /**
      * @author Asimple
@@ -84,9 +84,9 @@ public class Authentication {
             param.put("newPwd", newPwd);
             userService.update(param);
             session.removeAttribute(VideoKeyNameUtil.USER_KEY);
-            return ResponseReturnUtil.returnSuccessWithoutData("修改成功");
+            return ResponseReturnUtil.returnSuccessWithMsg("修改成功");
         }
-        return ResponseReturnUtil.returnErrorWithoutData("旧密码输入错误!");
+        return ResponseReturnUtil.returnErrorWithMsg("旧密码输入错误!");
     }
 
     /**
@@ -106,10 +106,10 @@ public class Authentication {
                 session.setAttribute(VideoKeyNameUtil.USER_KEY, user);
                 return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
             } else {
-                return ResponseReturnUtil.returnErrorWithoutData("加油失败，请稍后重试!");
+                return ResponseReturnUtil.returnErrorWithMsg("加油失败，请稍后重试!");
             }
         }
-        return ResponseReturnUtil.returnErrorWithoutData("VIP加油卡号不存在!");
+        return ResponseReturnUtil.returnErrorWithMsg("VIP加油卡号不存在!");
     }
 
     /**

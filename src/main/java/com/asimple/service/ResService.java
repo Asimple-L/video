@@ -5,6 +5,7 @@ import com.asimple.entity.Res;
 import com.asimple.mapper.ResMapper;
 import com.asimple.util.DateUtil;
 import com.asimple.util.Tools;
+import com.asimple.util.VideoKeyNameUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -23,11 +24,12 @@ public class ResService {
     private ResMapper resMapper;
 
     /**
-     * @author Asimple
-     * @description 根据film_id查找所有资源
-     **/
-    public List<Res> getListByFilmId(String film_id) {
-        return resMapper.getListByFilmId(film_id);
+     * 根据film_id查找所有资源
+     * @param filmId 影片id
+     * @return 影片所对应的所有资源
+     */
+    public List<Res> getListByFilmId(String filmId) {
+        return resMapper.getListByFilmId(filmId);
     }
 
     /**
@@ -42,21 +44,23 @@ public class ResService {
     }
 
     /**
-     * @author Asimple
-     * @description 上传资源，如果是
-     **/
-    public String addRes(Res res, String film_id) {
+     * 上传资源
+     * @param res 资源信息
+     * @param filmId 对应的影片id
+     * @return 添加资源成功返回资源id
+     */
+    public String addRes(Res res, String filmId) {
         // 初始化
         res.setIsUse(1);
-        Film film = filmService.load(film_id);
+        Film film = filmService.load(filmId);
         res.setFilm(film);
         res.setUpdateTime(DateUtil.getTime());
 
         // 多资源上传
         String id = "";
-        if ( res.getName().contains("@@") ) {
+        if ( res.getName().contains(VideoKeyNameUtil.RES_NAME_SPLIT) ) {
             //  xxxx@@集##集数开始##集数结束##分割符号
-            String resName[] = res.getName().trim().split("##");
+            String[] resName = res.getName().trim().split(VideoKeyNameUtil.EPISODES_NAME_SPLIT);
             // 视频名称
             String name = resName[0];
             // 开始集数与结束集数
@@ -66,13 +70,15 @@ public class ResService {
             String flag = "";
             if( resName.length > 3 ) {
                 flag = resName[3];
-                String res_links[] = res.getLink().replaceAll("\\n","").split(flag);
+                String resLinks[] = res.getLink().replaceAll("\\n","").split(flag);
                 int cz = begin - 1;
                 for(int i=begin; i<=end; i++) {
-                    res.setName(name.replace("@@", ""));
+                    res.setName(name.replace(VideoKeyNameUtil.RES_NAME_SPLIT, ""));
                     res.setEpisodes(i);
-                    if( "Flh".equals(res.getLinkType()) ) flag = "";
-                    res.setLink(flag+res_links[i-cz]);
+                    if( "Flh".equals(res.getLinkType()) ) {
+                        flag = "";
+                    }
+                    res.setLink(flag+resLinks[i-cz]);
                     id = add(res);
                 }
             }
@@ -85,19 +91,20 @@ public class ResService {
     }
 
     /**
-     * @author Asimple
-     * @description 删除资源
-     **/
-    public boolean delete(String res_id) {
-        return resMapper.deleteById(res_id)==1;
+     * 删除资源
+     * @param resId 资源id
+     * @return 是否删除成功
+     */
+    public boolean delete(String resId) {
+        return resMapper.deleteById(resId)==1;
     }
 
     /**
      * @author Asimple
      * @description 更改资源在离线状态
      **/
-    public boolean updateIsUse(String res_id) {
-        Res res = resMapper.load(res_id);
+    public boolean updateIsUse(String resId) {
+        Res res = resMapper.load(resId);
         res.setIsUse(1-res.getIsUse());
         res.setUpdateTime(DateUtil.getTime());
         return resMapper.update(res) == 1;
