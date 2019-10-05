@@ -35,7 +35,7 @@
         SELECT * FROM `t_film`
     </select>
 
-    <select id="listByCataLog_id" resultType="com.asimple.entity.Film">
+    <select id="listByCataLogId" resultType="com.asimple.entity.Film">
         SELECT * FROM t_film WHERE `cataLog_id` = #{param1}
         <if test="param2 != null">
             LIMIT 0,#{param2}
@@ -54,7 +54,7 @@
     </select>
 
     <select id="getTotalCount" resultType="Integer">
-        SELECT count(*) FROM t_film
+        SELECT count(1) FROM t_film
         <where>
             <include refid="filmChoose" />
         </where>

@@ -23,7 +23,9 @@ public class ProfileInterceptor implements HandlerInterceptor {
         }
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
-        if( user!=null ) return true;
+        if( user!=null ) {
+            return true;
+        }
         response.sendRedirect("/video/index");
         return false;
     }

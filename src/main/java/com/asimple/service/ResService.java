@@ -4,6 +4,7 @@ import com.asimple.entity.Film;
 import com.asimple.entity.Res;
 import com.asimple.mapper.ResMapper;
 import com.asimple.util.DateUtil;
+import com.asimple.util.LogUtil;
 import com.asimple.util.Tools;
 import com.asimple.util.VideoKeyNameUtil;
 import org.springframework.stereotype.Service;
@@ -33,9 +34,10 @@ public class ResService {
     }
 
     /**
-     * @author Asimple
-     * @description 添加资源
-     **/
+     * 添加资源
+     * @param res 资源实体
+     * @return 添加成功返回id，否则返回0
+     */
     public String add(Res res) {
         if(Tools.isEmpty(res.getId()) ) {
             res.setId(Tools.UUID());
@@ -100,10 +102,12 @@ public class ResService {
     }
 
     /**
-     * @author Asimple
-     * @description 更改资源在离线状态
-     **/
+     * 更改资源在离线状态
+     * @param resId 资源id
+     * @return 更新成功返回true
+     */
     public boolean updateIsUse(String resId) {
+        LogUtil.info(ResService.class, "resId = " + resId);
         Res res = resMapper.load(resId);
         res.setIsUse(1-res.getIsUse());
         res.setUpdateTime(DateUtil.getTime());

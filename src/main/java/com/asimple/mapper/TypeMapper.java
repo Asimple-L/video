@@ -13,5 +13,10 @@ import java.util.List;
  */
 @Repository
 public interface TypeMapper extends IBaseDao<Type> {
-    List<Type> listIsUseBySubClass_id(String subClass_id);
+    /**
+     * 查询二级分类下所有可用的类型
+     * @param subClassId 二级分类id
+     * @return 类型列表
+     */
+    List<Type> listIsUseBySubClassId(String subClassId);
 }

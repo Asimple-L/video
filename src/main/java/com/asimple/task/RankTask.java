@@ -27,12 +27,6 @@ public class RankTask {
     @Resource
     private FilmService filmService;
     @Resource
-    private DecadeService decadeService;
-    @Resource
-    private LocService locService;
-    @Resource
-    private LevelService levelService;
-    @Resource
     private CommonService commonService;
 
     /**
@@ -53,7 +47,7 @@ public class RankTask {
         // 查询推荐电影
         List<Object> list =  new ArrayList<>();
         for (CataLog aLogList : logList) {
-            List<Film> films = filmService.listByCataLog_id(aLogList.getId(), 12);
+            List<Film> films = filmService.listByCataLogId(aLogList.getId(), 12);
             if (films.size() != 0) {
                 list.add(films);
             }

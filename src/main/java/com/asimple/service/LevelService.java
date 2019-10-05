@@ -21,9 +21,9 @@ public class LevelService {
     private LevelMapper levelMapper;
 
     /**
-     * @author Asimple
-     * @description 查询所有在使用的等级
-     **/
+     * 查询所有在使用的等级
+     * @return 等级列表
+     */
     @Cacheable( value = "redis_levelList")
     public List<Level> listIsUse() {
         return levelMapper.findByIsUse();

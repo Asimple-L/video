@@ -23,17 +23,19 @@ public class TypeService {
     private SubClassService subClassService;
 
     /**
-     * @author Asimple
-     * @description 查找二级分类下的所有类型
-     **/
-    public List<Type> listIsUseBySubClass_id(String subClass_id) {
-        return typeMapper.listIsUseBySubClass_id(subClass_id);
+     * 查找二级分类下的所有类型
+     * @param subClassId 二级分类id
+     * @return 类型列表
+     */
+    public List<Type> listIsUseBySubClassId(String subClassId) {
+        return typeMapper.listIsUseBySubClassId(subClassId);
     }
 
     /**
-     * @author Asimple
-     * @description 根据id查询Type
-     **/
+     * 根据id查询Type
+     * @param id 类型id
+     * @return 类型实体
+     */
     public Type load(String id) {
         return typeMapper.load(id);
     }

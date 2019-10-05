@@ -4,6 +4,11 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+/**
+ * Dao层基础接口
+ * @author Asimple
+ */
+
 public interface IBaseDao<T> {
     /**
      * 统一方法： 新增

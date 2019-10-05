@@ -4,7 +4,6 @@ import com.asimple.entity.*;
 import com.asimple.util.*;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.ModelMap;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -86,6 +85,8 @@ public class CommonService {
             case "isVip":
                 film.setIsVip(Integer.valueOf(val));
                 break;
+            default:
+                break;
         }
         LogUtil.info(CommonService.class, "film = " + film);
         return filmService.update(film);
@@ -117,6 +118,10 @@ public class CommonService {
         return null;
     }
 
+    /**
+     * 获取所有分类信息
+     * @return 分类信息
+     */
     public Map<String, Object> getCatalog() {
         Map<String, Object> result = new HashMap<>(4);
         List<Loc> locList =  locService.listIsUse();

@@ -21,9 +21,9 @@ public class CataLogService {
     private CataLogMapper cataLogMapper;
 
     /**
-     * @author Asimple
-     * @description 查找可用的列表
-     **/
+     * 查找可用的列表
+     * @return 可用一级分类列表
+     */
     @Cacheable(value = "redis_cataLogList")
     public List<CataLog> listIsUse() {
         return cataLogMapper.findByIsUse();
@@ -48,11 +48,12 @@ public class CataLogService {
     }
 
     /**
-     * @author Asimple
-     * @description 根据id查询一级分类
-     **/
-    public CataLog load(String cataLog_id) {
-        return cataLogMapper.load(cataLog_id);
+     * 根据id查询一级分类
+     * @param cataLogId 一级分类id
+     * @return 一级分类实体
+     */
+    public CataLog load(String cataLogId) {
+        return cataLogMapper.load(cataLogId);
     }
 
 }

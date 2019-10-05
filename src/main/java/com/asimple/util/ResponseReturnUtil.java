@@ -25,11 +25,11 @@ public class ResponseReturnUtil {
     }
 
     public static JSONObject returnSuccessMsgAndData(String msg, Object data) {
-        return returnData("111111", msg, data);
+        return returnData(VideoKeyNameUtil.SUCCESS_CODE, msg, data);
     }
 
     public static JSONObject returnErrorMsgAndData(String msg, Object data) {
-        return returnData("000000", msg, data);
+        return returnData(VideoKeyNameUtil.ERROR_CODE, msg, data);
     }
 
     public static JSONObject returnSuccessWithMsg(String msg) {

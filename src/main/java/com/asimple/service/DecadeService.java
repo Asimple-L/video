@@ -22,9 +22,9 @@ public class DecadeService {
     private DecadeMapper decadeMapper;
 
     /**
-     * @author Asimple
-     * @description 查找在使用年份
-     **/
+     * 查找在使用年份
+     * @return 年份列表
+     */
     @Cacheable( value = "redis_decadeList")
     public List<Decade> listIsUse() {
         return decadeMapper.findByIsUse();

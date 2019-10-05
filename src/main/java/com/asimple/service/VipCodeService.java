@@ -42,17 +42,19 @@ public class VipCodeService {
     }
 
     /**
-     * @author Asimple
-     * @description 通过VIP卡号查找vipCode对象
-     **/
-    public VipCode findByVipCode(String vip_code) {
-        return vipCodeMapper.findByVipCode(vip_code);
+     * 通过VIP卡号查找vipCode对象
+     * @param vipCode VIP卡号
+     * @return vipCode对象
+     */
+    public VipCode findByVipCode(String vipCode) {
+        return vipCodeMapper.findByVipCode(vipCode);
     }
 
     /**
-     * @author Asimple
-     * @description 更新vipCode信息
-     **/
+     * 更新vipCode信息
+     * @param vipCode vipCode对象
+     * @return 更新成功返回true
+     */
     public boolean update(VipCode vipCode) {
         return vipCodeMapper.update(vipCode)==1;
     }
@@ -101,6 +103,11 @@ public class VipCodeService {
         return false;
     }
 
+    /**
+     * 批量添加vipCode
+     * @param n 添加数目
+     * @return 添加成功的vipCode对象列表
+     */
     public List<VipCode> addVipCodes(int n) {
         VipCode vipCode;
         List<VipCode> vipCodes = new ArrayList<>();

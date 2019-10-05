@@ -2,9 +2,9 @@ package com.asimple.controller;
 
 import com.asimple.util.FileOperate;
 import com.asimple.util.JSONUtil;
+import com.asimple.util.ResponseReturnUtil;
 import net.sf.json.JSONObject;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.multipart.MultipartFile;
@@ -65,7 +65,7 @@ public class Util implements ServletContextAware {
             int count = 1;
             while ( iter.hasNext() ) {
                 // 记录上传过程起始时间，用来计算上传时间
-                int pre = (int)System.currentTimeMillis();// 开始时间
+                int pre = (int)System.currentTimeMillis();
                 // 获取上传文件
                 MultipartFile file = multiRequest.getFile(iter.next());
                 if( file != null ) {
@@ -84,10 +84,12 @@ public class Util implements ServletContextAware {
                             // 文件名（除后缀）
                         String fileNameSuffix = fileName.substring(0, fileName.lastIndexOf("."));
                             // 防止上传无后缀名的文件，所以不用 "."+fileSuffix
-                        String newFileName = new Date().getTime() + fileType;
+                        String newFileName = System.currentTimeMillis() + fileType;
                         // 新建一个文件
                         File file2 = new File(path, newFileName);
-                        if( !file2.exists() ) file2.createNewFile();
+                        if( !file2.exists() ) {
+                            file2.createNewFile();
+                        }
                         file.transferTo(file2);
                         count ++;
 
@@ -114,13 +116,15 @@ public class Util implements ServletContextAware {
      * @description 根据文件路径删除系统下的文件
      **/
     @RequestMapping(value = "/delFile", produces = "text/html;charset=UTF-8")
-    public String delFile(String picsPath) {
+    public Object delFile(String picsPath) {
         JSONObject jsonObject = new JSONObject();
-        if( picsPath.startsWith("/video/") ) picsPath = picsPath.substring(picsPath.lastIndexOf("/video/")+"/video/".length());
+        if( picsPath.startsWith("/video/") ) {
+            picsPath = picsPath.substring(picsPath.lastIndexOf("/video/")+"/video/".length());
+        }
         if(FileOperate.delFile(this.servletContext.getRealPath("/"+picsPath))) {
-            jsonObject.put("code", "1");
-        } else jsonObject.put("code", "0");
-        return jsonObject.toString();
+            return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
+        }
+        return ResponseReturnUtil.returnErrorWithMsg("删除失败,请稍后重试!");
     }
 
 

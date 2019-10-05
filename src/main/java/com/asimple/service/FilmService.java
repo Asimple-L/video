@@ -1,8 +1,6 @@
 package com.asimple.service;
 
-import com.asimple.entity.Bullet;
-import com.asimple.entity.Film;
-import com.asimple.entity.Type;
+import com.asimple.entity.*;
 import com.asimple.mapper.FilmMapper;
 import com.asimple.mapper.RatyMapper;
 import com.asimple.mapper.ResMapper;
@@ -11,16 +9,15 @@ import com.asimple.util.DateUtil;
 import com.asimple.util.LogUtil;
 import com.asimple.util.PageBean;
 import com.asimple.util.Tools;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.data.solr.core.query.*;
 import org.springframework.data.solr.core.query.result.HighlightEntry;
 import org.springframework.data.solr.core.query.result.HighlightPage;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.ModelMap;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -42,65 +39,85 @@ public class FilmService {
     private ResMapper resMapper;
     @Resource
     private SolrTemplate solrTemplate;
+    @Resource
+    private CataLogService cataLogService;
+    @Resource
+    private RatyService ratyService;
 
+    /**
+     * 查询所有影片信息
+     * @return 影片列表
+     */
     public List<Film> findAll() {
         return filmMapper.getAll();
     }
 
     /**
-     * @author Asimple
-     * @description 通过类型查找电影
-     **/
-    public List<Film> listByType_id(String type_id) {
-        return filmMapper.listByTypeId(type_id);
+     * 通过类型查找电影
+     * @param typeId 类型id
+     * @return 影片列表
+     */
+    public List<Film> listByTypeId(String typeId) {
+        return filmMapper.listByTypeId(typeId);
     }
 
     /**
-     * @author Asimple
-     * @description 通过类型查找电影TOP榜
-     **/
-    public List<Film> listByType_id(String type_id, int top) {
-        return filmMapper.listByTypeId(type_id, top);
+     * 通过类型查找电影TOP榜
+     * @param typeId 类型id
+     * @param top 前top
+     * @return 影片列表
+     */
+    public List<Film> listByTypeId(String typeId, int top) {
+        return filmMapper.listByTypeId(typeId, top);
     }
 
     /**
-     * @author Asimple
-     * @description 通过分类查找电影列表
-     **/
-    public List<Film> listByCataLog_id(String id) {
-        return filmMapper.listByCataLog_id(id);
+     * 通过分类查找电影列表
+     * @param id 分类id
+     * @return 影片列表
+     */
+    public List<Film> listByCataLogId(String id) {
+        return filmMapper.listByCataLogId(id);
     }
 
     /**
-     * @author Asimple
-     * @description 通过分类查找前12的电影
-     **/
+     * 通过分类查找前top的电影
+     * @param id 分类id
+     * @param top 查看前多少
+     * @return 影片列表
+     */
     @Cacheable(value = "index_filmTuijian")
-    public List<Film> listByCataLog_id(String id, int top) {
-        return filmMapper.listByCataLog_id(id, top);
+    public List<Film> listByCataLogId(String id, int top) {
+        return filmMapper.listByCataLogId(id, top);
     }
 
     /**
-     * @author Asimple
-     * @description  查找评分排行电影
-     **/
+     * 查找评分排行电影
+     * @param id 影片id
+     * @return 影片列表
+     */
     public List<Film> listByEvaluation(String id) {
         return filmMapper.listByEvaluation(id);
     }
 
     /**
-     * @author Asimple
-     * @description  查找评分排行前top的电影
-     **/
+     * 查找评分排行前top的电影
+     * @param id 分类id
+     * @param top 前top
+     * @return 影片列表
+     */
     @Cacheable( value = "index_filmPaiHang")
     public List<Film> listByEvaluation(String id, int top) {
         return filmMapper.listByEvaluation(id, top);
     }
 
     /**
-     * @author Asimple
-     * @description 分页查询电影
-     **/
+     * 分页查询电影
+     * @param ob 影片信息
+     * @param pc 开始条数
+     * @param ps 结束条数
+     * @return 影片分页信息
+     */
     public PageBean<Film> getPage(Film ob, int pc, int ps) {
         PageBean<Film> pb = new PageBean<>();
         pb.setPc(pc);
@@ -121,9 +138,10 @@ public class FilmService {
     }
 
     /**
-     * @author Asimple
-     * @description 更新Film信息
-     **/
+     * 更新Film信息
+     * @param film 影片实体
+     * @return 更新成功返回true
+     */
     public boolean update(Film film) {
         return filmMapper.update(film)==1;
     }
@@ -151,16 +169,18 @@ public class FilmService {
     }
 
     /**
-     * @author Asimple
-     * @description 删除电影
-     **/
-    public boolean deleteById(String film_id) {
+     * 删除电影
+     * @param filmId 电影id
+     * @return 删除成功返回true
+     */
+    public boolean deleteById(String filmId) {
+        LogUtil.info(FilmService.class, "待删除的影片：filmId = " + filmId);
         // 1、删除评分信息
-        int sum = ratyMapper.deleteByFilmId(film_id);
+        int sum = ratyMapper.deleteByFilmId(filmId);
         // 2、删除资源信息
-        sum += resMapper.deleteByFilmId(film_id);
+        sum += resMapper.deleteByFilmId(filmId);
         // 3、删除电影本身
-        sum += filmMapper.deleteById(film_id);
+        sum += filmMapper.deleteById(filmId);
         return sum != 0;
     }
 
@@ -173,37 +193,52 @@ public class FilmService {
     }
 
     /**
-     * @author Asimple
-     * @description 保存弹幕
-     **/
+     * 保存弹幕
+     * @param bullet 弹幕对象
+     * @return 保存成功返回true
+     */
     public boolean saveBullet(Bullet bullet) {
         bullet.setId(Tools.UUID());
         return filmMapper.saveBullet(bullet)!=0;
     }
 
     /**
-     * @author Asimple
-     * @description 查找用户上传的视频
-     **/
-    public List<Film> listByUser(String uid, int pc, int ps){
+     * 查找用户上传的视频
+     * @param params 参数列表 必须要有uid
+     * @return 用户上传的视频
+     */
+    public List<Film> listByUser(Map<String, Object> params){
+        String uid = (String) params.get("uid");
+        String page = (String) params.get("page");
+        String pageSize = (String) params.get("pageSize");
+        if(StringUtils.isEmpty(page) ) {
+            page = "1";
+        }
+        if( StringUtils.isEmpty(pageSize) ) {
+            pageSize = "5";
+        }
+        int pc = Integer.valueOf(page);
+        int ps = Integer.valueOf(pageSize);
         int start = (pc-1)*ps;
         return filmMapper.listByUser(uid, start, ps);
     }
 
     /**
-     * @author Asimple
-     * @description 统计用户上传的视频
-     **/
+     * 统计用户上传的视频
+     * @param uid 用户id
+     * @return 用户上传的视频数
+     */
     public int countListByUser(String uid) {
         return filmMapper.countListByUser(uid);
     }
 
     /**
-     * @author Asimple
-     * @description 添加用户浏览记录
-     **/
+     * 添加用户浏览记录
+     * @param filmId 影片id
+     * @param uid 用户id
+     */
     public void addViewHistory(String filmId, String uid){
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<>(4);
         map.put("film_id", filmId);
         map.put("uid", uid);
         map.put("view_date", new Date());
@@ -219,57 +254,41 @@ public class FilmService {
     }
 
     /**
-     * @author Asimple
-     * @description 获取用户浏览记录
-     **/
-    public List<Map> getViewHistory(String uid, int pc, int ps){
+     * 获取用户浏览记录
+     * @param params 参数
+     * @return 用户浏览历史列表
+     */
+    public List<Map> getViewHistory(Map<String, Object> params){
+        String uid = (String) params.get("uid");
+        String page = (String) params.get("page");
+        String pageSize = (String) params.get("pageSize");
+        if(StringUtils.isEmpty(page) ) {
+            page = "1";
+        }
+        if( StringUtils.isEmpty(pageSize) ) {
+            pageSize = "5";
+        }
+        int pc = Integer.valueOf(page);
+        int ps = Integer.valueOf(pageSize);
         List<Map> temp = filmMapper.getViewHistory(uid, (pc-1)*ps, ps);
         List<Map> res = new ArrayList<>();
-        for(int i=0; i<temp.size(); i++) {
-            Map item = temp.get(i);
-            Film film = load((String)item.get("film_id"));
+        for (Map item : temp) {
+            Film film = load((String) item.get("film_id"));
             item.put("film", film);
             res.add(item);
         }
         return res;
     }
 
+    /**
+     * 统计用户浏览历史数目
+     * @param uid 用户id
+     * @return 用户浏览数
+     */
     public int countViewHistory(String uid) {
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         map.put("uid", uid);
         return filmMapper.countViewHistory(map);
-    }
-
-    public Map<String, Object> getFilmList(HttpServletRequest request) {
-        String name = request.getParameter("name");
-        Map<String, Object> result = new HashMap<>(8);
-        if( !Tools.isEmpty(name) ) {
-            result.put("name", name);
-        }
-        // 分页查询所有电影列表
-        // 获取url条件信息
-        String url = request.getQueryString();
-        if( url != null ) {
-            int index = url.indexOf("&pc=");
-            if( index != -1 ) {
-                url = url.substring(0, index);
-            }
-        }
-        // 当前页面数
-        String value = request.getParameter("pc");
-        int pc = 1;
-        if( Tools.notEmpty(value) ) {
-            pc = Integer.parseInt(value);
-        }
-        // 每页显示数目
-        int ps = 27;
-        // 获取页面传递的查询条件
-        Film ob = Tools.toBean(request.getParameterMap(), Film.class);
-
-        PageBean<Film> pageBean = getPage(ob, pc, ps);
-        pageBean.setUrl(url);
-        result.put("pb", pageBean);
-        return result;
     }
 
     /**
@@ -277,15 +296,15 @@ public class FilmService {
      * 报错信息：org.apache.solr.client.solrj.impl.HttpSolrClient$RemoteSolrException: Error from server at http://127.0.0.1:8090/solr/video: Expected mime type application/octet-stream but got text/html.
      * 未改成SpringBoot的时候，是正常运行的。
      */
-    public Map<String, Object> getFilmOfSolr(HttpServletRequest request) {
+    public Map<String, Object> getFilmOfSolr(Map<String, Object> params) {
         Map<String, Object> result = new HashMap<>(8);
         PageBean<Film> pageBean = new PageBean<>();
-        String name = request.getParameter("name");
+        String name = (String) params.get("name");
         if( !Tools.isEmpty(name) ) {
             result.put("name", name);
         }
         // 待改进
-        String url = request.getQueryString();
+        String url = (String) params.get("url");
         if( url != null ) {
             int index = url.indexOf("&pc=");
             if( index != -1 ) {
@@ -293,7 +312,7 @@ public class FilmService {
             }
         }
         // 当前页面数
-        String value = request.getParameter("pc");
+        String value = (String) params.get("pc");
         int pc = 1;
         if( Tools.notEmpty(value) ) {
             pc = Integer.parseInt(value);
@@ -303,7 +322,7 @@ public class FilmService {
         int ps = 27;
         pageBean.setPs(ps);
         // 获取页面传递的查询条件
-        Film ob = Tools.toBean(request.getParameterMap(), Film.class);
+        Film ob = (Film) params.get("film");
         pageBean.setUrl(url);
 
         HighlightQuery query = new SimpleHighlightQuery(new SimpleStringCriteria("*:*"));
@@ -343,5 +362,134 @@ public class FilmService {
         return result;
     }
 
+    /**
+     * 获取影片信息
+     * @param params 参数列表
+     * @return 影片列表信息
+     */
+    public Map<String, Object> getFilmList(Map<String, Object> params) {
+        Map<String, Object> map = new HashMap<>(16);
+        String name = (String) params.get("name");
+        if (Tools.notEmpty(name)) {
+            map.put("name", name );
+        }
+
+        // 获取url
+        String url = (String) params.get("url");
+        if (url != null) {
+            int index = url.lastIndexOf("&pc=");
+            if (index != -1) {
+                url = url.substring(0, index);
+            }
+        }
+
+        // 获取当前页数，默认为1
+        String value = (String) params.get("pc");
+        int pc = 1;
+        if (!Tools.isEmpty(value)) {
+            pc = Integer.parseInt(value);
+        }
+        // 设置每页显示的个数
+        int ps = 18;
+
+        // 转化成Film对象
+        Film ob = (Film) params.get("film");
+        ob.setIsUse(1);
+        PageBean<Film> pageBean = getPage(ob, pc, ps);
+        pageBean.setUrl(url);
+        map.put("pb", pageBean);
+        return map;
+    }
+
+    /**
+     * 获取影片详细信息
+     * @param params 参数列表
+     * @return 影片详情信息
+     */
+    public Map<String, Object> getFilmDetailInfo(Map<String, Object> params) {
+        Map<String, Object> result = new HashMap<>(16);
+        Film film = (Film) params.get("film");
+        String filmId = film.getId();
+        // 导航栏栏目加载
+        List<CataLog> cataLogList = cataLogService.listIsUse();
+        result.put("cataLogList", cataLogList);
+        result.put("film", film);
+        // 获取影评总人数
+        result.put("totalRatys", ratyService.getCountByFilmId(filmId));
+
+        // 获取相同类型的影片
+        List<Film> films = listByTypeId(film.getType_id(), 8);
+        result.put("films", films);
+
+        // 下载链接
+        List<Res> resListEd2k = new ArrayList<>();
+        List<Res> resListThunder = new ArrayList<>();
+        List<Res> resListHttp = new ArrayList<>();
+        List<Res> resListDupan = new ArrayList<>();
+        List<Res> resListFlh = new ArrayList<>();
+        List<Res> resListOther = new ArrayList<>();
+
+        for (Res res : film.getResList()) {
+            if ("ed2k".equals(res.getLinkType()) && res.getIsUse() == 1) {
+                resListEd2k.add(res);
+            } else if ("thunder".equals(res.getLinkType()) && res.getIsUse() == 1) {
+                resListThunder.add(res);
+            } else if ("http".equals(res.getLinkType()) && res.getIsUse() == 1) {
+                resListHttp.add(res);
+            } else if ("dupan".equals(res.getLinkType()) && res.getIsUse() == 1) {
+                resListDupan.add(res);
+            } else if ("Flh".equals(res.getLinkType()) && res.getIsUse() == 1) {
+                resListFlh.add(res);
+            } else if (res.getIsUse() == 1) {
+                resListOther.add(res);
+            }
+        }
+        Collections.sort(resListEd2k, Comparator.comparingInt(Res::getEpisodes));
+        Collections.sort(resListThunder, Comparator.comparingInt(Res::getEpisodes));
+        Collections.sort(resListHttp, Comparator.comparingInt(Res::getEpisodes));
+        Collections.sort(resListDupan, Comparator.comparingInt(Res::getEpisodes));
+        Collections.sort(resListFlh, Comparator.comparingInt(Res::getEpisodes));
+        Collections.sort(resListOther, Comparator.comparingInt(Res::getEpisodes));
+        result.put("resListEd2k", resListEd2k);
+        result.put("resListThunder", resListThunder);
+        result.put("resListHttp", resListHttp);
+        result.put("resListDupan", resListDupan);
+        result.put("resListFlh", resListFlh);
+        result.put("resListOther", resListOther);
+
+        return result;
+    }
+
+    /**
+     * 首页信息获取
+     * @return 首页显示信息
+     */
+    public Map<String, Object> getIndexInfo() {
+        Map<String, Object> result = new HashMap<>(4);
+        // 查询用户菜单列表
+        List<CataLog> logList =  cataLogService.listIsUse();
+        result.put("cataLogList", logList);
+
+        // 查询推荐电影
+        List<Object> list = new ArrayList<>();
+        for (CataLog aLogList : logList) {
+            List<Film> films = listByCataLogId(aLogList.getId(), 12);
+            if (films.size() != 0) {
+                list.add(films);
+            }
+        }
+        result.put("filmTuijian", list);
+
+        // 电影排行榜
+        List<Object> list1 = new ArrayList<>();
+        for (CataLog aLogList : logList) {
+            List<Film> films = listByEvaluation(aLogList.getId(), 12);
+            if (films.size() != 0) {
+                list1.add(films);
+            }
+        }
+        result.put("filmPaiHang", list1);
+        return result;
+    }
 
 }

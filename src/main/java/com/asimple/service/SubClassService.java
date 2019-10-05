@@ -23,9 +23,10 @@ public class SubClassService {
     private CataLogService cataLogService;
 
     /**
-     * @author Asimple
-     * @description 查询所有可使用的二级分类
-     **/
+     * 查询一级分类下所有可使用的二级分类
+     * @param id 一级分类id
+     * @return 二级分类列表
+     */
     public List<SubClass> listIsUse(String id) {
         return subClassMapper.listIsUse(id);
     }
@@ -47,10 +48,11 @@ public class SubClassService {
     }
 
     /**
-     * @author Asimple
-     * @description 根据id加载二级分类
-     **/
-    public SubClass load(String subClass_id) {
-        return subClassMapper.load(subClass_id);
+     * 根据id加载二级分类
+     * @param subClassId 二级分类id
+     * @return 二级分类实体
+     */
+    public SubClass load(String subClassId) {
+        return subClassMapper.load(subClassId);
     }
 }

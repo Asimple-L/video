@@ -21,9 +21,9 @@ public class LocService {
     private LocMapper locMapper;
 
     /**
-     * @author Asimple
-     * @description 查询所有在使用的地区信息
-     **/
+     * 查询所有在使用的地区信息
+     * @return 地区列表
+     */
     @Cacheable( value = "redis_locList")
     public List<Loc> listIsUse() {
         return locMapper.findByIsUse();

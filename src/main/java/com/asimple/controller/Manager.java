@@ -94,7 +94,12 @@ public class Manager {
     @RequestMapping(value = "/list")
     public Object filmList(HttpServletRequest request) {
         Map<String, Object> result = new HashMap<>(8);
-        result.putAll(filmService.getFilmList(request));
+        Map<String, Object> param = new HashMap<>(4);
+        param.put("name", request.getParameter("name"));
+        param.put("url", request.getQueryString());
+        param.put("pc", request.getParameter("pc"));
+        param.put("film", Tools.toBean(request.getParameterMap(), Film.class));
+        result.putAll(filmService.getFilmList(param));
 //        result.putAll(filmService.getFilmOfSolr(request));
         return ResponseReturnUtil.returnSuccessWithData(result);
     }

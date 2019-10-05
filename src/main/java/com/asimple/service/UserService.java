@@ -1,5 +1,6 @@
 package com.asimple.service;
 
+import com.asimple.entity.Comment;
 import com.asimple.entity.User;
 import com.asimple.mapper.UserMapper;
 import com.asimple.util.MD5Auth;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,19 +25,25 @@ public class UserService {
 
     @Resource
     private UserMapper userMapper;
+    @Resource
+    private FilmService filmService;
+    @Resource
+    private CommentService commentService;
 
     /**
-     * @author Asimple
-     * @description 有条件查询用户
-     **/
+     * 有条件查询用户
+     * @param user 用户实体
+     * @return 相关用户列表
+     */
     public List<User> findByCondition(User user) {
         return userMapper.findByCondition(user);
     }
 
     /**
-     * @author Asimple
-     * @description 添加用户
-     **/
+     * 添加用户
+     * @param user 用户实体
+     * @return 添加成功返回user实体，否则返回null
+     */
     public User add(User user) {
         int f = userMapper.add(user);
         if( f == 1 ) {
@@ -75,9 +83,10 @@ public class UserService {
     }
 
     /**
-     * @author Asimple
-     * @description 加载用户
-     **/
+     * 加载用户
+     * @param id 用户id
+     * @return 用户实体
+     */
     public User load(String id) {
         return userMapper.load(id);
     }
@@ -148,5 +157,68 @@ public class UserService {
      */
     public boolean checkPassword(String userPwd, String oldPwd) {
         return MD5Auth.validatePassword(userPwd, oldPwd+VideoKeyNameUtil.PASSWORD_KEY, VideoKeyNameUtil.ENCODE);
+    }
+
+    /**
+     * 获取用户个人中心内容
+     * @param params 参数列表 必须包含uid
+     * @return 个人中心内容
+     */
+    public Map<String, Object> getProfileInfo(Map<String, Object> params) {
+        Map<String, Object> result = new HashMap<>(16);
+        String uid = (String) params.get("uid");
+        if( StringUtils.isEmpty(uid) ) {
+            return null;
+        }
+        // 我的视频
+        int total = filmService.countListByUser(uid);
+        result.put("totalPage", total/5+((total%5)>0?1:0));
+        result.put("pageNo", 1);
+        result.put("films", filmService.listByUser(params));
+        // 浏览记录
+        List<Map> viewHistoryMap = filmService.getViewHistory(params);
+        int viewHistoryNumber = filmService.countViewHistory(uid);
+        result.put("viewHistoryList", viewHistoryMap);
+        result.put("viewHistoryAllPage", viewHistoryNumber/5+((viewHistoryNumber%5)>0?1:0));
+        result.put("viewHistoryPage", 1);
+        // 我的评论
+        List<Comment> commentList = commentService.getPageByUid(params);
+        int commentNumber = commentService.getCommentsTotal(uid);
+        result.put("comments", commentList);
+        result.put("commentPage", 1);
+        result.put("commentAllPage", commentNumber/4+((commentNumber%4)>0?1:0));
+
+        long totalLike = 0;
+        for (Comment comment: commentList) {
+            totalLike += comment.getLikeNum();
+        }
+
+        // 左边栏目信息
+        result.put("viewCount", viewHistoryNumber);
+        result.put("myFilmsCount", total);
+        result.put("commentCount", commentNumber);
+        result.put("totalLike", totalLike);
+        return result;
+    }
+
+    /**
+     * 获取我的视频或者浏览历史
+     * @param param 参数列表
+     * @return 视频分页相关信息
+     */
+    public Map<String, Object> getProfileInfoByType(Map<String, Object> param) {
+        Map<String, Object> result = new HashMap<>(8);
+        String type = (String) param.get("type");
+        String uid = (String) param.get("uid");
+        if( VideoKeyNameUtil.PROFILE_TYPE.equalsIgnoreCase(type) ) {
+            int total = filmService.countListByUser(uid);
+            result.put("totalPage", total/5+((total%5)>0?1:0));
+            result.put("films", filmService.listByUser(param));
+        } else {
+            int viewHistoryNumber = filmService.countViewHistory(uid);
+            result.put("totalPage", viewHistoryNumber/5+((viewHistoryNumber%5)>0?1:0));
+            result.put("viewHistoryList", filmService.getViewHistory(param));
+        }
+        return result;
     }
 }
