@@ -45,8 +45,8 @@
 - [x] 前后端分离（VUE）
 - [ ] 文件上传插件更换
     <div>
-        已将部分前端代码分离，具体整改进度见<a href="https://github.com/Asimple-L/vue-video">video-vue</a>
+        前端VUE框架已经搭建完毕，具体整改进度见<a href="https://github.com/Asimple-L/vue-video">video-vue</a>
     </div>
 
 ### 代码/接口优化
--[ ] 导航栏信息可以单独写成一个接口，主要传输数据包括分类信息，用户信息
+- [ ] 导航栏信息可以单独写成一个接口，主要传输数据包括分类信息，用户信息
