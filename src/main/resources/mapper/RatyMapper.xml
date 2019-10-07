@@ -12,7 +12,7 @@
             VALUES (#{id}, #{film_id},#{enTime},#{score})
     </insert>
 
-    <select id="getCountByFilm_id" resultType="Integer">
+    <select id="getCountByFilmId" resultType="Integer">
         SELECT COUNT(*) FROM t_raty WHERE film_id=#{id}
     </select>
 

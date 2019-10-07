@@ -14,9 +14,9 @@ public class ResponseReturnUtil {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("code", code);
         if( StringUtils.isNotEmpty(msg) ) {
-            jsonObject.put("msg", msg);
+            jsonObject.put("message", msg);
         } else {
-            jsonObject.put("msg", "调用成功!");
+            jsonObject.put("message", "调用成功!");
         }
         if( null != data ) {
             jsonObject.put("data", data);

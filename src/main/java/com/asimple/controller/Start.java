@@ -42,6 +42,18 @@ public class Start {
 
     /**
      * @author Asimple
+     * @description 导航栏信息返回
+     **/
+    @RequestMapping( value = "/getHeaderInfo")
+    public Object indexInfo(HttpSession session) {
+        Map<String, Object> result = new HashMap<>(5);
+        result.put("cataLogList", cataLogService.listIsUse());
+        result.put("user", session.getAttribute(VideoKeyNameUtil.USER_KEY));
+        return ResponseReturnUtil.returnSuccessWithData(result);
+    }
+
+    /**
+     * @author Asimple
      * @description 留言
      **/
     @RequestMapping("/note")

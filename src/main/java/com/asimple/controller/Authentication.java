@@ -7,6 +7,7 @@ import com.asimple.util.*;
 import net.sf.json.JSONObject;
 import org.json.JSONException;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -51,15 +52,18 @@ public class Authentication {
      * @author Asimple
      * @description 用户登录
      **/
-    @RequestMapping(value = "/login")
-    public Object login(String account, String password, HttpSession session) {
+    @RequestMapping(value = "/login", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
+    public Object login(String account,String password, HttpSession session) {
         User user = commonService.checkUser(account, password);
         if( null != user ) {
             session.setAttribute(VideoKeyNameUtil.USER_KEY, user);
-            return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
+            Map<String, Object> result = new HashMap<>(1);
+            result.put("user", user);
+            return ResponseReturnUtil.returnSuccessWithData(result);
         }
         return ResponseReturnUtil.returnErrorWithMsg("登录失败，用户不存在或密码错误！");
     }
+
     /**
      * @author Asimple
      * @description 登出
@@ -75,7 +79,7 @@ public class Authentication {
      * @author Asimple
      * @description 修改密码
      **/
-    @RequestMapping(value = "/updatePassword", produces = "text/html;charset=UTF-8")
+    @RequestMapping(value = "/updatePassword", produces = "application/json;charset=UTF-8")
     public Object updatePassword(HttpSession session, String oldPwd, String newPwd) {
         User user = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
         if( userService.checkPassword(user.getUserPasswd(), oldPwd) ) {

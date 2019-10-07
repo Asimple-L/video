@@ -3,6 +3,7 @@ package com.asimple.config;
 import com.asimple.interceptor.AdminUserInterceptor;
 import com.asimple.interceptor.ProfileInterceptor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -23,5 +24,14 @@ public class MyWebAppConfigurer extends WebMvcConfigurerAdapter {
         registry.addInterceptor(new AdminUserInterceptor()).addPathPatterns("/admin/**");
         registry.addInterceptor(new ProfileInterceptor()).addPathPatterns("/profile/**");
         super.addInterceptors(registry);
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("*")
+                .allowCredentials(true)
+                .allowedMethods("GET", "POST", "DELETE", "PUT","PATCH")
+                .maxAge(3600);
     }
 }

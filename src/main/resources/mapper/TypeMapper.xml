@@ -20,7 +20,7 @@
     </resultMap>
 
 
-    <select id="listIsUseBySubClass_id" resultType="com.asimple.entity.Type">
+    <select id="listIsUseBySubClassId" resultType="com.asimple.entity.Type">
         SELECT * FROM `t_type` WHERE isUse=1 AND subclass_id=#{id}
     </select>
 
