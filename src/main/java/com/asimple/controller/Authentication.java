@@ -37,7 +37,7 @@ public class Authentication {
      * @author Asimple
      * @description 用户注册
      **/
-    @RequestMapping(value = "/register")
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
     public Object register(User user, HttpSession session) {
         User userDb = userService.register(user);
         if( null == userDb ) {

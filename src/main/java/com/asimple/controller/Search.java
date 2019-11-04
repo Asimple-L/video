@@ -122,7 +122,7 @@ public class Search {
     public Object addRaty(Raty raty) {
         raty.setEnTime(DateUtil.getTime());
         if ( ratyService.add(raty) ) {
-            ResponseReturnUtil.returnSuccessWithoutMsgAndData();
+            return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
         }
         return ResponseReturnUtil.returnErrorWithMsg("添加失败!请稍后重试!");
     }
