@@ -121,8 +121,9 @@ public class Search {
     @RequestMapping("/addRaty")
     public Object addRaty(Raty raty) {
         raty.setEnTime(DateUtil.getTime());
-        if ( ratyService.add(raty) ) {
-            return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
+        double evaluation = ratyService.add(raty);
+        if ( evaluation!=-1 ) {
+            return ResponseReturnUtil.returnSuccessWithData(evaluation);
         }
         return ResponseReturnUtil.returnErrorWithMsg("添加失败!请稍后重试!");
     }

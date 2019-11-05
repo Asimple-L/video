@@ -34,7 +34,7 @@ public class RatyService {
      * @param raty 评分实体
      * @return 添加成功返回true
      */
-    public boolean add(Raty raty) {
+    public double add(Raty raty) {
         int cnt = ratyMapper.add(raty);
         if( cnt == 1 ) {
             // 添加成功，重新计算评分
@@ -43,14 +43,16 @@ public class RatyService {
             for (Raty raty1 : ratyList) {
                 count = count + Integer.parseInt(raty1.getScore());
             }
-            long tem = count / ratyList.size();
+            long tem = count / ratyList.size()*10;
             double evaluation = Math.floor(tem * 10d) / 10;
             Film film = filmService.load(raty.getFilm_id());
             film.setEvaluation(evaluation);
             // 更新最新的评分
-            return filmService.update(film);
+            if( filmService.update(film) ) {
+                return evaluation;
+            }
         }
-        return false;
+        return -1;
     }
 
     /**
