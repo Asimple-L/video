@@ -43,7 +43,7 @@ public class RatyService {
             for (Raty raty1 : ratyList) {
                 count = count + Integer.parseInt(raty1.getScore());
             }
-            long tem = count / ratyList.size()*10;
+            long tem = count / ratyList.size();
             double evaluation = Math.floor(tem * 10d) / 10;
             Film film = filmService.load(raty.getFilm_id());
             film.setEvaluation(evaluation);
