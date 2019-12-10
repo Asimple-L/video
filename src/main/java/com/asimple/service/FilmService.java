@@ -410,9 +410,6 @@ public class FilmService {
         Map<String, Object> result = new HashMap<>(16);
         Film film = (Film) params.get("film");
         String filmId = film.getId();
-        // 导航栏栏目加载
-        List<CataLog> cataLogList = cataLogService.listIsUse();
-        result.put("cataLogList", cataLogList);
         result.put("film", film);
         // 获取影评总人数
         result.put("totalRatys", ratyService.getCountByFilmId(filmId));
@@ -444,12 +441,12 @@ public class FilmService {
                 resListOther.add(res);
             }
         }
-        Collections.sort(resListEd2k, Comparator.comparingInt(Res::getEpisodes));
-        Collections.sort(resListThunder, Comparator.comparingInt(Res::getEpisodes));
-        Collections.sort(resListHttp, Comparator.comparingInt(Res::getEpisodes));
-        Collections.sort(resListDupan, Comparator.comparingInt(Res::getEpisodes));
-        Collections.sort(resListFlh, Comparator.comparingInt(Res::getEpisodes));
-        Collections.sort(resListOther, Comparator.comparingInt(Res::getEpisodes));
+        resListEd2k.sort(Comparator.comparingInt(Res::getEpisodes));
+        resListThunder.sort(Comparator.comparingInt(Res::getEpisodes));
+        resListHttp.sort(Comparator.comparingInt(Res::getEpisodes));
+        resListDupan.sort(Comparator.comparingInt(Res::getEpisodes));
+        resListFlh.sort(Comparator.comparingInt(Res::getEpisodes));
+        resListOther.sort(Comparator.comparingInt(Res::getEpisodes));
         result.put("resListEd2k", resListEd2k);
         result.put("resListThunder", resListThunder);
         result.put("resListHttp", resListHttp);
