@@ -41,7 +41,7 @@ public class Search {
      * @author Asimple
      * @description 查询页面
      **/
-    @RequestMapping("/1.html")
+    @RequestMapping("/index")
     public Object index(HttpServletRequest request) {
         Map<String, Object> result = new HashMap<>(8);
         Map<String, Object> param = new HashMap<>(4);
