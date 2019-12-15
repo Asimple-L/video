@@ -374,15 +374,6 @@ public class FilmService {
             map.put("name", name );
         }
 
-        // 获取url
-        String url = (String) params.get("url");
-        if (url != null) {
-            int index = url.lastIndexOf("&pc=");
-            if (index != -1) {
-                url = url.substring(0, index);
-            }
-        }
-
         // 获取当前页数，默认为1
         String value = (String) params.get("pc");
         int pc = 1;
@@ -390,14 +381,17 @@ public class FilmService {
             pc = Integer.parseInt(value);
         }
         // 设置每页显示的个数
+        value = (String) params.get("ps");
         int ps = 18;
+        if (!Tools.isEmpty(value)) {
+            ps = Integer.parseInt(value);
+        }
 
         // 转化成Film对象
         Film ob = (Film) params.get("film");
         ob.setIsUse(1);
         PageBean<Film> pageBean = getPage(ob, pc, ps);
-        pageBean.setUrl(url);
-        map.put("pb", pageBean);
+        map.put("filmList", pageBean.getBeanList());
         return map;
     }
 

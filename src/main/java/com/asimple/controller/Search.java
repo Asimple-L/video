@@ -47,8 +47,8 @@ public class Search {
         Map<String, Object> param = new HashMap<>(4);
         String cataLogId = request.getParameter("cataLogId");
         param.put("name", request.getParameter("name"));
-        param.put("url", request.getQueryString());
         param.put("pc", request.getParameter("pc"));
+        param.put("ps", request.getParameter("ps"));
         param.put("film", Tools.toBean(request.getParameterMap(), Film.class));
         result.putAll(filmService.getFilmList(param));
 
