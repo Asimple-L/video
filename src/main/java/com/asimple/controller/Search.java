@@ -45,7 +45,7 @@ public class Search {
     public Object index(HttpServletRequest request) {
         Map<String, Object> result = new HashMap<>(8);
         Map<String, Object> param = new HashMap<>(4);
-        String cataLogId = request.getParameter("cataLogId");
+        String cataLogId = request.getParameter("cataLog_id");
         param.put("name", request.getParameter("name"));
         param.put("pc", request.getParameter("pc"));
         param.put("ps", request.getParameter("ps"));
@@ -57,7 +57,7 @@ public class Search {
             result.put("subClassList", subClasses);
             result.put("cataLog_id", cataLogId);
         }
-        String subClassId = request.getParameter("subClassId");
+        String subClassId = request.getParameter("subClass_id");
         if (Tools.notEmpty(subClassId)) {
             List<Type> types = typeService.listIsUseBySubClassId(subClassId);
             result.put("typeList", types);
