@@ -5,25 +5,25 @@
 
 <mapper namespace="com.asimple.mapper.FilmMapper">
     <sql id="filmChoose">
-        <if test="obj.name != null ">
+        <if test="obj.name != null and obj.name!='' ">
             AND `name` LIKE '%' #{obj.name} '%'
         </if>
-        <if test="obj.actor != null">
+        <if test="obj.actor != null and obj.actor!=''">
             AND `actor` LIKE '%' #{obj.actor} '%'
         </if>
-        <if test="obj.cataLog_id != null">
+        <if test="obj.cataLog_id != null and obj.cataLog_id!=''">
             AND `cataLog_id` = #{ obj.cataLog_id}
         </if>
-        <if test="obj.subClass_id != null">
+        <if test="obj.subClass_id != null and obj.subClass_id!=''">
             AND `subClass_id` = #{obj.subClass_id}
         </if>
-        <if test="obj.onDecade != null">
+        <if test="obj.onDecade != null and obj.onDecade!=''">
             AND `onDecade` = #{obj.onDecade}
         </if>
-        <if test="obj.type_id != null">
+        <if test="obj.type_id != null and obj.type_id!=''">
             AND `type_id` = #{obj.type_id}
         </if>
-        <if test="obj.loc_id != null">
+        <if test="obj.loc_id != null and obj.loc_id!=''">
             AND `loc_id` = #{obj.loc_id}
         </if>
         <if test="obj.evaluation != null and obj.evaluation!=0">

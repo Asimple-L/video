@@ -8,12 +8,27 @@ import java.util.List;
  **/
 public class PageBean<T> {
 
-    private int pc;//当前页码 page code
-    private int tr;//总记录数 total record
-    private int ps;//每页记录数
-    private List<T> beanList;//当前页的记录
+    /**
+     * 当前页码 page code
+     */
+    private int pc;
+    /**
+     * 总记录数 total record
+     */
+    private int tr;
+    /**
+     * //每页记录数
+     */
+    private int ps;
+    /**
+     * 当前页的记录
+     */
 
-    private String url;//用来保存条件！
+    private List<T> beanList;
+    /**
+     *  用来保存条件
+     */
+    private String url;
 
 
     public String getUrl() {

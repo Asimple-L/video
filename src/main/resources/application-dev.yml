@@ -33,4 +33,6 @@ mybatis:
   type-aliases-package: com.asimple.mapper
 server:
   context-path: /video
-
+logging:
+  level:
+    com.asimple.mapper : debug

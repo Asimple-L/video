@@ -382,7 +382,7 @@ public class FilmService {
         }
         // 设置每页显示的个数
         value = (String) params.get("ps");
-        int ps = 18;
+        int ps = 15;
         if (!Tools.isEmpty(value)) {
             ps = Integer.parseInt(value);
         }
@@ -391,7 +391,7 @@ public class FilmService {
         Film ob = (Film) params.get("film");
         ob.setIsUse(1);
         PageBean<Film> pageBean = getPage(ob, pc, ps);
-        map.put("filmList", pageBean.getBeanList());
+        map.put("pageBean", pageBean);
         return map;
     }
 
