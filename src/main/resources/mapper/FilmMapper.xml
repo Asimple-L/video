@@ -58,7 +58,6 @@
         <where>
             <include refid="filmChoose" />
         </where>
-        order by updateTime desc
     </select>
 
     <select id="getPage" resultType="com.asimple.entity.Film">
@@ -66,6 +65,7 @@
         <where>
             <include refid="filmChoose"/>
         </where>
+        order by updateTime desc
         LIMIT #{start},#{count}
     </select>
 

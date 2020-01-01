@@ -6,6 +6,7 @@ import com.asimple.task.RankTask;
 import com.asimple.util.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JsonConfig;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -46,11 +47,17 @@ public class Profile {
      * @description 进入个人中心页面
      **/
     @RequestMapping(value = "/profilePage")
-    public Object profile(HttpSession session) {
+    public Object profile(HttpSession session, String uid) {
         Map<String, Object> result = new HashMap<>(16);
         result.putAll(commonService.getCatalog());
         User user = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
-        String uid = user.getId();
+        if( user==null ) {
+            return ResponseReturnUtil.returnErrorWithMsg("未登录，请登录后重试!");
+        }
+        if(StringUtils.isEmpty(uid) || !uid.equals(user.getId()) ) {
+            return ResponseReturnUtil.returnErrorWithMsg("参数错误，请登录后重试!");
+        }
+        uid = user.getId();
         Map<String, Object> param = new HashMap<>(4);
         param.put("uid", uid);
         result.putAll(userService.getProfileInfo(param));

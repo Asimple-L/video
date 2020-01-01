@@ -35,4 +35,4 @@ server:
   context-path: /video
 logging:
   level:
-    com.asimple.mapper : debug
+    com.asimple.mapper : error
