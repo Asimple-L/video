@@ -8,6 +8,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JsonConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -47,7 +48,7 @@ public class Profile {
      * @description 进入个人中心页面
      **/
     @RequestMapping(value = "/profilePage")
-    public Object profile(HttpSession session, String uid) {
+    public Object profile(HttpSession session, String uid, @RequestParam(required = false) String type) {
         Map<String, Object> result = new HashMap<>(16);
         result.putAll(commonService.getCatalog());
         User user = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
@@ -60,6 +61,7 @@ public class Profile {
         uid = user.getId();
         Map<String, Object> param = new HashMap<>(4);
         param.put("uid", uid);
+        param.put("type", type);
         result.putAll(userService.getProfileInfo(param));
         return ResponseReturnUtil.returnSuccessWithData(result);
     }

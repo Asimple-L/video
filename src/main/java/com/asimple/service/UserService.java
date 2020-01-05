@@ -167,27 +167,34 @@ public class UserService {
     public Map<String, Object> getProfileInfo(Map<String, Object> params) {
         Map<String, Object> result = new HashMap<>(16);
         String uid = (String) params.get("uid");
-        if( StringUtils.isEmpty(uid) ) {
-            return null;
-        }
+        String type = (String) params.get("type");
         // 我的视频
         int total = filmService.countListByUser(uid);
-        result.put("totalPage", total/5+((total%5)>0?1:0));
-        result.put("pageNo", 1);
-        result.put("films", filmService.listByUser(params));
+        if( StringUtils.equalsIgnoreCase(VideoKeyNameUtil.PROFILE_VIDEO, type) ) {
+            result.put("totalPage", total/5+((total%5)>0?1:0));
+            result.put("pageNo", 1);
+            result.put("films", filmService.listByUser(params));
+            return result;
+        }
         // 浏览记录
-        List<Map> viewHistoryMap = filmService.getViewHistory(params);
         int viewHistoryNumber = filmService.countViewHistory(uid);
-        result.put("viewHistoryList", viewHistoryMap);
-        result.put("viewHistoryAllPage", viewHistoryNumber/5+((viewHistoryNumber%5)>0?1:0));
-        result.put("viewHistoryPage", 1);
+        if( StringUtils.equalsIgnoreCase(VideoKeyNameUtil.PROFILE_VIEW, type) ) {
+            List<Map> viewHistoryMap = filmService.getViewHistory(params);
+            result.put("viewHistoryList", viewHistoryMap);
+            result.put("viewHistoryAllPage", viewHistoryNumber/5+((viewHistoryNumber%5)>0?1:0));
+            result.put("viewHistoryPage", 1);
+            return result;
+        }
+
         // 我的评论
         List<Comment> commentList = commentService.getPageByUid(params);
         int commentNumber = commentService.getCommentsTotal(uid);
-        result.put("comments", commentList);
-        result.put("commentPage", 1);
-        result.put("commentAllPage", commentNumber/4+((commentNumber%4)>0?1:0));
-
+        if( StringUtils.equalsIgnoreCase(VideoKeyNameUtil.PROFILE_COMMENT, type) ) {
+            result.put("comments", commentList);
+            result.put("commentPage", 1);
+            result.put("commentAllPage", commentNumber/4+((commentNumber%4)>0?1:0));
+            return result;
+        }
         long totalLike = 0;
         for (Comment comment: commentList) {
             totalLike += comment.getLikeNum();

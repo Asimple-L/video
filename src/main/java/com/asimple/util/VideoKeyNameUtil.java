@@ -39,4 +39,17 @@ public class VideoKeyNameUtil {
      * 失败编码
      */
     public static final String ERROR_CODE = "111111";
+    /**
+     * 个人中心--我的视频 查询关键字
+     */
+    public static final String PROFILE_VIDEO = "videos";
+    /**
+     * 个人中心--浏览历史 查询关键字
+     */
+    public static final String PROFILE_VIEW = "view";
+    /**
+     * 个人中心--我的评论 查询关键字
+     */
+    public static final String PROFILE_COMMENT = "comment";
+
 }
