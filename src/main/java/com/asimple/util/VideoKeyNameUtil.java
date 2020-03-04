@@ -38,7 +38,7 @@ public class VideoKeyNameUtil {
     /**
      * 失败编码
      */
-    public static final String ERROR_CODE = "111111";
+    static final String ERROR_CODE = "111111";
     /**
      * 个人中心--我的视频 查询关键字
      */

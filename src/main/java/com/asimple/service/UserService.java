@@ -171,8 +171,7 @@ public class UserService {
         // 我的视频
         int total = filmService.countListByUser(uid);
         if( StringUtils.equalsIgnoreCase(VideoKeyNameUtil.PROFILE_VIDEO, type) ) {
-            result.put("totalPage", total/5+((total%5)>0?1:0));
-            result.put("pageNo", 1);
+            result.put("total", total);
             result.put("films", filmService.listByUser(params));
             return result;
         }
@@ -181,8 +180,7 @@ public class UserService {
         if( StringUtils.equalsIgnoreCase(VideoKeyNameUtil.PROFILE_VIEW, type) ) {
             List<Map> viewHistoryMap = filmService.getViewHistory(params);
             result.put("viewHistoryList", viewHistoryMap);
-            result.put("viewHistoryAllPage", viewHistoryNumber/5+((viewHistoryNumber%5)>0?1:0));
-            result.put("viewHistoryPage", 1);
+            result.put("total", viewHistoryNumber);
             return result;
         }
 
@@ -191,8 +189,7 @@ public class UserService {
         int commentNumber = commentService.getCommentsTotal(uid);
         if( StringUtils.equalsIgnoreCase(VideoKeyNameUtil.PROFILE_COMMENT, type) ) {
             result.put("comments", commentList);
-            result.put("commentPage", 1);
-            result.put("commentAllPage", commentNumber/4+((commentNumber%4)>0?1:0));
+            result.put("total", commentNumber);
             return result;
         }
         long totalLike = 0;

@@ -50,7 +50,6 @@ public class Profile {
     @RequestMapping(value = "/profilePage")
     public Object profile(HttpSession session, String uid, @RequestParam(required = false) String type) {
         Map<String, Object> result = new HashMap<>(16);
-        result.putAll(commonService.getCatalog());
         User user = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
         if( user==null ) {
             return ResponseReturnUtil.returnErrorWithMsg("未登录，请登录后重试!");
