@@ -91,7 +91,7 @@ public class Manager {
      * @author Asimple
      * @description 查看所有影视信息
      **/
-    @RequestMapping(value = "/list")
+    @RequestMapping(value = "/list", produces = "application/json;charset=UTF-8")
     public Object filmList(HttpServletRequest request) {
         Map<String, Object> result = new HashMap<>(8);
         Map<String, Object> param = new HashMap<>(4);
@@ -140,7 +140,7 @@ public class Manager {
      * @author Asimple
      * @description 添加影片
      **/
-    @RequestMapping( value = "/addFilm", produces = "text/html;charset=UTF-8")
+    @RequestMapping( value = "/addFilm", produces = "application/json;charset=UTF-8")
     public Object addFilm(Film film, HttpSession session) {
         Map<String, Object> map = new HashMap<>(1);
         User user = (User) session.getAttribute(VideoKeyNameUtil.ADMIN_USER_KEY);
@@ -346,7 +346,7 @@ public class Manager {
      * @author Asimple
      * @description 导入Solr库
      **/
-    @RequestMapping(value = "/loadIn", produces = "text/html;charset=UTF-8")
+    @RequestMapping(value = "/loadIn", produces = "application/json;charset=UTF-8")
     public Object loadInSolr() {
         solrTask.pushToSolr();
         return ResponseReturnUtil.returnSuccessWithoutMsgAndData();

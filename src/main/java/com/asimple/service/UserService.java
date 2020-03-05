@@ -216,11 +216,11 @@ public class UserService {
         String uid = (String) param.get("uid");
         if( VideoKeyNameUtil.PROFILE_TYPE.equalsIgnoreCase(type) ) {
             int total = filmService.countListByUser(uid);
-            result.put("totalPage", total/5+((total%5)>0?1:0));
+            result.put("total", total);
             result.put("films", filmService.listByUser(param));
         } else {
             int viewHistoryNumber = filmService.countViewHistory(uid);
-            result.put("totalPage", viewHistoryNumber/5+((viewHistoryNumber%5)>0?1:0));
+            result.put("total", viewHistoryNumber);
             result.put("viewHistoryList", filmService.getViewHistory(param));
         }
         return result;

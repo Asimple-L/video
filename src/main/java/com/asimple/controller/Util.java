@@ -36,7 +36,7 @@ public class Util implements ServletContextAware {
      * @author Asimple
      * @description 文件上传(多文件上传处理)
      **/
-    @RequestMapping(value = "/upload", produces = "text/html;charset=UTF-8")
+    @RequestMapping(value = "/upload", produces = "application/json;charset=UTF-8")
     public String upload(String childPath, HttpServletRequest request) throws IOException{
         // 文件上传处理
         Properties pro = new Properties();
@@ -115,7 +115,7 @@ public class Util implements ServletContextAware {
      * @author Asimple
      * @description 根据文件路径删除系统下的文件
      **/
-    @RequestMapping(value = "/delFile", produces = "text/html;charset=UTF-8")
+    @RequestMapping(value = "/delFile", produces = "application/json;charset=UTF-8")
     public Object delFile(String picsPath) {
         JSONObject jsonObject = new JSONObject();
         if( picsPath.startsWith("/video/") ) {

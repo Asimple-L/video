@@ -70,7 +70,7 @@ public class Start {
      * @author Asimple
      * @description 保存留言
      **/
-    @RequestMapping(value = "/saveComment", produces = "text/html;charset=UTF-8")
+    @RequestMapping(value = "/saveComment", produces = "application/json;charset=UTF-8")
     public Object addComment(String context, HttpSession session) {
         User user = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
         if( user == null ) {
@@ -90,7 +90,7 @@ public class Start {
      * @author Asimple
      * @description 评论点赞或者踩
      **/
-    @RequestMapping(value = "/changeLikeNum", produces = "text/html;charset=UTF-8")
+    @RequestMapping(value = "/changeLikeNum", produces = "application/json;charset=UTF-8")
     public Object changeLikeNum(String type, String id) {
         if( commentService.update(type, id) ) {
             return ResponseReturnUtil.returnSuccessWithoutMsgAndData();

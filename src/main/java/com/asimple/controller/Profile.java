@@ -67,9 +67,9 @@ public class Profile {
 
     /**
      * @author Asimple
-     * @description 视频分享页面
+     * @description 视频分享页面初始化
      **/
-    @RequestMapping(value = "/share")
+    @RequestMapping(value = "/share", produces = "application/json;charset=UTF-8")
     public Object shareVideo(HttpServletRequest request) {
         Map<String, Object> result = new HashMap<>(8);
         String filmId = request.getParameter("film_id");
@@ -91,7 +91,7 @@ public class Profile {
      * @author Asimple
      * @description 添加影片
      **/
-    @RequestMapping( value = "/addFilm", produces = "text/html;charset=UTF-8")
+    @RequestMapping( value = "/addFilm", produces = "application/json;charset=UTF-8")
     public Object addFilm(Film film, HttpSession session) {
         User user = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
         film.setUser(user);
@@ -104,7 +104,7 @@ public class Profile {
      * @author Asimple
      * @description 删除影片
      **/
-    @RequestMapping( value = "/delFilm")
+    @RequestMapping( value = "/delFilm", produces = "application/json;charset=UTF-8")
     public Object delFilm(String filmId) {
         if ( filmService.deleteById(filmId) ) {
             this.updateRedis("1");
@@ -174,7 +174,7 @@ public class Profile {
      * @author Asimple
      * @description 获取二级目录信息
      **/
-    @RequestMapping(value = "/getSubClass", produces = "text/html;charset=UTF-8")
+    @RequestMapping(value = "/getSubClass", produces = "application/json;charset=UTF-8")
     public Object getSubClass(String catalogId) {
         List<SubClass> subClasses = subClassService.listIsUse(catalogId);
         JsonConfig jsonConfig = new JsonConfig();
@@ -188,7 +188,7 @@ public class Profile {
      * @author Asimple
      * @description 获取类型
      **/
-    @RequestMapping(value = "/getType", produces = "text/html;charset=UTF-8")
+    @RequestMapping(value = "/getType", produces = "application/json;charset=UTF-8")
     public Object getType(String subClassId) {
         List<Type> types = typeService.listIsUseBySubClassId(subClassId);
         JsonConfig jsonConfig = new JsonConfig();
@@ -202,16 +202,18 @@ public class Profile {
      * @author Asimple
      * @description 返回我的视频
      **/
-    @RequestMapping(value = "/getFilmAjax", produces = "text/html;charset=UTF-8")
-    public Object getFilm(HttpSession session, int pc, String type) {
+    @RequestMapping(value = "/getFilmAjax", produces = "application/json;charset=UTF-8")
+    public Object getFilm(HttpSession session,@RequestParam(required = false) String pc, String type) {
         User user = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
         Map<String, Object> result = new HashMap<>(8);
         Map<String, Object> param = new HashMap<>(4);
+        if( StringUtils.isEmpty(pc) ) {
+            pc = "1";
+        }
         param.put("uid", user.getId());
         param.put("page", String.valueOf(pc));
         param.put("type", type);
         result.putAll(userService.getProfileInfoByType(param));
-        result.put("pageNo", pc);
         return  ResponseReturnUtil.returnSuccessWithData(result);
     }
 
@@ -219,7 +221,7 @@ public class Profile {
      * @author Asimple
      * @description 获取我的评论
      */
-    @RequestMapping(value = "/getMyComments", produces = "text/html;charset=UTF-8")
+    @RequestMapping(value = "/getMyComments", produces = "application/json;charset=UTF-8")
     public Object getMyComments(HttpSession session, int pc) {
         Map<String, Object> result = new HashMap<>(4);
         Map<String, Object> params = new HashMap<>(4);
