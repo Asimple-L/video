@@ -80,15 +80,21 @@ public class Authentication {
      * @description 修改密码
      **/
     @RequestMapping(value = "/updatePassword", produces = "application/json;charset=UTF-8")
-    public Object updatePassword(HttpSession session, String oldPwd, String newPwd) {
-        User user = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
+    public Object updatePassword(HttpServletRequest request) {
+        User user = RequestUtil.getUserInformation(request);
+        String uid = request.getParameter("uid");
+        if( RequestUtil.isSelfLogin(request) ) {
+            return ResponseReturnUtil.returnErrorWithMsg("请先登录!");
+        }
+        String oldPwd = request.getParameter("oldPwd");
+        String newPwd = request.getParameter("newPwd");
         if( userService.checkPassword(user.getUserPasswd(), oldPwd) ) {
             Map<String, Object> param = new HashMap<>(1);
             param.put("user", user);
             param.put("newPwd", newPwd);
             userService.update(param);
-            session.removeAttribute(VideoKeyNameUtil.USER_KEY);
-            return ResponseReturnUtil.returnSuccessWithMsg("修改成功");
+            RequestUtil.logout(request);
+            return ResponseReturnUtil.returnSuccessWithMsg("修改成功,请重新登录!");
         }
         return ResponseReturnUtil.returnErrorWithMsg("旧密码输入错误!");
     }

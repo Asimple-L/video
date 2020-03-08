@@ -48,19 +48,17 @@ public class Profile {
      * @description 进入个人中心页面
      **/
     @RequestMapping(value = "/profilePage")
-    public Object profile(HttpSession session, String uid, @RequestParam(required = false) String type) {
+    public Object profile(HttpServletRequest request) {
         Map<String, Object> result = new HashMap<>(16);
-        User user = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
-        if( user==null ) {
+        if( RequestUtil.isLogin(request) ) {
             return ResponseReturnUtil.returnErrorWithMsg("未登录，请登录后重试!");
         }
-        if(StringUtils.isEmpty(uid) || !uid.equals(user.getId()) ) {
+        if( RequestUtil.isSelfLogin(request) ) {
             return ResponseReturnUtil.returnErrorWithMsg("参数错误，请登录后重试!");
         }
-        uid = user.getId();
+        User user = RequestUtil.getUserInformation(request);
         Map<String, Object> param = new HashMap<>(4);
-        param.put("uid", uid);
-        param.put("type", type);
+        param.put("uid", user.getId());
         result.putAll(userService.getProfileInfo(param));
         return ResponseReturnUtil.returnSuccessWithData(result);
     }
@@ -222,15 +220,22 @@ public class Profile {
      * @description 获取我的评论
      */
     @RequestMapping(value = "/getMyComments", produces = "application/json;charset=UTF-8")
-    public Object getMyComments(HttpSession session, int pc) {
+    public Object getMyComments(HttpServletRequest request) {
         Map<String, Object> result = new HashMap<>(4);
         Map<String, Object> params = new HashMap<>(4);
-        User user = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
+        if ( RequestUtil.isSelfLogin(request) ) {
+            return ResponseReturnUtil.returnErrorWithMsg("请登录!");
+        }
+        String pc = request.getParameter("pc");
+        if( StringUtils.isEmpty(pc) ) {
+            pc = "1";
+        }
+        User user = RequestUtil.getUserInformation(request);
         params.put("uid", user.getId());
         params.put("page", String.valueOf(pc));
-        result.put("commentList", commentService.getPageByUid(params));
+        result.put("comments", commentService.getPageByUid(params));
         result.put("pageNo", pc);
-        result.put("totalPage", commentService.getCommentsTotal(user.getId()));
+        result.put("total", commentService.getCommentsTotal(user.getId()));
         return ResponseReturnUtil.returnSuccessWithData(result);
     }
 

@@ -167,31 +167,14 @@ public class UserService {
     public Map<String, Object> getProfileInfo(Map<String, Object> params) {
         Map<String, Object> result = new HashMap<>(16);
         String uid = (String) params.get("uid");
-        String type = (String) params.get("type");
-        // 我的视频
+        // 我上传的视频数量
         int total = filmService.countListByUser(uid);
-        if( StringUtils.equalsIgnoreCase(VideoKeyNameUtil.PROFILE_VIDEO, type) ) {
-            result.put("total", total);
-            result.put("films", filmService.listByUser(params));
-            return result;
-        }
-        // 浏览记录
+        // 浏览记录数
         int viewHistoryNumber = filmService.countViewHistory(uid);
-        if( StringUtils.equalsIgnoreCase(VideoKeyNameUtil.PROFILE_VIEW, type) ) {
-            List<Map> viewHistoryMap = filmService.getViewHistory(params);
-            result.put("viewHistoryList", viewHistoryMap);
-            result.put("total", viewHistoryNumber);
-            return result;
-        }
-
-        // 我的评论
+        // 我的评论数量
         List<Comment> commentList = commentService.getPageByUid(params);
         int commentNumber = commentService.getCommentsTotal(uid);
-        if( StringUtils.equalsIgnoreCase(VideoKeyNameUtil.PROFILE_COMMENT, type) ) {
-            result.put("comments", commentList);
-            result.put("total", commentNumber);
-            return result;
-        }
+        // 总点赞数量
         long totalLike = 0;
         for (Comment comment: commentList) {
             totalLike += comment.getLikeNum();
