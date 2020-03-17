@@ -83,7 +83,7 @@ public class Authentication {
     public Object updatePassword(HttpServletRequest request) {
         User user = RequestUtil.getUserInformation(request);
         String uid = request.getParameter("uid");
-        if( RequestUtil.isSelfLogin(request) ) {
+        if( RequestUtil.isNotSelfLogin(request) ) {
             return ResponseReturnUtil.returnErrorWithMsg("请先登录!");
         }
         String oldPwd = request.getParameter("oldPwd");

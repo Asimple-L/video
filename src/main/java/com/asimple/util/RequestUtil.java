@@ -44,15 +44,15 @@ public class RequestUtil {
     }
 
     /**
-     * 是否本人登录
+     * 不是本人登录
      * @param request 请求
-     * @return 是本人登录返回true
+     * @return 是本人登录返回false
      */
-    public static boolean isSelfLogin(HttpServletRequest request) {
+    public static boolean isNotSelfLogin(HttpServletRequest request) {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
         String uid = request.getParameter("uid");
-        return isLogin(request) && user.getId().equals(uid);
+        return !(isLogin(request) && user.getId().equals(uid));
     }
 
 }

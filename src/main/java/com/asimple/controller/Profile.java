@@ -50,10 +50,10 @@ public class Profile {
     @RequestMapping(value = "/profilePage")
     public Object profile(HttpServletRequest request) {
         Map<String, Object> result = new HashMap<>(16);
-        if( RequestUtil.isLogin(request) ) {
+        if( !RequestUtil.isLogin(request) ) {
             return ResponseReturnUtil.returnErrorWithMsg("未登录，请登录后重试!");
         }
-        if( RequestUtil.isSelfLogin(request) ) {
+        if( RequestUtil.isNotSelfLogin(request) ) {
             return ResponseReturnUtil.returnErrorWithMsg("参数错误，请登录后重试!");
         }
         User user = RequestUtil.getUserInformation(request);
@@ -223,7 +223,7 @@ public class Profile {
     public Object getMyComments(HttpServletRequest request) {
         Map<String, Object> result = new HashMap<>(4);
         Map<String, Object> params = new HashMap<>(4);
-        if ( RequestUtil.isSelfLogin(request) ) {
+        if ( RequestUtil.isNotSelfLogin(request) ) {
             return ResponseReturnUtil.returnErrorWithMsg("请登录!");
         }
         String pc = request.getParameter("pc");

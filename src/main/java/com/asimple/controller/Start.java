@@ -9,10 +9,12 @@ import com.asimple.service.FilmService;
 import com.asimple.util.PageBean;
 import com.asimple.util.ResponseReturnUtil;
 import com.asimple.util.VideoKeyNameUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
@@ -56,12 +58,20 @@ public class Start {
      * @author Asimple
      * @description 留言
      **/
-    @RequestMapping("/note")
-    public Object note() {
+    @RequestMapping(value = "/note", produces = "application/json;charset=UTF-8")
+    public Object note(HttpServletRequest request) {
+        String pageSize = request.getParameter("pageSize");
+        String pageNo = request.getParameter("pageNo");
+        int ps = 20;
+        int pc = 1;
+        if(StringUtils.isNotBlank(pageSize) ) {
+            ps = Integer.valueOf(pageSize);
+        }
+        if( StringUtils.isNotBlank(pageNo) ) {
+            pc = Integer.valueOf(pageNo);
+        }
         Map<String, Object> map = new HashMap<>(2);
-        List<CataLog> cataLogList = cataLogService.listIsUse();
-        PageBean<Comment> pageBean = commentService.getPage(null, 1, 20);
-        map.put("cataLogList", cataLogList);
+        PageBean<Comment> pageBean = commentService.getPage(null, pc, ps);
         map.put("pb", pageBean);
         return ResponseReturnUtil.returnSuccessWithData(map);
     }
@@ -91,7 +101,12 @@ public class Start {
      * @description 评论点赞或者踩
      **/
     @RequestMapping(value = "/changeLikeNum", produces = "application/json;charset=UTF-8")
-    public Object changeLikeNum(String type, String id) {
+    public Object changeLikeNum(HttpServletRequest request) {
+        String type = request.getParameter("type");
+        String id = request.getParameter("id");
+        if( StringUtils.isEmpty(type) || StringUtils.isEmpty(id) ) {
+            return ResponseReturnUtil.returnErrorWithMsg("参数错误,请重试!");
+        }
         if( commentService.update(type, id) ) {
             return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
         }
