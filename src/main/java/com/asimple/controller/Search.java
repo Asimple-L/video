@@ -25,8 +25,6 @@ public class Search {
     @Resource
     private FilmService filmService;
     @Resource
-    private CataLogService cataLogService;
-    @Resource
     private SubClassService subClassService;
     @Resource
     private TypeService typeService;

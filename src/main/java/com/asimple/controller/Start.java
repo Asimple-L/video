@@ -1,12 +1,12 @@
 package com.asimple.controller;
 
-import com.asimple.entity.CataLog;
 import com.asimple.entity.Comment;
 import com.asimple.entity.User;
 import com.asimple.service.CataLogService;
 import com.asimple.service.CommentService;
 import com.asimple.service.FilmService;
 import com.asimple.util.PageBean;
+import com.asimple.util.PropertiesUtil;
 import com.asimple.util.ResponseReturnUtil;
 import com.asimple.util.VideoKeyNameUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -31,6 +31,8 @@ public class Start {
     private FilmService filmService;
     @Resource
     private CommentService commentService;
+    @Resource
+    private PropertiesUtil propertiesUtil;
 
     /**
      * @author Asimple
@@ -62,7 +64,7 @@ public class Start {
     public Object note(HttpServletRequest request) {
         String pageSize = request.getParameter("pageSize");
         String pageNo = request.getParameter("pageNo");
-        int ps = 20;
+        int ps = 6;
         int pc = 1;
         if(StringUtils.isNotBlank(pageSize) ) {
             ps = Integer.valueOf(pageSize);
