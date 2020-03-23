@@ -5,10 +5,7 @@ import com.asimple.entity.User;
 import com.asimple.service.CataLogService;
 import com.asimple.service.CommentService;
 import com.asimple.service.FilmService;
-import com.asimple.util.PageBean;
-import com.asimple.util.PropertiesUtil;
-import com.asimple.util.ResponseReturnUtil;
-import com.asimple.util.VideoKeyNameUtil;
+import com.asimple.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -104,13 +101,16 @@ public class Start {
      **/
     @RequestMapping(value = "/changeLikeNum", produces = "application/json;charset=UTF-8")
     public Object changeLikeNum(HttpServletRequest request) {
+        if ( !RequestUtil.isLogin(request) ) {
+            return ResponseReturnUtil.returnErrorWithMsg("请先登录!");
+        }
         String type = request.getParameter("type");
         String id = request.getParameter("id");
         if( StringUtils.isEmpty(type) || StringUtils.isEmpty(id) ) {
             return ResponseReturnUtil.returnErrorWithMsg("参数错误,请重试!");
         }
-        if( commentService.update(type, id) ) {
-            return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
+        if( commentService.update(id, type) ) {
+            return ResponseReturnUtil.returnSuccessWithMsg("成功!");
         }
         return ResponseReturnUtil.returnErrorWithMsg("操作失败,请稍后重试!");
     }

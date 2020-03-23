@@ -71,6 +71,9 @@ public class CommentService {
      */
     public boolean update(String id, String type) {
         Comment comment = load(id);
+        if( comment == null ) {
+            return false;
+        }
         if( VideoKeyNameUtil.SUCCESS_CODE.equals(type) ) {
             comment.setLikeNum(comment.getLikeNum()+1);
         } else {
