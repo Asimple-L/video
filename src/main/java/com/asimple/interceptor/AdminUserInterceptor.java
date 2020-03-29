@@ -27,7 +27,7 @@ public class AdminUserInterceptor implements HandlerInterceptor {
             return true;
         }
         request.setAttribute("msg", "请登录管理员账号!");
-        request.getRequestDispatcher("/WEB-INF/jsp/manager/login.jsp").forward(request, response);
+//        request.getRequestDispatcher("/WEB-INF/jsp/manager/login.jsp").forward(request, response);
         return false;
     }
 

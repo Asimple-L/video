@@ -55,4 +55,15 @@ public class RequestUtil {
         return !(isLogin(request) && user.getId().equals(uid));
     }
 
+    /**
+     * 是否管理员登录
+     * @param request 请求信息
+     * @return 当前登录用户是管理返回true
+     */
+    public static boolean isAdmin(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
+        return user!=null && user.getIsManager()==1;
+    }
+
 }

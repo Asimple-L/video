@@ -28,8 +28,6 @@ public class Start {
     private FilmService filmService;
     @Resource
     private CommentService commentService;
-    @Resource
-    private PropertiesUtil propertiesUtil;
 
     /**
      * @author Asimple
@@ -46,10 +44,10 @@ public class Start {
      * @description 导航栏信息返回
      **/
     @RequestMapping( value = "/getHeaderInfo")
-    public Object indexInfo(HttpSession session) {
+    public Object indexInfo(HttpServletRequest request) {
         Map<String, Object> result = new HashMap<>(5);
         result.put("cataLogList", cataLogService.listIsUse());
-        result.put("user", session.getAttribute(VideoKeyNameUtil.USER_KEY));
+        result.put("user", RequestUtil.getUserInformation(request));
         return ResponseReturnUtil.returnSuccessWithData(result);
     }
 
@@ -80,11 +78,12 @@ public class Start {
      * @description 保存留言
      **/
     @RequestMapping(value = "/saveComment", produces = "application/json;charset=UTF-8")
-    public Object addComment(String context, HttpSession session) {
-        User user = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
-        if( user == null ) {
+    public Object addComment(HttpServletRequest request) {
+        if( !RequestUtil.isLogin(request) ) {
             return ResponseReturnUtil.returnErrorWithMsg("请登录后评论!");
         }
+        User user = RequestUtil.getUserInformation(request);
+        String context = request.getParameter("context");
         Map<String, Object> param = new HashMap<>(2);
         param.put("user", user);
         param.put("context", context);
