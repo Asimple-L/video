@@ -57,6 +57,7 @@ public class Authentication {
         User user = commonService.checkUser(account, password);
         if( null != user ) {
             session.setAttribute(VideoKeyNameUtil.USER_KEY, user);
+            session.setAttribute(VideoKeyNameUtil.ADMIN_USER_KEY, user);
             Map<String, Object> result = new HashMap<>(1);
             result.put("user", user);
             return ResponseReturnUtil.returnSuccessWithData(result);

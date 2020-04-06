@@ -50,6 +50,7 @@ public class Manager {
     /**
      * @author Asimple
      * @description 管理员登录
+     * @deprecated
      **/
     @RequestMapping(value = "/login", method = { RequestMethod.POST })
     public Object adminLogin(String username, String password, HttpSession session) {
@@ -68,10 +69,14 @@ public class Manager {
      * @author Asimple
      * @description 影片资源管理
      **/
-    @RequestMapping(value = "/film")
-    public Object film(String filmId) {
-        // 如果有id，则是编辑
+    @RequestMapping(value = "/film", produces = "application/json;charset=UTF-8")
+    public Object film(HttpServletRequest request) {
+        if( !RequestUtil.isAdmin(request) ) {
+            return ResponseReturnUtil.returnErrorWithMsg("请重新登录后重试!");
+        }
         Map<String, Object> result = new HashMap<>(4);
+        String filmId = request.getParameter("filmId");
+        // 如果有id，则是编辑
         if ( StringUtils.isNotEmpty(filmId) ) {
             // 获取电影信息
             result.put("film", filmService.load(filmId));
@@ -83,7 +88,6 @@ public class Manager {
                 result.put("res", list);
             }
         }
-        result.putAll(commonService.getCatalog());
         return ResponseReturnUtil.returnSuccessWithData(result);
     }
 
@@ -93,10 +97,12 @@ public class Manager {
      **/
     @RequestMapping(value = "/list", produces = "application/json;charset=UTF-8")
     public Object filmList(HttpServletRequest request) {
+        if( !RequestUtil.isAdmin(request) ) {
+            return ResponseReturnUtil.returnErrorWithMsg("请重新登录后重试!");
+        }
         Map<String, Object> result = new HashMap<>(8);
         Map<String, Object> param = new HashMap<>(4);
         param.put("name", request.getParameter("name"));
-        param.put("url", request.getQueryString());
         param.put("pc", request.getParameter("pc"));
         param.put("film", Tools.toBean(request.getParameterMap(), Film.class));
         result.putAll(filmService.getFilmList(param));
@@ -108,7 +114,7 @@ public class Manager {
      * @author Asimple
      * @description 用户管理
      **/
-    @RequestMapping( value = "/userList")
+    @RequestMapping( value = "/userList", produces = "application/json;charset=UTF-8")
     public Object userList(HttpServletRequest request) {
         Map<String, Object> result = new HashMap<>(2);
         Map<String, Object> param = new HashMap<>(2);
