@@ -8,13 +8,34 @@ import java.io.Serializable;
  * @author Asimple
  */
 public class Res implements Serializable {
-    private String id; // 主键id
-    private int episodes; // 集
-    private String name; // 资源名称
-    private String link; // 资源链接
-    private String linkType; // 资源类型
-    private String updateTime; // 更新时间
-    private int isUse; // 是否有用
+    /**
+     * 主键id
+     */
+    private String id;
+    /**
+     * 集
+     */
+    private int episodes;
+    /**
+     * 资源名称
+     */
+    private String name;
+    /**
+     * 资源链接
+     */
+    private String link;
+    /**
+     * 资源类型
+     */
+    private String linkType;
+    /**
+     * 更新时间
+     */
+    private String updateTime;
+    /**
+     * 是否有用
+     */
+    private int isUse;
     private Film film;
 
     public Res() {

@@ -9,14 +9,38 @@ import java.util.Date;
  * @author Asimple
  */
 public class User implements Serializable {
-    private String id;// 主键
-    private String userName;// 用户名
-    private String userPasswd;// 用户密码
-    private String userEmail;// 用户邮箱
-    private Date createDate;// 用户创建时间
-    private Date expireDate;// VIP失效时间
-    private long isVip;// 是否是VIP
-    private int isManager;// 是否是管理员
+    /**
+     * 主键
+     */
+    private String id;
+    /**
+     * 用户名
+     */
+    private String userName;
+    /**
+     * 用户密码
+     */
+    private String userPasswd;
+    /**
+     * 用户邮箱
+     */
+    private String userEmail;
+    /**
+     * 用户创建时间
+     */
+    private Date createDate;
+    /**
+     * VIP失效时间
+     */
+    private Date expireDate;
+    /**
+     * 是否是VIP
+     */
+    private long isVip;
+    /**
+     * 是否是管理员
+     */
+    private int isManager;
 
     public User() {
     }

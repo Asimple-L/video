@@ -9,11 +9,26 @@ import java.util.Date;
  * @author Asimple
  */
 public class VipCode implements Serializable {
-    private String id; // 主键id
-    private String code; // VIP卡码
-    private int isUse; // 是否使用
-    private Date create_time; // 创建时间
-    private Date expire_time; // 到期时间
+    /**
+     * 主键id
+     */
+    private String id;
+    /**
+     *  VIP卡码
+     */
+    private String code;
+    /**
+     * 是否使用
+     */
+    private int isUse;
+    /**
+     * 创建时间
+      */
+    private Date create_time;
+    /**
+     * 到期时间
+     */
+    private Date expire_time;
 
     public VipCode() {
     }

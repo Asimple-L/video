@@ -8,9 +8,18 @@ import java.io.Serializable;
  * @author Asimple
  */
 public class Decade implements Serializable {
-    private String id; // 主键id
-    private int isUse; // 是否在使用
-    private String name; // 名称
+    /**
+     * 主键id
+     */
+    private String id;
+    /**
+     * 是否在使用
+     */
+    private int isUse;
+    /**
+     * 名称
+     */
+    private String name;
 
     public Decade() {
     }

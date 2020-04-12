@@ -12,41 +12,107 @@ import java.util.List;
  * @author Asimple
  */
 public class Film implements Serializable {
+    /**
+     * 主键
+     */
     @Field
-    private String id;// 主键
+    private String id;
+    /**
+     * 片名
+     */
     @Field("video_film_name")
-    private String name;// 片名
+    private String name;
+    /**
+     * 海报图
+     */
     @Field("video_film_image")
-    private String image;// 海报图
+    private String image;
+    /**
+     * 上映年代
+     */
     @Field("video_film_onDecade")
-    private String onDecade;//上影年代
-    private String status;//状态
-    private String resolution;//分辨率
+    private String onDecade;
+    /**
+     * 状态
+     */
+    private String status;
+    /**
+     * 分辨率
+     */
+    private String resolution;
+    /**
+     * 类型名称
+     */
     @Field("video_type_name")
-    private String typeName;//类型名称
+    private String typeName;
+    /**
+     * 类型Id
+     */
     @Field("video_type_id")
-    private String type_id;//类型Id
-    private String actor;//演员
-    private String locName;//地区名称
+    private String type_id;
+    /**
+     * 演员
+     */
+    private String actor;
+    /**
+     * 地区名称
+     */
+    private String locName;
+    /**
+     * 地区Id
+     */
     @Field("video_film_loc_id")
-    private String loc_id;//地区Id
-    private String updateTime;//更新时间
-    private int isUse;//是否在使用
+    private String loc_id;
+    /**
+     * 更新时间
+     */
+    private String updateTime;
+    /**
+     * 是否在使用
+     */
+    private int isUse;
+    /**
+     * 一级目录
+     */
     @Field("video_film_cataLog_id")
-    private String cataLog_id;//一级目录
-    private String cataLogName;//一级目录名称
+    private String cataLog_id;
+    /**
+     * 一级目录名称
+     */
+    private String cataLogName;
+    /**
+     * 二级目录
+     */
     @Field("video_film_subClass_id")
-    private String subClass_id;//二级目录
-    private String subClassName;//二级目录名称
-    private Integer isVip;//是否vip资源
-    private String plot;//剧情
-    private double  evaluation;//评分
-    // 下载列表
+    private String subClass_id;
+    /**
+     * 二级目录名称
+     */
+    private String subClassName;
+    /**
+     * 是否vip资源
+     */
+    private Integer isVip;
+    /**
+     * 剧情
+     */
+    private String plot;
+    /**
+     * 评分
+     */
+    private double  evaluation;
+    /**
+     * 下载列表
+     */
     private List<Res> resList;
-    // 浏览数目
+    /**
+     * 浏览数目
+     */
     @JsonProperty(value = "viewNumber")
     private Integer view_number;
-    // 上传用户
+    /**
+     * 上传用户
+     */
     private User user;
 
     public Film() {

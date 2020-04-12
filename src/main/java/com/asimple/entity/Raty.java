@@ -8,10 +8,22 @@ import java.io.Serializable;
  * @author Asimple
  */
 public class Raty implements Serializable {
-    private String id;//主键id
-    private String film_id;//影片id
-    private String score;//评分
-    private String enTime;//评分时间
+    /**
+     * 主键id
+     */
+    private String id;
+    /**
+     * 影片id
+     */
+    private String film_id;
+    /**
+     * 评分
+     */
+    private String score;
+    /**
+     * 评分时间
+     */
+    private String enTime;
 
     public Raty() {
     }
