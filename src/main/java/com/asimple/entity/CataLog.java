@@ -9,10 +9,21 @@ import java.util.List;
  * @author Asimple
  */
 public class CataLog implements Serializable {
-    private String id; // 主键id
-    private String name; // 名称
-    private int isUse;  // 是否在使用
-    // 二级分类
+    /**
+     * 主键id
+     */
+    private String id;
+    /**
+     * 名称
+     */
+    private String name;
+    /**
+     * 是否在使用
+     */
+    private int isUse;
+    /**
+     *  二级分类
+     */
     private List<SubClass> subClassList;
 
     public String getId() {

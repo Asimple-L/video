@@ -106,7 +106,7 @@ public class Manager {
         param.put("pc", request.getParameter("pc"));
         param.put("film", Tools.toBean(request.getParameterMap(), Film.class));
         result.putAll(filmService.getFilmList(param));
-//        result.putAll(filmService.getFilmOfSolr(request));
+//     TODO   result.putAll(filmService.getFilmOfSolr(request));
         return ResponseReturnUtil.returnSuccessWithData(result);
     }
 
@@ -239,7 +239,10 @@ public class Manager {
      * @description 目录管理 目录查看与修改
      **/
     @RequestMapping( value = {"/catalog", "/editCatalog"})
-    public Object catalog() {
+    public Object catalog(HttpServletRequest request) {
+        if( !RequestUtil.isAdmin(request) ) {
+            return ResponseReturnUtil.returnErrorWithMsg("登录超时,请重新登录!");
+        }
         Map<String, Object> result = new HashMap<>(8);
         result.putAll(commonService.getCatalog());
         return ResponseReturnUtil.returnSuccessWithData(result);
