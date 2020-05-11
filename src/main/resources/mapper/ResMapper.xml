@@ -20,10 +20,6 @@
         SELECT * FROM `t_res` WHERE `id`=#{id}
     </select>
 
-    <select id="selectFilm" resultType="com.asimple.entity.Film">
-        SELECT * FROM `t_film` WHERE id=#{film_id}
-    </select>
-
     <select id="getListByFilmId" resultType="com.asimple.entity.Res">
         SELECT * FROM t_res WHERE film_id=#{id}
     </select>

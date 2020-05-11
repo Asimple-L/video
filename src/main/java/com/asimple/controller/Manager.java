@@ -286,14 +286,18 @@ public class Manager {
 
     /**
      * @author Asimple
-     * @description 添加一级分类
+     * @description 添加/修改一级分类
      **/
     @RequestMapping(value = "/addCataLog")
-    public Object addCataLog(CataLog cataLog) {
-        Map<String, Object> result = new HashMap<>(1);
-        result.put("id", cataLogService.add(cataLog));
-        commonService.cleanRedisCache();
-        return ResponseReturnUtil.returnSuccessWithData(result);
+    public Object addCataLog(CataLog cataLog, HttpServletRequest request) {
+        if( !RequestUtil.isAdmin(request) ) {
+            return ResponseReturnUtil.returnErrorWithMsg("非管理员不能操作!");
+        }
+        if ( cataLogService.add(cataLog) ) {
+            commonService.cleanRedisCache();
+            return ResponseReturnUtil.returnSuccessWithMsg("操作成功!");
+        }
+        return ResponseReturnUtil.returnErrorWithMsg("添加失败，请稍后重试!");
     }
 
     /**

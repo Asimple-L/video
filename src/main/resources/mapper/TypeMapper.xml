@@ -28,14 +28,6 @@
         SELECT * FROM `t_type` WHERE `id` = #{id}
     </select>
 
-    <select id="selectSubClass" resultMap="mySubClass">
-        SELECT * FROM `t_subclass` WHERE `id` = #{subclass_id}
-    </select>
-
-    <select id="selectCataLog" resultType="com.asimple.entity.CataLog">
-        SELECT * FROM `t_catalog` WHERE `id` = #{catalog_id}
-    </select>
-
     <insert id="add" parameterType="com.asimple.entity.Type">
         INSERT INTO `t_type` (`id`,`isUse`,`name`,`subclass_id`) VALUES (#{id},#{isUse},#{name},#{subClass.id})
     </insert>

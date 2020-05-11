@@ -8,17 +8,11 @@
         <id column="id" property="id"></id>
         <result column="isUse" property="isUse"></result>
         <result column="name" property="name"></result>
-        <result column="sort" property="sort"></result>
-        <result column="isVip" property="isVip"></result>
         <collection property="subClassList" column="id" select="selectSubclass"></collection>
     </resultMap>
 
     <select id="findByIsUse" resultMap="myCataLog">
         SELECT `id`,`name`,`isUse` FROM t_catalog WHERE `isUse`=1
-    </select>
-
-    <select id="selectSubclass" resultType="com.asimple.entity.SubClass">
-        SELECT * FROM `t_subclass` WHERE `catalog_id`=#{id}
     </select>
 
     <select id="load" resultType="com.asimple.entity.CataLog">
@@ -28,5 +22,13 @@
     <insert id="add" parameterType="com.asimple.entity.CataLog">
         INSERT INTO `t_catalog` (`id`, `isUse`, `name`) VALUES (#{id}, #{isUse},#{name})
     </insert>
+
+    <update id="update" parameterType="com.asimple.entity.CataLog">
+        UPDATE t_catalog t
+        SET t.`name` = #{name},
+            t.`isUse` = 1
+        WHERE
+                t.`id`= #{id}
+    </update>
 
 </mapper>
