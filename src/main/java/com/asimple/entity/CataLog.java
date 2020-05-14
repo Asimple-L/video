@@ -1,5 +1,7 @@
 package com.asimple.entity;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -8,6 +10,7 @@ import java.util.List;
  * @description 一级分类实体类
  * @author Asimple
  */
+@Data
 public class CataLog implements Serializable {
     /**
      * 主键id
@@ -22,48 +25,16 @@ public class CataLog implements Serializable {
      */
     private int isUse;
     /**
+     * 排序级别
+     */
+    private int sort;
+    /**
+     * 是否VIP可用
+     */
+    private int isVip;
+    /**
      *  二级分类
      */
     private List<SubClass> subClassList;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getIsUse() {
-        return isUse;
-    }
-
-    public void setIsUse(int isUse) {
-        this.isUse = isUse;
-    }
-
-    public List<SubClass> getSubClassList() {
-        return subClassList;
-    }
-
-    public void setSubClassList(List<SubClass> subClassList) {
-        this.subClassList = subClassList;
-    }
-
-    @Override
-    public String toString() {
-        return "CataLog{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", isUse=" + isUse +
-                '}';
-    }
 }

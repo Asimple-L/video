@@ -1,5 +1,7 @@
 package com.asimple.entity;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -8,6 +10,7 @@ import java.util.Date;
  * @description 评论
  * @author Asimple
  */
+@Data
 public class Comment implements Serializable {
 
     // 主键
@@ -36,74 +39,5 @@ public class Comment implements Serializable {
         this.likeNum = likeNum;
         this.unlikeNum = unlikeNum;
         this.user = user;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getContext() {
-        return context;
-    }
-
-    public void setContext(String context) {
-        this.context = context;
-    }
-
-    public Date getDate_create() {
-        return date_create;
-    }
-
-    public void setDate_create(Date date_create) {
-        this.date_create = date_create;
-    }
-
-    public Date getDate_update() {
-        return date_update;
-    }
-
-    public void setDate_update(Date date_update) {
-        this.date_update = date_update;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Integer getLikeNum() {
-        return likeNum;
-    }
-
-    public void setLikeNum(Integer likeNum) {
-        this.likeNum = likeNum;
-    }
-
-    public Integer getUnlikeNum() {
-        return unlikeNum;
-    }
-
-    public void setUnlikeNum(Integer unlikeNum) {
-        this.unlikeNum = unlikeNum;
-    }
-
-    @Override
-    public String toString() {
-        return "Comment{" +
-                "id='" + id + '\'' +
-                ", context='" + context + '\'' +
-                ", date_create=" + date_create +
-                ", date_update=" + date_update +
-                ", likeNum=" + likeNum +
-                ", unlikeNum=" + unlikeNum +
-                ", user=" + user +
-                '}';
     }
 }

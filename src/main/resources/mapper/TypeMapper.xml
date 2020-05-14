@@ -19,6 +19,13 @@
         <association property="cataLog" column="catalog_id" select="selectCataLog"></association>
     </resultMap>
 
+    <select id="selectSubClass" resultMap="mySubClass">
+        SELECT * FROM `t_subclass` WHERE `id` = #{subclass_id}
+    </select>
+
+    <select id="selectCataLog" resultType="com.asimple.entity.CataLog">
+        SELECT * FROM `t_catalog` WHERE `id` = #{catalog_id}
+    </select>
 
     <select id="listIsUseBySubClassId" resultType="com.asimple.entity.Type">
         SELECT * FROM `t_type` WHERE isUse=1 AND subclass_id=#{id}

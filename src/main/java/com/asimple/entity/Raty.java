@@ -1,5 +1,7 @@
 package com.asimple.entity;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
@@ -7,6 +9,7 @@ import java.io.Serializable;
  * @description 评分实体类
  * @author Asimple
  */
+@Data
 public class Raty implements Serializable {
     /**
      * 主键id
@@ -25,54 +28,4 @@ public class Raty implements Serializable {
      */
     private String enTime;
 
-    public Raty() {
-    }
-
-    public Raty(String film_id, String score, String enTime) {
-        this.film_id = film_id;
-        this.score = score;
-        this.enTime = enTime;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getFilm_id() {
-        return film_id;
-    }
-
-    public void setFilm_id(String film_id) {
-        this.film_id = film_id;
-    }
-
-    public String getScore() {
-        return score;
-    }
-
-    public void setScore(String score) {
-        this.score = score;
-    }
-
-    public String getEnTime() {
-        return enTime;
-    }
-
-    public void setEnTime(String enTime) {
-        this.enTime = enTime;
-    }
-
-    @Override
-    public String toString() {
-        return "Raty{" +
-                "id='" + id + '\'' +
-                ", film_id='" + film_id + '\'' +
-                ", score='" + score + '\'' +
-                ", enTime='" + enTime + '\'' +
-                '}';
-    }
 }

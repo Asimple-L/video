@@ -1,5 +1,7 @@
 package com.asimple.entity;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
@@ -7,6 +9,7 @@ import java.io.Serializable;
  * @description 地区分类实体
  * @author Asimple
  */
+@Data
 public class Loc implements Serializable {
     /**
      * 主键id
@@ -21,44 +24,4 @@ public class Loc implements Serializable {
      */
     private String name;
 
-    public Loc(int isUse, String name) {
-        this.isUse = isUse;
-        this.name = name;
-    }
-
-    public Loc() {
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public int getIsUse() {
-        return isUse;
-    }
-
-    public void setIsUse(int isUse) {
-        this.isUse = isUse;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return "Loc{" +
-                "id='" + id + '\'' +
-                ", isUse=" + isUse +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }
