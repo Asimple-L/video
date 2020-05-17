@@ -168,9 +168,8 @@ public class Manager {
         if ( filmService.deleteById(filmId) ) {
             commonService.cleanRedisCache();
             return ResponseReturnUtil.returnSuccessWithMsg("更新成功!");
-        } else {
-            return ResponseReturnUtil.returnErrorWithMsg("更新失败,请稍后重试!");
         }
+        return ResponseReturnUtil.returnErrorWithMsg("更新失败,请稍后重试!");
     }
 
 
@@ -194,9 +193,8 @@ public class Manager {
     public Object delRes(String resId) {
         if( resService.delete(resId) ) {
             return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
-        } else {
-            return ResponseReturnUtil.returnErrorWithMsg("删除失败!请稍后重试!");
         }
+        return ResponseReturnUtil.returnErrorWithMsg("删除失败!请稍后重试!");
     }
 
     /**
