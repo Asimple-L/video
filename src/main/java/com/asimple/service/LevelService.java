@@ -37,13 +37,14 @@ public class LevelService {
     /**
      * 添加一个等级信息并返回id
      * @param level 等级对象
-     * @return 添加成功返回id，否则返回 0
+     * @return 添加成功返回true，否则返回 false
      */
-    public String add(Level level) {
+    public boolean add(Level level) {
         if(Tools.isEmpty(level.getId()) ) {
             level.setId(Tools.UUID());
             level.setIsUse(1);
+            return levelMapper.add(level)==1;
         }
-        return levelMapper.add(level)==1?level.getId():"0";
+        return levelMapper.update(level)==1;
     }
 }

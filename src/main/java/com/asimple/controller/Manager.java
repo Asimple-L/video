@@ -254,10 +254,11 @@ public class Manager {
      **/
     @RequestMapping( value = "addDecade")
     public Object addDecade(Decade decade) {
-        Map<String, Object> result = new HashMap<>(1);
-        result.put("id", decadeService.add(decade));
-        commonService.cleanRedisCache();
-        return ResponseReturnUtil.returnSuccessWithData(result);
+        if( decadeService.add(decade) ) {
+            commonService.cleanRedisCache();
+            return ResponseReturnUtil.returnSuccessWithMsg("操作成功!");
+        }
+        return ResponseReturnUtil.returnErrorWithMsg("参数错误，请重试!");
     }
 
     /**
@@ -266,10 +267,11 @@ public class Manager {
      **/
     @RequestMapping( value = "/addLevel")
     public Object addLevel(Level level) {
-        Map<String, Object> result = new HashMap<>(1);
-        result.put("id", levelService.add(level));
-        commonService.cleanRedisCache();
-        return ResponseReturnUtil.returnSuccessWithData(result);
+        if( levelService.add(level) ) {
+            commonService.cleanRedisCache();
+            return ResponseReturnUtil.returnSuccessWithMsg("操作成功!");
+        }
+        return ResponseReturnUtil.returnErrorWithMsg("参数错误，请重试!");
     }
 
     /**
@@ -278,10 +280,11 @@ public class Manager {
      **/
     @RequestMapping( value = "/addLoc")
     public Object addLoc(Loc loc) {
-        Map<String, Object> result = new HashMap<>(1);
-        result.put("id", locService.add(loc));
-        commonService.cleanRedisCache();
-        return ResponseReturnUtil.returnSuccessWithData(result);
+        if( locService.add(loc) ) {
+            commonService.cleanRedisCache();
+            return ResponseReturnUtil.returnSuccessWithMsg("操作成功!");
+        }
+        return ResponseReturnUtil.returnErrorWithMsg("参数错误，请重试!");
     }
 
     /**
@@ -306,10 +309,11 @@ public class Manager {
      **/
     @RequestMapping(value = "/addSubClass")
     public Object addSubClass(SubClass subClass, String cataLogId) {
-        Map<String, Object> result = new HashMap<>(1);
-        result.put("id", subClassService.add(subClass, cataLogId));
-        commonService.cleanRedisCache();
-        return ResponseReturnUtil.returnSuccessWithData(result);
+        if( subClassService.add(subClass, cataLogId) ) {
+            commonService.cleanRedisCache();
+            return ResponseReturnUtil.returnSuccessWithMsg("操作成功!");
+        }
+        return ResponseReturnUtil.returnErrorWithMsg("参数错误，请重试!");
     }
 
     /**
@@ -319,9 +323,11 @@ public class Manager {
     @RequestMapping(value = "/addType")
     public Object addType(Type type,String subClassId) {
         Map<String, Object> result = new HashMap<>(1);
-        result.put("id", typeService.add(type, subClassId));
-        commonService.cleanRedisCache();
-        return ResponseReturnUtil.returnSuccessWithData(result);
+        if( typeService.add(type, subClassId) ) {
+            commonService.cleanRedisCache();
+            return ResponseReturnUtil.returnSuccessWithMsg("操作成功!");
+        }
+        return ResponseReturnUtil.returnErrorWithMsg("参数错误，请重试!");
     }
 
     /**

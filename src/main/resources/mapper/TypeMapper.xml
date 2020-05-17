@@ -36,7 +36,17 @@
     </select>
 
     <insert id="add" parameterType="com.asimple.entity.Type">
-        INSERT INTO `t_type` (`id`,`isUse`,`name`,`subclass_id`) VALUES (#{id},#{isUse},#{name},#{subClass.id})
+        INSERT INTO `t_type`
+                (`id`,`isUse`,`name`,`subclass_id`)
+        VALUES (#{id},#{isUse},#{name},#{subClass.id})
     </insert>
+
+    <update id="update" parameterType="com.asimple.entity.Type">
+        update `t_type` set
+            `isUse` = #{isUse},
+            `name`=#{name},
+            `subclass_id`=#{subClass.id}
+        where `id`=#{id}
+    </update>
 
 </mapper>

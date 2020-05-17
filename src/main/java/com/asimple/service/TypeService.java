@@ -44,15 +44,19 @@ public class TypeService {
      * 添加type并返回id
      * @param type 类型对象
      * @param subClassId 对应的二级分类id
-     * @return 添加成功返回id，否则返回0
+     * @return 添加成功返回true，否则返回false
      */
-    public String add(Type type, String subClassId) {
-        type.setIsUse(1);
+    public boolean add(Type type, String subClassId) {
         SubClass subClass = subClassService.load(subClassId);
+        if( subClass == null ) {
+            return false;
+        }
         type.setSubClass(subClass);
         if(Tools.isEmpty(type.getId()) ) {
             type.setId(Tools.UUID());
+            type.setIsUse(1);
+            return typeMapper.add(type)==1;
         }
-        return typeMapper.add(type)==1?type.getId():"0";
+        return typeMapper.update(type)==1;
     }
 }

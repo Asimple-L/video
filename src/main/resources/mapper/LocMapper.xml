@@ -12,4 +12,8 @@
         INSERT INTO `t_loc` (`id`, `isUse`, `name`) VALUES (#{id}, #{isUse}, #{name})
     </insert>
 
+    <update id="update" parameterType="com.asimple.entity.Loc">
+        update `t_loc` set `isUse`=#{isUse}, `name`=#{name} where id=#{id}
+    </update>
+
 </mapper>

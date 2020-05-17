@@ -9,11 +9,21 @@
     </select>
 
     <insert id="add" parameterType="com.asimple.entity.SubClass">
-        INSERT INTO `t_subclass` (`id`,`isUse`,`name`,`catalog_id`) VALUES (#{id},#{isUse},#{name},#{cataLog.id})
+        INSERT INTO `t_subclass`
+                (`id`,`isUse`,`name`,`catalog_id`)
+        VALUES (#{id},#{isUse},#{name},#{cataLog.id})
     </insert>
 
     <select id="load" resultType="com.asimple.entity.SubClass">
         SELECT * FROM `t_subclass` WHERE id=#{subClass_id}
     </select>
+
+    <update id="update" parameterType="com.asimple.entity.SubClass">
+        update `t_subclass` set
+                `isUse` = #{isUse},
+                `name` = #{name},
+                `catalog_id` = #{cataLog.id}
+        where `id` = #{id}
+    </update>
 
 </mapper>

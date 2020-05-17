@@ -35,16 +35,20 @@ public class SubClassService {
      * 添加二级分类
      * @param subClass 二级分类对象
      * @param cataLogId 对应的一级分类id
-     * @return 添加成功返回id，否则返回0
+     * @return 添加成功返回true，否则返回false
      */
-    public String add(SubClass subClass, String cataLogId) {
+    public boolean add(SubClass subClass, String cataLogId) {
         CataLog cataLog = cataLogService.load(cataLogId);
+        if( cataLog == null ) {
+            return false;
+        }
         subClass.setCataLog(cataLog);
-        subClass.setIsUse(1);
         if(Tools.isEmpty(subClass.getId()) ) {
             subClass.setId(Tools.UUID());
+            subClass.setIsUse(1);
+            return subClassMapper.add(subClass)==1;
         }
-        return subClassMapper.add(subClass)==1?subClass.getId():"0";
+        return subClassMapper.update(subClass)==1;
     }
 
     /**

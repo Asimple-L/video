@@ -38,14 +38,15 @@ public class DecadeService {
     /**
      * 添加年份
      * @param decade 年份对象
-     * @return 添加成功返回id，否则返回0
+     * @return 添加成功返回true，否则返回false
      */
-    public String add(Decade decade) {
+    public boolean add(Decade decade) {
         if( decade.getId() == null || "".equals(decade.getId()) ) {
             decade.setId(Tools.UUID());
             decade.setIsUse(1);
+            return decadeMapper.add(decade)==1;
         }
-        return decadeMapper.add(decade)==1?decade.getId():"0";
+        return decadeMapper.update(decade)==1;
     }
 
 

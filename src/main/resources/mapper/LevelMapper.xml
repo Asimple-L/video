@@ -12,4 +12,8 @@
         INSERT INTO `t_level` (`id`, `isUse`, `name`) VALUES (#{id}, #{isUse}, #{name})
     </insert>
 
+    <update id="update" parameterType="com.asimple.entity.Level">
+        update `t_level` set `isUse`=#{isUse}, `name`=#{name} where `id`=#{id}
+    </update>
+
 </mapper>

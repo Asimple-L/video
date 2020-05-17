@@ -12,4 +12,8 @@
         INSERT INTO `t_decade` (`id`, `isUse`, `name`) VALUES (#{id}, #{isUse}, #{name})
     </insert>
 
+    <update id="update" parameterType="com.asimple.entity.Decade">
+        update `t_decade` set `isUse`=#{isUse},`name`=#{name} where id=#{id}
+    </update>
+
 </mapper>
