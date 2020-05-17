@@ -1,6 +1,8 @@
 package com.asimple.interceptor;
 
+import com.alibaba.fastjson.JSONObject;
 import com.asimple.entity.User;
+import com.asimple.util.ResponseReturnUtil;
 import com.asimple.util.VideoKeyNameUtil;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -26,7 +28,8 @@ public class ProfileInterceptor implements HandlerInterceptor {
         if( user!=null ) {
             return true;
         }
-        response.sendRedirect("/video/index");
+        JSONObject jsonObject = ResponseReturnUtil.returnErrorWithMsg("请先登录!");
+        ResponseReturnUtil.returnJson(response, jsonObject.toJSONString());
         return false;
     }
 

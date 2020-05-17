@@ -3,6 +3,10 @@ package com.asimple.util;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 /**
  * @description 返回数据包装类
  * @author Asimple
@@ -50,6 +54,16 @@ public class ResponseReturnUtil {
 
     public static JSONObject returnSuccessWithoutMsgAndData(){
         return returnSuccessWithMsg(null);
+    }
+
+    public static void returnJson(HttpServletResponse response, String json) {
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=utf-8");
+        try (PrintWriter writer = response.getWriter()) {
+            writer.print(json);
+        } catch (IOException e) {
+            LogUtil.error("response error");
+        }
     }
 
 }

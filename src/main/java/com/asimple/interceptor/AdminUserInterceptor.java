@@ -1,6 +1,9 @@
 package com.asimple.interceptor;
 
+import com.alibaba.fastjson.JSONObject;
 import com.asimple.entity.User;
+import com.asimple.util.LogUtil;
+import com.asimple.util.ResponseReturnUtil;
 import com.asimple.util.VideoKeyNameUtil;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -8,6 +11,10 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @ProjectName video
@@ -26,8 +33,8 @@ public class AdminUserInterceptor implements HandlerInterceptor {
         if( user!=null && user.getIsManager()==1 ) {
             return true;
         }
-        request.setAttribute("msg", "请登录管理员账号!");
-//        request.getRequestDispatcher("/WEB-INF/jsp/manager/login.jsp").forward(request, response);
+        JSONObject jsonObject = ResponseReturnUtil.returnErrorWithMsg("请登录管理员账号!");
+        ResponseReturnUtil.returnJson(response, jsonObject.toJSONString());
         return false;
     }
 
