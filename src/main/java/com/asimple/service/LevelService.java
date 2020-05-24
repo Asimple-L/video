@@ -29,16 +29,12 @@ public class LevelService {
         return levelMapper.findByIsUse();
     }
 
-    @CacheEvict( value = "redis_levelList")
-    public void cleanRedisCache() {
-        System.out.println("从redis等级缓存!");
-    }
-
     /**
      * 添加一个等级信息并返回id
      * @param level 等级对象
      * @return 添加成功返回true，否则返回 false
      */
+    @CacheEvict( value = "redis_levelList", allEntries = true)
     public boolean add(Level level) {
         if(Tools.isEmpty(level.getId()) ) {
             level.setId(Tools.UUID());

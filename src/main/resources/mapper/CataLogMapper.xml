@@ -32,9 +32,13 @@
     <update id="update" parameterType="com.asimple.entity.CataLog">
         UPDATE t_catalog t
         SET t.`name` = #{name},
-            t.`isUse` = 1
+            t.`isUse` = #{isUse}
         WHERE
                 t.`id`= #{id}
     </update>
+
+    <delete id="deleteById" parameterType="string">
+        delete from `t_catalog` where `id`=#{id}
+    </delete>
 
 </mapper>

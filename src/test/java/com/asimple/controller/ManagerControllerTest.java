@@ -5,9 +5,11 @@ import com.asimple.util.LogUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @ProjectName video
@@ -24,6 +26,15 @@ public class ManagerControllerTest {
     @Test
     public void testSome() {
         Object object = manager.createVipCode("1");
+        System.out.println(object);
+    }
+
+    @Test
+    public void test_deleteCatalog() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setParameter("type", "catalog");
+        request.setParameter("id", "B961C8D1C3714676ABE6F70FC088982A");
+        Object object = manager.deleteCatalog(request);
         System.out.println(object);
     }
 

@@ -29,16 +29,12 @@ public class CataLogService {
         return cataLogMapper.findByIsUse();
     }
 
-    @CacheEvict( value = "redis_cataLogList")
-    public void cleanRedisCache() {
-        System.out.println("从redis清除一级分类实体类缓存!");
-    }
-
     /**
      * 添加一级分类并返回id
      * @param cataLog 一级分类对象
      * @return boolean 添加成功返回true,否则返回false
      */
+    @CacheEvict(value = "redis_cataLogList", allEntries = true)
     public boolean add(CataLog cataLog) {
         if(Tools.isEmpty(cataLog.getId()) ) {
             cataLog.setId(Tools.UUID());
@@ -55,6 +51,16 @@ public class CataLogService {
      */
     public CataLog load(String cataLogId) {
         return cataLogMapper.load(cataLogId);
+    }
+
+    /**
+     * 根据id删除分类
+     * @param id 分类id
+     * @return 是否删除成功，true/false
+     */
+    @CacheEvict( value = "redis_cataLogList", allEntries = true)
+    public boolean deleteById(String id) {
+        return cataLogMapper.deleteById(id)==1;
     }
 
 }

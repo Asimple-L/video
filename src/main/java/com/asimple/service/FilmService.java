@@ -10,6 +10,7 @@ import com.asimple.util.LogUtil;
 import com.asimple.util.PageBean;
 import com.asimple.util.Tools;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.data.solr.core.query.*;
@@ -142,6 +143,7 @@ public class FilmService {
      * @param film 影片实体
      * @return 更新成功返回true
      */
+    @CacheEvict(value = {"index_filmTuijian", "index_filmPaiHang"}, allEntries = true)
     public boolean update(Film film) {
         return filmMapper.update(film)==1;
     }
@@ -151,6 +153,7 @@ public class FilmService {
      * @param film 电影对象
      * @return 保存成功返回id
      */
+    @CacheEvict(value = {"index_filmTuijian", "index_filmPaiHang"}, allEntries = true)
     public String save(Film film) {
         // 初始化参数
         film.setIsUse(1);
@@ -173,6 +176,7 @@ public class FilmService {
      * @param filmId 电影id
      * @return 删除成功返回true
      */
+    @CacheEvict(value = {"index_filmTuijian", "index_filmPaiHang"}, allEntries = true)
     public boolean deleteById(String filmId) {
         LogUtil.info(FilmService.class, "待删除的影片：filmId = " + filmId);
         // 1、删除评分信息

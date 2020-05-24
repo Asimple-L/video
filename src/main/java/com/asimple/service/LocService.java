@@ -29,16 +29,12 @@ public class LocService {
         return locMapper.findByIsUse();
     }
 
-    @CacheEvict( value = "redis_locList")
-    public void cleanLocList() {
-        System.out.println("清除地区缓存!");
-    }
-
     /**
      * 添加地区信息并返回id
      * @param loc 地区对象
      * @return 添加成功返回true 否则返回false
      */
+    @CacheEvict( value = "redis_locList", allEntries = true)
     public boolean add(Loc loc) {
         if(Tools.isEmpty(loc.getId()) ) {
             loc.setId(Tools.UUID());

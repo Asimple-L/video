@@ -38,8 +38,6 @@ public class RankTask {
         long startTime = System.currentTimeMillis();
         LogUtil.info("start update commendRank!");
 
-        commonService.cleanIndexCache();
-
         // 查询用户菜单列表
         List<CataLog> logList = cataLogService.listIsUse();
         LogUtil.info("用户菜单列表："+logList.size());

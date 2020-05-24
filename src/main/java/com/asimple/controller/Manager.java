@@ -152,7 +152,6 @@ public class Manager {
         User user = (User) session.getAttribute(VideoKeyNameUtil.ADMIN_USER_KEY);
         film.setUser(user);
         String id = filmService.save(film);
-        commonService.cleanRedisCache();
         map.put("id", id);
         return ResponseReturnUtil.returnSuccessWithData(map);
     }
@@ -166,7 +165,6 @@ public class Manager {
         String filmId = request.getParameter("filmId");
         LogUtil.info(Manager.class, "film_id = " + filmId);
         if ( filmService.deleteById(filmId) ) {
-            commonService.cleanRedisCache();
             return ResponseReturnUtil.returnSuccessWithMsg("更新成功!");
         }
         return ResponseReturnUtil.returnErrorWithMsg("更新失败,请稍后重试!");
@@ -205,7 +203,6 @@ public class Manager {
     public Object updateIsUse(String resId) {
         LogUtil.info(Manager.class, "res_id = " + resId);
         if( resService.updateIsUse(resId) ) {
-            commonService.cleanRedisCache();
             return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
         } else {
             return ResponseReturnUtil.returnErrorWithMsg("更新失败,请稍后重试!");
@@ -225,11 +222,9 @@ public class Manager {
         param.put("film", film);
         param.put("filePath", session.getServletContext().getRealPath(film.getImage()));
         if( commonService.updateFilmInfo(param) ) {
-            commonService.cleanRedisCache();
             return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
-        } else {
-            return ResponseReturnUtil.returnErrorWithMsg("更新失败,请稍后重试!");
         }
+        return ResponseReturnUtil.returnErrorWithMsg("更新失败,请稍后重试!");
     }
 
     /**
@@ -253,7 +248,6 @@ public class Manager {
     @RequestMapping( value = "addDecade")
     public Object addDecade(Decade decade) {
         if( decadeService.add(decade) ) {
-            commonService.cleanRedisCache();
             return ResponseReturnUtil.returnSuccessWithMsg("操作成功!");
         }
         return ResponseReturnUtil.returnErrorWithMsg("参数错误，请重试!");
@@ -266,7 +260,6 @@ public class Manager {
     @RequestMapping( value = "/addLevel")
     public Object addLevel(Level level) {
         if( levelService.add(level) ) {
-            commonService.cleanRedisCache();
             return ResponseReturnUtil.returnSuccessWithMsg("操作成功!");
         }
         return ResponseReturnUtil.returnErrorWithMsg("参数错误，请重试!");
@@ -279,7 +272,6 @@ public class Manager {
     @RequestMapping( value = "/addLoc")
     public Object addLoc(Loc loc) {
         if( locService.add(loc) ) {
-            commonService.cleanRedisCache();
             return ResponseReturnUtil.returnSuccessWithMsg("操作成功!");
         }
         return ResponseReturnUtil.returnErrorWithMsg("参数错误，请重试!");
@@ -290,12 +282,8 @@ public class Manager {
      * @description 添加/修改一级分类
      **/
     @RequestMapping(value = "/addCataLog")
-    public Object addCataLog(CataLog cataLog, HttpServletRequest request) {
-        if( !RequestUtil.isAdmin(request) ) {
-            return ResponseReturnUtil.returnErrorWithMsg("非管理员不能操作!");
-        }
+    public Object addCataLog(CataLog cataLog) {
         if ( cataLogService.add(cataLog) ) {
-            commonService.cleanRedisCache();
             return ResponseReturnUtil.returnSuccessWithMsg("操作成功!");
         }
         return ResponseReturnUtil.returnErrorWithMsg("添加失败，请稍后重试!");
@@ -308,7 +296,6 @@ public class Manager {
     @RequestMapping(value = "/addSubClass")
     public Object addSubClass(SubClass subClass, String cataLogId) {
         if( subClassService.add(subClass, cataLogId) ) {
-            commonService.cleanRedisCache();
             return ResponseReturnUtil.returnSuccessWithMsg("操作成功!");
         }
         return ResponseReturnUtil.returnErrorWithMsg("参数错误，请重试!");
@@ -322,7 +309,6 @@ public class Manager {
     public Object addType(Type type,String subClassId) {
         Map<String, Object> result = new HashMap<>(1);
         if( typeService.add(type, subClassId) ) {
-            commonService.cleanRedisCache();
             return ResponseReturnUtil.returnSuccessWithMsg("操作成功!");
         }
         return ResponseReturnUtil.returnErrorWithMsg("参数错误，请重试!");
@@ -367,6 +353,27 @@ public class Manager {
     public Object loadInSolr() {
         solrTask.pushToSolr();
         return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
+    }
+
+    /**
+     * @author Asimple
+     * @description 删除分类
+     **/
+    @RequestMapping(value = "/deleteCatalogById", produces = "application/json;charset=UTF-8")
+    public Object deleteCatalog(HttpServletRequest request) {
+        String type = request.getParameter("type");
+        String id = request.getParameter("id");
+        if( StringUtils.isEmpty(id) || StringUtils.isEmpty(type) ) {
+            return ResponseReturnUtil.returnErrorWithMsg("参数错误，请重试!");
+        }
+        boolean flag = false;
+        if ( "catalog".equals(type) ) {
+            flag = cataLogService.deleteById(id);
+        }
+        if ( !flag ) {
+            return ResponseReturnUtil.returnErrorWithMsg("删除失败!");
+        }
+        return ResponseReturnUtil.returnSuccessWithMsg("操作成功!");
     }
 
 }

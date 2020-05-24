@@ -30,16 +30,12 @@ public class DecadeService {
         return decadeMapper.findByIsUse();
     }
 
-    @CacheEvict( value = "redis_decadeList")
-    public void cleanRedisCache() {
-        System.out.println("从redis清除目录等信息的缓存");
-    }
-
     /**
      * 添加年份
      * @param decade 年份对象
      * @return 添加成功返回true，否则返回false
      */
+    @CacheEvict( value = "redis_decadeList", allEntries = true)
     public boolean add(Decade decade) {
         if( decade.getId() == null || "".equals(decade.getId()) ) {
             decade.setId(Tools.UUID());

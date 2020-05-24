@@ -2,11 +2,9 @@ package com.asimple.service;
 
 import com.asimple.entity.*;
 import com.asimple.util.*;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -135,36 +133,6 @@ public class CommonService {
         result.put("decadeList", decadeList);
         result.put("cataLogList", cataLogList);
         return result;
-    }
-
-    /**
-     * 清空所有缓存
-     */
-    public void cleanRedisCache() {
-        cataLogService.cleanRedisCache();
-        locService.cleanLocList();
-        decadeService.cleanRedisCache();
-        levelService.cleanRedisCache();
-        this.cleanIndexCache();
-    }
-
-    /**
-     * 清空首页缓存
-     */
-    public void cleanIndexCache() {
-        this.cleanIndexCachePaiHang();
-        this.cleanIndexCacheTuiJian();
-        cataLogService.cleanRedisCache();
-    }
-
-    @CacheEvict(value = "index_filmTuijian")
-    public void cleanIndexCacheTuiJian() {
-        LogUtil.info("从redis清除首页推荐缓存!");
-    }
-
-    @CacheEvict(value = "index_filmPaiHang")
-    public void cleanIndexCachePaiHang() {
-        LogUtil.info("从redis清除首页排行缓存!");
     }
 
     /**
