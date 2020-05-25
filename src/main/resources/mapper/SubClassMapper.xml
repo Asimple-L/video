@@ -26,4 +26,8 @@
         where `id` = #{id}
     </update>
 
+    <delete id="deleteById" parameterType="string">
+        delete from `t_subclass` where `id`=#{id}
+    </delete>
+
 </mapper>

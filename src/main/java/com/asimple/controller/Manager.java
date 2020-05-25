@@ -370,6 +370,12 @@ public class Manager {
         if ( "catalog".equals(type) ) {
             flag = cataLogService.deleteById(id);
         }
+        if( "subClass".equals(type) ) {
+            flag = subClassService.deleteById(id);
+        }
+        if( "type".equals(type) ) {
+            flag = typeService.deleteById(id);
+        }
         if ( !flag ) {
             return ResponseReturnUtil.returnErrorWithMsg("删除失败!");
         }

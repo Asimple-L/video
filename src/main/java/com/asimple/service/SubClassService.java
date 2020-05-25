@@ -59,4 +59,13 @@ public class SubClassService {
     public SubClass load(String subClassId) {
         return subClassMapper.load(subClassId);
     }
+
+    /**
+     * 根据id删除二级分类
+     * @param subClassId 二级分类id
+     * @return boolean 是否删除成功，删除成功返回true，否则返回false
+     */
+    public boolean deleteById(String subClassId) {
+        return subClassMapper.deleteById(subClassId)==1;
+    }
 }

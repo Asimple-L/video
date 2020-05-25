@@ -59,4 +59,14 @@ public class TypeService {
         }
         return typeMapper.update(type)==1;
     }
+
+    /**
+     * 根据id删除类型
+     * @param id 类型id
+     * @return boolean 是否删除成功
+     */
+    public boolean deleteById(String id) {
+        return typeMapper.deleteById(id)==1;
+    }
+
 }

@@ -49,4 +49,8 @@
         where `id`=#{id}
     </update>
 
+    <delete id="deleteById" parameterType="string">
+        delete from `t_type` where `id`=#{id}
+    </delete>
+
 </mapper>
