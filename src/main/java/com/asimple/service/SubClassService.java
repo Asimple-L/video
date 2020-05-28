@@ -4,6 +4,7 @@ import com.asimple.entity.CataLog;
 import com.asimple.entity.SubClass;
 import com.asimple.mapper.SubClassMapper;
 import com.asimple.util.Tools;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -37,6 +38,7 @@ public class SubClassService {
      * @param cataLogId 对应的一级分类id
      * @return 添加成功返回true，否则返回false
      */
+    @CacheEvict(value = "redis_cataLogList", allEntries = true)
     public boolean add(SubClass subClass, String cataLogId) {
         CataLog cataLog = cataLogService.load(cataLogId);
         if( cataLog == null ) {
@@ -65,6 +67,7 @@ public class SubClassService {
      * @param subClassId 二级分类id
      * @return boolean 是否删除成功，删除成功返回true，否则返回false
      */
+    @CacheEvict( value = "redis_cataLogList", allEntries = true)
     public boolean deleteById(String subClassId) {
         return subClassMapper.deleteById(subClassId)==1;
     }

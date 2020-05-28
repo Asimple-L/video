@@ -284,6 +284,7 @@ public class Manager {
     @RequestMapping(value = "/addCataLog")
     public Object addCataLog(CataLog cataLog) {
         if ( cataLogService.add(cataLog) ) {
+            cataLogService.listIsUse();
             return ResponseReturnUtil.returnSuccessWithMsg("操作成功!");
         }
         return ResponseReturnUtil.returnErrorWithMsg("添加失败，请稍后重试!");
@@ -296,6 +297,7 @@ public class Manager {
     @RequestMapping(value = "/addSubClass")
     public Object addSubClass(SubClass subClass, String cataLogId) {
         if( subClassService.add(subClass, cataLogId) ) {
+            cataLogService.listIsUse();
             return ResponseReturnUtil.returnSuccessWithMsg("操作成功!");
         }
         return ResponseReturnUtil.returnErrorWithMsg("参数错误，请重试!");
@@ -309,6 +311,7 @@ public class Manager {
     public Object addType(Type type,String subClassId) {
         Map<String, Object> result = new HashMap<>(1);
         if( typeService.add(type, subClassId) ) {
+            cataLogService.listIsUse();
             return ResponseReturnUtil.returnSuccessWithMsg("操作成功!");
         }
         return ResponseReturnUtil.returnErrorWithMsg("参数错误，请重试!");
@@ -379,6 +382,7 @@ public class Manager {
         if ( !flag ) {
             return ResponseReturnUtil.returnErrorWithMsg("删除失败!");
         }
+        cataLogService.listIsUse();
         return ResponseReturnUtil.returnSuccessWithMsg("操作成功!");
     }
 

@@ -4,6 +4,7 @@ import com.asimple.entity.SubClass;
 import com.asimple.entity.Type;
 import com.asimple.mapper.TypeMapper;
 import com.asimple.util.Tools;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -46,6 +47,7 @@ public class TypeService {
      * @param subClassId 对应的二级分类id
      * @return 添加成功返回true，否则返回false
      */
+    @CacheEvict(value = "redis_cataLogList", allEntries = true)
     public boolean add(Type type, String subClassId) {
         SubClass subClass = subClassService.load(subClassId);
         if( subClass == null ) {
@@ -65,6 +67,7 @@ public class TypeService {
      * @param id 类型id
      * @return boolean 是否删除成功
      */
+    @CacheEvict( value = "redis_cataLogList", allEntries = true)
     public boolean deleteById(String id) {
         return typeMapper.deleteById(id)==1;
     }
