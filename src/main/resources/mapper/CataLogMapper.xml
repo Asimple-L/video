@@ -13,12 +13,23 @@
         <collection property="subClassList" column="id" select="selectSubclass"></collection>
     </resultMap>
 
+    <resultMap id="mySubClass" type="com.asimple.entity.SubClass">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"></result>
+        <result column="isUse" property="isUse"></result>
+        <collection property="types" column="id" select="selectType"></collection>
+    </resultMap>
+
     <select id="findByIsUse" resultMap="myCataLog">
         SELECT `id`,`name`,`isUse` FROM t_catalog WHERE `isUse`=1
     </select>
 
-    <select id="selectSubclass" resultType="com.asimple.entity.SubClass">
+    <select id="selectSubclass" resultMap="mySubClass">
         SELECT * FROM `t_subclass` WHERE `catalog_id`=#{id}
+    </select>
+
+    <select id="selectType" resultType="com.asimple.entity.Type">
+        select * from `t_type` where `subclass_id` = #{id}
     </select>
 
     <select id="load" resultType="com.asimple.entity.CataLog">
