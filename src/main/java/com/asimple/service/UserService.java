@@ -77,6 +77,11 @@ public class UserService {
         } else if( StringUtils.equalsIgnoreCase("vip", key)) {
             long isVip = userDb.getIsVip();
             userDb.setIsVip(1L-isVip);
+        } else if( StringUtils.equalsIgnoreCase("both", key) ) {
+            int isManager = userDb.getIsManager();
+            userDb.setIsManager(1-isManager);
+            long isVip = userDb.getIsVip();
+            userDb.setIsVip(1L-isVip);
         }
 
         return userMapper.update(userDb)==1;
