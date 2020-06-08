@@ -28,4 +28,12 @@
         UPDATE `t_vipcode` SET `code`=#{code}, `is_use`=#{isUse}, `create_time`=#{create_time},`expire_time`=#{expire_time} WHERE `id`=#{id}
     </update>
 
+    <select id="findByIsUseByPage" resultType="com.asimple.entity.VipCode">
+        select * from `t_vipcode` where `is_use`=1 limit #{start},#{count}
+    </select>
+
+    <select id="getTotalIsUse" resultType="int">
+        select count(1) from `t_vipcode` where `is_use`=1
+    </select>
+
 </mapper>

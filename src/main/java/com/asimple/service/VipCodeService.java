@@ -3,6 +3,7 @@ package com.asimple.service;
 import com.asimple.entity.User;
 import com.asimple.entity.VipCode;
 import com.asimple.mapper.VipCodeMapper;
+import com.asimple.util.PageBean;
 import com.asimple.util.Tools;
 import org.springframework.stereotype.Service;
 
@@ -22,10 +23,18 @@ public class VipCodeService {
 
     /**
      * 可用卡号列表
+     * @param page 当前页
+     * @param pageSize 一页大小
      * @return vipCode列表
      */
-    public List<VipCode> listIsUse() {
-        return vipCodeMapper.findByIsUse();
+    public PageBean<VipCode> listIsUse(int page, int pageSize) {
+        PageBean<VipCode> pageBean = new PageBean<>();
+        pageBean.setPc(page);
+        pageBean.setPs(pageSize);
+        pageBean.setTr(vipCodeMapper.getTotalIsUse());
+        List<VipCode> list = vipCodeMapper.findByIsUseByPage((page-1)*pageSize, pageSize);
+        pageBean.setBeanList(list);
+        return pageBean;
     }
 
     /**

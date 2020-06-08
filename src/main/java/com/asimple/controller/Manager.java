@@ -7,6 +7,7 @@ import com.asimple.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -322,11 +323,9 @@ public class Manager {
      * @description VIP管理
      **/
     @RequestMapping(value = "/vipCode")
-    public Object vipCode() {
-        Map<String, Object> map = new HashMap<>(2);
-        List<VipCode> list = vipCodeService.listIsUse();
-        map.put("vip_codes",list);
-        return ResponseReturnUtil.returnSuccessWithData(map);
+    public Object vipCode(@RequestParam(required = false, defaultValue = "1")int page, @RequestParam(required = false, defaultValue = "10") int pageSize) {
+        PageBean<VipCode> pageBean = vipCodeService.listIsUse(page, pageSize);
+        return ResponseReturnUtil.returnSuccessWithData(pageBean);
     }
 
     /**
