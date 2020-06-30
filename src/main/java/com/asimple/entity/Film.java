@@ -113,14 +113,14 @@ public class Film implements Serializable {
     @JsonProperty(value = "viewNumber")
     private Integer view_number;
     /**
-     * 上传用户
+     * 上传用户的id
      */
-    private User user;
+    private String uid;
 
     public Film() {
     }
 
-    public Film(String id, String name, String image, String onDecade, String status, String resolution, String typeName, String type_id, String actor, String locName, String loc_id, String updateTime, int isUse, String cataLog_id, String cataLogName, String subClass_id, String subClassName, Integer isVip, String plot, double evaluation, List<Res> resList, Integer viewNumber, User user) {
+    public Film(String id, String name, String image, String onDecade, String status, String resolution, String typeName, String type_id, String actor, String locName, String loc_id, String updateTime, int isUse, String cataLog_id, String cataLogName, String subClass_id, String subClassName, Integer isVip, String plot, double evaluation, List<Res> resList, Integer viewNumber, String uid) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -143,7 +143,7 @@ public class Film implements Serializable {
         this.evaluation = evaluation;
         this.resList = resList;
         this.view_number = viewNumber;
-        this.user = user;
+        this.uid = uid;
     }
 
 }

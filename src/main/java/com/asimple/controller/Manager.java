@@ -83,12 +83,10 @@ public class Manager {
             result.put("film", filmService.load(filmId));
             // 获取资源信息
             List<Res> list = resService.getListByFilmId(filmId);
-            if( list.size()== 0 ) {
-                result.put("res", null);
-            } else {
-                result.put("res", list);
-            }
+            result.put("res", list);
         }
+        // 加载分类信息
+        result.putAll(commonService.getCatalog());
         return ResponseReturnUtil.returnSuccessWithData(result);
     }
 
@@ -151,7 +149,7 @@ public class Manager {
     public Object addFilm(Film film, HttpSession session) {
         Map<String, Object> map = new HashMap<>(1);
         User user = (User) session.getAttribute(VideoKeyNameUtil.ADMIN_USER_KEY);
-        film.setUser(user);
+        film.setUid(user.getId());
         String id = filmService.save(film);
         map.put("id", id);
         return ResponseReturnUtil.returnSuccessWithData(map);
@@ -246,7 +244,7 @@ public class Manager {
      * @author Asimple
      * @description 添加年列表
      **/
-    @RequestMapping( value = "addDecade")
+    @RequestMapping( value = "/addDecade")
     public Object addDecade(Decade decade) {
         if( decadeService.add(decade) ) {
             return ResponseReturnUtil.returnSuccessWithMsg("操作成功!");

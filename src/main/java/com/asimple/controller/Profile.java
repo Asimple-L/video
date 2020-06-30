@@ -69,20 +69,21 @@ public class Profile {
      **/
     @RequestMapping(value = "/share", produces = "application/json;charset=UTF-8")
     public Object shareVideo(HttpServletRequest request) {
+        User user = RequestUtil.getUserInformation(request);
+        if ( user==null ) {
+            return ResponseReturnUtil.returnErrorWithMsg("请先登录");
+        }
         Map<String, Object> result = new HashMap<>(8);
-        String filmId = request.getParameter("film_id");
+        String filmId = request.getParameter("filmId");
         Film film = filmService.load(filmId);
-        if( film!=null ) {
+        if( film!=null && user.getId().equals(film.getUid()) ) {
             result.put("film", film);
             List<Res> list = resService.getListByFilmId(filmId);
-            if( list.size()== 0 ) {
-                result.put("res", null);
-            } else {
-                result.put("res", list);
-            }
+            result.put("res", list);
+            result.putAll( commonService.getCatalog() );
+            return ResponseReturnUtil.returnSuccessWithData(result);
         }
-        result.putAll( commonService.getCatalog() );
-        return ResponseReturnUtil.returnSuccessWithData(result);
+        return ResponseReturnUtil.returnErrorWithMsg("权限不足!");
     }
 
     /**
@@ -92,7 +93,7 @@ public class Profile {
     @RequestMapping( value = "/addFilm", produces = "application/json;charset=UTF-8")
     public Object addFilm(Film film, HttpSession session) {
         User user = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
-        film.setUser(user);
+        film.setUid(user.getId());
         String id = filmService.save(film);
         this.updateRedis(id);
         return ResponseReturnUtil.returnSuccessWithoutMsgAndData();

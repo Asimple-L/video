@@ -99,7 +99,7 @@ public class Util implements ServletContextAware {
                         map.put("fileName", fileName);
                         map.put("name", fileNameSuffix);
                         // 文件路径
-                        map.put("filePath", "/video" + pro.getProperty("upload")+childPath+"/"+newFileName);
+                        map.put("filePath", pro.getProperty("upload")+childPath+"/"+newFileName);
                         list.add(map);
                     }
                 }

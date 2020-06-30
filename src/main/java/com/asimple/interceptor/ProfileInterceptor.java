@@ -19,6 +19,12 @@ import javax.servlet.http.HttpSession;
 public class ProfileInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        // 允许跨域
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:7001");
+        // 当请求的地址写在了上面，此项必须为true
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
+        response.setHeader("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
         //如果是获取类型则放行
         if (request.getRequestURL().indexOf("/getType")>0 || request.getRequestURL().indexOf("getSubClass")>0 ) {
             return true;
