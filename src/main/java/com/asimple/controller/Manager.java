@@ -85,8 +85,6 @@ public class Manager {
             List<Res> list = resService.getListByFilmId(filmId);
             result.put("res", list);
         }
-        // 加载分类信息
-        result.putAll(commonService.getCatalog());
         return ResponseReturnUtil.returnSuccessWithData(result);
     }
 
@@ -143,6 +141,7 @@ public class Manager {
 
     /**
      * @author Asimple
+     * @deprecated
      * @description 添加影片
      **/
     @RequestMapping( value = "/addFilm", produces = "application/json;charset=UTF-8")
@@ -159,7 +158,7 @@ public class Manager {
      * @author Asimple
      * @description 删除影片
      **/
-    @RequestMapping( value = "/delFilm")
+    @RequestMapping( value = "/delFilm", produces = "application/json;charset=UTF-8")
     public Object delFilm(HttpServletRequest request) {
         String filmId = request.getParameter("filmId");
         LogUtil.info(Manager.class, "film_id = " + filmId);
@@ -174,7 +173,7 @@ public class Manager {
      * @author Asimple
      * @description 添加资源
      **/
-    @RequestMapping(value = "/addRes")
+    @RequestMapping(value = "/addRes", produces = "application/json;charset=UTF-8")
     public Object addRes(Res res, String filmId) {
         Map<String, Object> result = new HashMap<>(1);
         String id = resService.addRes(res, filmId);
@@ -186,7 +185,7 @@ public class Manager {
      * @author Asimple
      * @description 删除资源
      **/
-    @RequestMapping( value = "/delRes")
+    @RequestMapping( value = "/delRes", produces = "application/json;charset=UTF-8")
     public Object delRes(String resId) {
         if( resService.delete(resId) ) {
             return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
@@ -198,7 +197,7 @@ public class Manager {
      * @author Asimple
      * @description 更改在离线状态
      **/
-    @RequestMapping( value = "/updateIsUse")
+    @RequestMapping( value = "/updateIsUse", produces = "application/json;charset=UTF-8")
     public Object updateIsUse(String resId) {
         LogUtil.info(Manager.class, "res_id = " + resId);
         if( resService.updateIsUse(resId) ) {
@@ -212,7 +211,7 @@ public class Manager {
      * @author Asimple
      * @description 更新影片信息
      **/
-    @RequestMapping( value = "/updateFilmInfo")
+    @RequestMapping( value = "/updateFilmInfo", produces = "application/json;charset=UTF-8")
     public Object updateFilmInfo(String filmId, String val, String key, HttpSession session) {
         Map<String, Object> param = new HashMap<>(16);
         Film film = filmService.load(filmId);
@@ -230,7 +229,7 @@ public class Manager {
      * @author Asimple
      * @description 目录管理 目录查看与修改
      **/
-    @RequestMapping( value = {"/catalog", "/editCatalog"})
+    @RequestMapping( value = {"/catalog", "/editCatalog"}, produces = "application/json;charset=UTF-8")
     public Object catalog(HttpServletRequest request) {
         if( !RequestUtil.isAdmin(request) ) {
             return ResponseReturnUtil.returnErrorWithMsg("登录超时,请重新登录!");
@@ -244,7 +243,7 @@ public class Manager {
      * @author Asimple
      * @description 添加年列表
      **/
-    @RequestMapping( value = "/addDecade")
+    @RequestMapping( value = "/addDecade", produces = "application/json;charset=UTF-8")
     public Object addDecade(Decade decade) {
         if( decadeService.add(decade) ) {
             return ResponseReturnUtil.returnSuccessWithMsg("操作成功!");
@@ -256,7 +255,7 @@ public class Manager {
      * @author Asimple
      * @description 添加级别
      **/
-    @RequestMapping( value = "/addLevel")
+    @RequestMapping( value = "/addLevel", produces = "application/json;charset=UTF-8")
     public Object addLevel(Level level) {
         if( levelService.add(level) ) {
             return ResponseReturnUtil.returnSuccessWithMsg("操作成功!");
@@ -268,7 +267,7 @@ public class Manager {
      * @author Asimple
      * @description 添加地区
      **/
-    @RequestMapping( value = "/addLoc")
+    @RequestMapping( value = "/addLoc", produces = "application/json;charset=UTF-8")
     public Object addLoc(Loc loc) {
         if( locService.add(loc) ) {
             return ResponseReturnUtil.returnSuccessWithMsg("操作成功!");
@@ -280,7 +279,7 @@ public class Manager {
      * @author Asimple
      * @description 添加/修改一级分类
      **/
-    @RequestMapping(value = "/addCataLog")
+    @RequestMapping(value = "/addCataLog", produces = "application/json;charset=UTF-8")
     public Object addCataLog(CataLog cataLog) {
         if ( cataLogService.add(cataLog) ) {
             cataLogService.listIsUse();
@@ -293,7 +292,7 @@ public class Manager {
      * @author Asimple
      * @description 添加二级分类
      **/
-    @RequestMapping(value = "/addSubClass")
+    @RequestMapping(value = "/addSubClass", produces = "application/json;charset=UTF-8")
     public Object addSubClass(SubClass subClass, String cataLogId) {
         if( subClassService.add(subClass, cataLogId) ) {
             cataLogService.listIsUse();
@@ -306,7 +305,7 @@ public class Manager {
      * @author Asimple
      * @description 添加类型
      **/
-    @RequestMapping(value = "/addType")
+    @RequestMapping(value = "/addType", produces = "application/json;charset=UTF-8")
     public Object addType(Type type,String subClassId) {
         Map<String, Object> result = new HashMap<>(1);
         if( typeService.add(type, subClassId) ) {
@@ -320,7 +319,7 @@ public class Manager {
      * @author Asimple
      * @description VIP管理
      **/
-    @RequestMapping(value = "/vipCode")
+    @RequestMapping(value = "/vipCode", produces = "application/json;charset=UTF-8")
     public Object vipCode(@RequestParam(required = false, defaultValue = "1")int page, @RequestParam(required = false, defaultValue = "10") int pageSize) {
         PageBean<VipCode> pageBean = vipCodeService.listIsUse(page, pageSize);
         return ResponseReturnUtil.returnSuccessWithData(pageBean);
@@ -330,7 +329,7 @@ public class Manager {
      * @author Asimple
      * @description 创建VIP卡号
      **/
-    @RequestMapping(value = "/createVipCode", method = RequestMethod.POST)
+    @RequestMapping(value = "/createVipCode", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     public Object createVipCode(String num) {
         Map<String, Object> result = new HashMap<>(1);
         if ( StringUtils.isEmpty(num) ) {

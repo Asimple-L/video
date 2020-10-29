@@ -1,5 +1,7 @@
 package com.asimple.controller;
 
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.asimple.entity.*;
 import com.asimple.service.*;
 import com.asimple.task.RankTask;
@@ -7,9 +9,7 @@ import com.asimple.util.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JsonConfig;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -47,7 +47,7 @@ public class Profile {
      * @author Asimple
      * @description 进入个人中心页面
      **/
-    @RequestMapping(value = "/profilePage")
+    @RequestMapping(value = "/profilePage", produces = "application/json;charset=UTF-8")
     public Object profile(HttpServletRequest request) {
         Map<String, Object> result = new HashMap<>(16);
         if( !RequestUtil.isLogin(request) ) {
@@ -80,7 +80,6 @@ public class Profile {
             result.put("film", film);
             List<Res> list = resService.getListByFilmId(filmId);
             result.put("res", list);
-            result.putAll( commonService.getCatalog() );
             return ResponseReturnUtil.returnSuccessWithData(result);
         }
         return ResponseReturnUtil.returnErrorWithMsg("权限不足!");
@@ -91,12 +90,14 @@ public class Profile {
      * @description 添加影片
      **/
     @RequestMapping( value = "/addFilm", produces = "application/json;charset=UTF-8")
-    public Object addFilm(Film film, HttpSession session) {
+    public Object addFilm(@RequestBody Film film, HttpSession session) {
+        Map<String, Object> map = new HashMap<>(1);
         User user = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
         film.setUid(user.getId());
         String id = filmService.save(film);
         this.updateRedis(id);
-        return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
+        map.put("id", id);
+        return ResponseReturnUtil.returnSuccessWithData(map);
     }
 
     /**
@@ -117,8 +118,14 @@ public class Profile {
      * @author Asimple
      * @description 添加资源
      **/
-    @RequestMapping(value = "/addRes")
-    public Object addRes(Res res, String filmId) {
+    @RequestMapping(value = "/addRes", produces = "application/json;charset=UTF-8")
+    public Object addRes(HttpServletRequest request) {
+        String resString  = request.getParameter("res");
+        String filmId  = request.getParameter("filmId");
+        if( StringUtils.isBlank(filmId) || StringUtils.isBlank(resString) ) {
+            return ResponseReturnUtil.returnErrorWithMsg("参数错误");
+        }
+        Res res = JSONObject.parseObject(resString, new TypeReference<Res>(){});
         Map<String, Object> result = new HashMap<>(1);
         result.put("id", resService.addRes(res, filmId));
         return ResponseReturnUtil.returnSuccessWithData(result);
@@ -128,7 +135,7 @@ public class Profile {
      * @author Asimple
      * @description 删除资源
      **/
-    @RequestMapping( value = "/delRes")
+    @RequestMapping( value = "/delRes", produces = "application/json;charset=UTF-8")
     public Object delRes(String resId) {
         if( resService.delete(resId) ) {
             return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
@@ -141,7 +148,7 @@ public class Profile {
      * @author Asimple
      * @description 更改在离线状态
      **/
-    @RequestMapping( value = "/updateIsUse")
+    @RequestMapping( value = "/updateIsUse", produces = "application/json;charset=UTF-8")
     public Object updateIsUse(String resId) {
         if( resService.updateIsUse(resId) ) {
             this.updateRedis("1");
@@ -154,7 +161,7 @@ public class Profile {
      * @author Asimple
      * @description 更新影片信息
      **/
-    @RequestMapping( value = "/updateFilmInfo")
+    @RequestMapping( value = "/updateFilmInfo", produces = "application/json;charset=UTF-8")
     public Object updateFilmInfo(String filmId, String val, String key, HttpSession session) {
         Map<String, Object> param = new HashMap<>(8);
         Film film = filmService.load(filmId);
@@ -244,6 +251,17 @@ public class Profile {
         if( !"0".equals(id) ) {
             rankTask.commendRank();
         }
+    }
+
+    /**
+     * @author Asimple
+     * @description 查询所有目录
+     **/
+    @RequestMapping( value = {"/getCatalog"}, produces = "application/json;charset=UTF-8")
+    public Object catalog() {
+        Map<String, Object> result = new HashMap<>(8);
+        result.putAll(commonService.getCatalog());
+        return ResponseReturnUtil.returnSuccessWithData(result);
     }
 
 }

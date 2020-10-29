@@ -4,6 +4,7 @@ import com.asimple.util.FileOperate;
 import com.asimple.util.JSONUtil;
 import com.asimple.util.ResponseReturnUtil;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.ServletContextAware;
@@ -38,6 +39,9 @@ public class Util implements ServletContextAware {
      **/
     @RequestMapping(value = "/upload", produces = "application/json;charset=UTF-8")
     public String upload(String childPath, HttpServletRequest request) throws IOException{
+        if( StringUtils.isBlank(childPath) ) {
+            return ResponseReturnUtil.returnErrorWithMsg("参数错误").toString();
+        }
         // 文件上传处理
         Properties pro = new Properties();
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("user.properties");
