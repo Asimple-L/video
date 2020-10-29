@@ -139,9 +139,8 @@ public class Profile {
     public Object delRes(String resId) {
         if( resService.delete(resId) ) {
             return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
-        } else {
-            return ResponseReturnUtil.returnErrorWithMsg("删除失败，请稍后重试!");
         }
+        return ResponseReturnUtil.returnErrorWithMsg("删除失败，请稍后重试!");
     }
 
     /**
