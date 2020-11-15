@@ -132,8 +132,7 @@ public class VipCodeService {
         int num = saveAll(vipCodes);
         if( num == n ) {
             return vipCodes;
-        } else {
-            return new ArrayList<>();
         }
+        return new ArrayList<>();
     }
 }

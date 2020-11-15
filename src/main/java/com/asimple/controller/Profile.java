@@ -109,9 +109,8 @@ public class Profile {
         if ( filmService.deleteById(filmId) ) {
             this.updateRedis("1");
             return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
-        } else {
-            return ResponseReturnUtil.returnErrorWithMsg("系统繁忙，请稍后重试!");
         }
+        return ResponseReturnUtil.returnErrorWithMsg("系统繁忙，请稍后重试!");
     }
 
     /**

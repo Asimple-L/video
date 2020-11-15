@@ -246,7 +246,7 @@ public class FilmService {
         map.put("film_id", filmId);
         map.put("uid", uid);
         map.put("view_date", new Date());
-        int num = 0;
+        int num;
         if( filmMapper.countViewHistory(map)>0 ) {
             num = filmMapper.updateViewHistory(map);
         } else {
@@ -335,8 +335,10 @@ public class FilmService {
             FilterQuery filterQuery = new SimpleFilterQuery(filterCriteria);
             query.addFilterQuery(filterQuery);
         }
-        query.setOffset((pc-1)*ps);//开始索引（默认0）
-        query.setRows(ps);//每页记录数(默认10)
+        //开始索引（默认0）
+        query.setOffset((pc-1)*ps);
+        //每页记录数(默认10)
+        query.setRows(ps);
 
         //***********************高亮设置***********************
         //设置高亮的域

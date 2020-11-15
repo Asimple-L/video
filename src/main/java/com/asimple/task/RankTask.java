@@ -26,8 +26,6 @@ public class RankTask {
     private CataLogService cataLogService;
     @Resource
     private FilmService filmService;
-    @Resource
-    private CommonService commonService;
 
     /**
      * @author Asimple

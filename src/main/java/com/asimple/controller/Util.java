@@ -121,7 +121,6 @@ public class Util implements ServletContextAware {
      **/
     @RequestMapping(value = "/delFile", produces = "application/json;charset=UTF-8")
     public Object delFile(String picsPath) {
-        JSONObject jsonObject = new JSONObject();
         if( picsPath.startsWith("/video/") ) {
             picsPath = picsPath.substring(picsPath.lastIndexOf("/video/")+"/video/".length());
         }

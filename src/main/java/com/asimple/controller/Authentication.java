@@ -42,10 +42,9 @@ public class Authentication {
         User userDb = userService.register(user);
         if( null == userDb ) {
             return ResponseReturnUtil.returnErrorWithMsg("注册失败！邮箱或者用户名已存在!");
-        } else {
-            session.setAttribute(VideoKeyNameUtil.USER_KEY, userDb);
-            return ResponseReturnUtil.returnSuccessMsgAndData("注册成功,已自动登录!", user);
         }
+        session.setAttribute(VideoKeyNameUtil.USER_KEY, userDb);
+        return ResponseReturnUtil.returnSuccessMsgAndData("注册成功,已自动登录!", user);
     }
 
     /**
@@ -83,7 +82,6 @@ public class Authentication {
     @RequestMapping(value = "/updatePassword", produces = "application/json;charset=UTF-8")
     public Object updatePassword(HttpServletRequest request) {
         User user = RequestUtil.getUserInformation(request);
-        String uid = request.getParameter("uid");
         if( RequestUtil.isNotSelfLogin(request) ) {
             return ResponseReturnUtil.returnErrorWithMsg("请先登录!");
         }
@@ -105,9 +103,10 @@ public class Authentication {
      * @description 使用VIP卡号
      **/
     @RequestMapping( value = "/vipCodeVerification")
-    public Object vipCodeVerification(String vipCode, HttpSession session) {
+    public Object vipCodeVerification(String vipCode, HttpServletRequest request) {
+        User userTemp = RequestUtil.getUserInformation(request);
+        HttpSession session = request.getSession();
         VipCode code = vipCodeService.findByVipCode(vipCode);
-        User userTemp = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
         User user = userService.load(userTemp.getId());
         if( null != code && null!=user ) {
             Map<String, Object> param = new HashMap<>(1);

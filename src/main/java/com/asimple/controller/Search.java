@@ -84,12 +84,8 @@ public class Search {
         film.setResList(resService.getListByFilmId(filmId));
         // VIP资源校验
         if (film.getIsVip() == 1) {
-            if (user != null) {
-                if (user.getIsVip() == 0) {
-                    return ResponseReturnUtil.returnErrorWithMsg("非VIP用户不能访问VIP资源!");
-                }
-            } else {
-                return ResponseReturnUtil.returnErrorWithMsg("未登录!");
+            if( user == null || user.getIsVip() == 0 ) {
+                return ResponseReturnUtil.returnErrorWithMsg("请登录VIP账号后查看!");
             }
         }
 
