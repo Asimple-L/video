@@ -33,7 +33,7 @@
         SELECT * FROM `t_comment`
     </select>
 
-    <select id="getTotalCount" resultType="Integer">
+    <select id="getTotalCount" resultType="java.lang.Integer">
         SELECT COUNT(1) FROM `t_comment`
         <where>
             <if test="obj.user!=null">
@@ -69,7 +69,7 @@
         SELECT * FROM `t_comment` WHERE `uid`=#{uid} LIMIT #{start},#{count}
     </select>
 
-    <select id="getCommentsTotal" resultType="Integer">
+    <select id="getCommentsTotal" resultType="java.lang.Integer">
         SELECT COUNT(1) FROM `t_comment` WHERE `uid`=#{uid}
     </select>
 
