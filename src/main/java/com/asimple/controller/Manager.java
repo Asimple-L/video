@@ -47,6 +47,8 @@ public class Manager {
     private CommonService commonService;
     @Resource
     private SolrTask solrTask;
+    @Resource
+    private PropertiesUtil propertiesUtil;
 
     /**
      * @author Asimple
@@ -263,6 +265,10 @@ public class Manager {
      **/
     @RequestMapping(value = "/loadIn", produces = "application/json;charset=UTF-8")
     public Object loadInSolr() {
+        boolean openSwitch = propertiesUtil.isOn("asimple.solr.manager.switch", "on");
+        if( !openSwitch ) {
+            return ResponseReturnUtil.returnSuccessWithMsg("功能暂未开放!");
+        }
         solrTask.pushToSolr();
         return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
     }
