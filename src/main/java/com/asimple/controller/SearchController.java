@@ -21,7 +21,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/xl")
-public class Search {
+public class SearchController extends CommonController {
     @Resource
     private FilmService filmService;
     @Resource

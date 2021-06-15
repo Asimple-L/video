@@ -2,6 +2,7 @@ package com.asimple.controller;
 
 import com.asimple.App;
 import com.asimple.util.LogUtil;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 public class ManagerControllerTest {
 
     @Resource
-    private Manager manager;
+    private ManagerController manager;
 
     @Test
     public void testSome() {
@@ -36,6 +37,7 @@ public class ManagerControllerTest {
         request.setParameter("id", "B961C8D1C3714676ABE6F70FC088982A");
         Object object = manager.deleteCatalog(request);
         System.out.println(object);
+        Assert.assertNotNull(object);
     }
 
 }

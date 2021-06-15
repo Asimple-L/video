@@ -22,7 +22,7 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/admin")
-public class Manager {
+public class ManagerController extends CommonController {
     @Resource
     private UserService userService;
     @Resource
@@ -74,20 +74,21 @@ public class Manager {
      **/
     @RequestMapping(value = "/film", produces = "application/json;charset=UTF-8")
     public Object film(HttpServletRequest request) {
-        if( !RequestUtil.isAdmin(request) ) {
-            return ResponseReturnUtil.returnErrorWithMsg("请重新登录后重试!");
+        if( RequestUtil.isAdminLogin(request) ) {
+            Map<String, Object> result = new HashMap<>(4);
+            String filmId = request.getParameter("filmId");
+            // 如果有id，则是编辑
+            if ( StringUtils.isNotEmpty(filmId) ) {
+                // 获取电影信息
+                result.put("film", filmService.load(filmId));
+                // 获取资源信息
+                List<Res> list = resService.getListByFilmId(filmId);
+                result.put("res", list);
+            }
+            return ResponseReturnUtil.returnSuccessWithData(result);
+
         }
-        Map<String, Object> result = new HashMap<>(4);
-        String filmId = request.getParameter("filmId");
-        // 如果有id，则是编辑
-        if ( StringUtils.isNotEmpty(filmId) ) {
-            // 获取电影信息
-            result.put("film", filmService.load(filmId));
-            // 获取资源信息
-            List<Res> list = resService.getListByFilmId(filmId);
-            result.put("res", list);
-        }
-        return ResponseReturnUtil.returnSuccessWithData(result);
+        return ResponseReturnUtil.returnErrorWithMsg("请重新登录后重试!");
     }
 
     /**
@@ -96,7 +97,7 @@ public class Manager {
      **/
     @RequestMapping(value = "/list", produces = "application/json;charset=UTF-8")
     public Object filmList(HttpServletRequest request) {
-        if( !RequestUtil.isAdmin(request) ) {
+        if( !RequestUtil.isAdminLogin(request) ) {
             return ResponseReturnUtil.returnErrorWithMsg("请重新登录后重试!");
         }
         Map<String, Object> result = new HashMap<>(8);
@@ -146,7 +147,7 @@ public class Manager {
      **/
     @RequestMapping( value = {"/catalog", "/editCatalog"}, produces = "application/json;charset=UTF-8")
     public Object catalog(HttpServletRequest request) {
-        if( !RequestUtil.isAdmin(request) ) {
+        if( !RequestUtil.isAdminLogin(request) ) {
             return ResponseReturnUtil.returnErrorWithMsg("登录超时,请重新登录!");
         }
         Map<String, Object> result = new HashMap<>(8);

@@ -25,7 +25,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/profile")
-public class Profile {
+public class ProfileController extends CommonController {
     @Resource
     private ResService resService;
     @Resource
@@ -56,7 +56,7 @@ public class Profile {
         if( RequestUtil.isNotSelfLogin(request) ) {
             return ResponseReturnUtil.returnErrorWithMsg("参数错误，请登录后重试!");
         }
-        User user = RequestUtil.getUserInformation(request);
+        User user = getUserInfo(request);
         Map<String, Object> param = new HashMap<>(4);
         param.put("uid", user.getId());
         result.putAll(userService.getProfileInfo(param));
@@ -69,10 +69,10 @@ public class Profile {
      **/
     @RequestMapping(value = "/share", produces = "application/json;charset=UTF-8")
     public Object shareVideo(HttpServletRequest request) {
-        User user = RequestUtil.getUserInformation(request);
-        if ( user==null ) {
+        if ( !RequestUtil.isLogin(request) ) {
             return ResponseReturnUtil.returnErrorWithMsg("请先登录");
         }
+        User user = getUserInfo(request);
         Map<String, Object> result = new HashMap<>(8);
         String filmId = request.getParameter("filmId");
         Film film = filmService.load(filmId);
@@ -90,9 +90,9 @@ public class Profile {
      * @description 添加影片
      **/
     @RequestMapping( value = "/addFilm", produces = "application/json;charset=UTF-8")
-    public Object addFilm(@RequestBody Film film, HttpSession session) {
+    public Object addFilm(@RequestBody Film film, HttpServletRequest request) {
         Map<String, Object> map = new HashMap<>(1);
-        User user = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
+        User user = getUserInfo(request);
         film.setUid(user.getId());
         String id = filmService.save(film);
         this.updateRedis(id);
@@ -236,7 +236,7 @@ public class Profile {
         if( StringUtils.isEmpty(pc) ) {
             pc = "1";
         }
-        User user = RequestUtil.getUserInformation(request);
+        User user = getUserInfo(request);
         params.put("uid", user.getId());
         params.put("page", String.valueOf(pc));
         result.put("comments", commentService.getPageByUid(params));

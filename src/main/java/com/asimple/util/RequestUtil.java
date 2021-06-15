@@ -13,16 +13,6 @@ import javax.servlet.http.HttpSession;
 public class RequestUtil {
 
     /**
-     * 获取当前登录人信息
-     * @param request 请求
-     * @return 当前登录人信息
-     */
-    public static User getUserInformation(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        return (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
-    }
-
-    /**
      * 登出 清除登录信息
      * @param request 请求
      */
@@ -60,9 +50,9 @@ public class RequestUtil {
      * @param request 请求信息
      * @return 当前登录用户是管理返回true
      */
-    public static boolean isAdmin(HttpServletRequest request) {
+    public static boolean  isAdminLogin(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
+        User user = (User) session.getAttribute(VideoKeyNameUtil.ADMIN_USER_KEY);
         return user!=null && user.getIsManager()==1;
     }
 

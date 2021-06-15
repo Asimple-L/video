@@ -25,7 +25,7 @@ import java.util.Map;
  */
 
 @RestController
-public class Authentication {
+public class AuthenticationController extends CommonController {
     @Resource
     private UserService userService;
     @Resource
@@ -69,9 +69,8 @@ public class Authentication {
      * @description 登出
      **/
     @RequestMapping( value = "/logout")
-    public Object logout(HttpSession session) {
-        session.removeAttribute(VideoKeyNameUtil.USER_KEY);
-        session.removeAttribute(VideoKeyNameUtil.ADMIN_USER_KEY);
+    public Object logout(HttpServletRequest request) {
+        RequestUtil.logout(request);
         return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
     }
 
@@ -81,10 +80,10 @@ public class Authentication {
      **/
     @RequestMapping(value = "/updatePassword", produces = "application/json;charset=UTF-8")
     public Object updatePassword(HttpServletRequest request) {
-        User user = RequestUtil.getUserInformation(request);
         if( RequestUtil.isNotSelfLogin(request) ) {
             return ResponseReturnUtil.returnErrorWithMsg("请先登录!");
         }
+        User user = getUserInfo(request);
         String oldPwd = request.getParameter("oldPwd");
         String newPwd = request.getParameter("newPwd");
         if( userService.checkPassword(user.getUserPasswd(), oldPwd) ) {
@@ -104,7 +103,7 @@ public class Authentication {
      **/
     @RequestMapping( value = "/vipCodeVerification")
     public Object vipCodeVerification(String vipCode, HttpServletRequest request) {
-        User userTemp = RequestUtil.getUserInformation(request);
+        User userTemp = getUserInfo(request);
         HttpSession session = request.getSession();
         VipCode code = vipCodeService.findByVipCode(vipCode);
         User user = userService.load(userTemp.getId());
@@ -115,9 +114,8 @@ public class Authentication {
             if( vipCodeService.useCode(param) ) {
                 session.setAttribute(VideoKeyNameUtil.USER_KEY, user);
                 return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
-            } else {
-                return ResponseReturnUtil.returnErrorWithMsg("加油失败，请稍后重试!");
             }
+            return ResponseReturnUtil.returnErrorWithMsg("加油失败，请稍后重试!");
         }
         return ResponseReturnUtil.returnErrorWithMsg("VIP加油卡号不存在!");
     }

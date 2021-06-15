@@ -20,7 +20,7 @@ import java.util.*;
  * @author Asimple
  */
 @RestController
-public class Start {
+public class StartController extends CommonController {
     @Resource
     private CataLogService cataLogService;
     @Resource
@@ -46,7 +46,7 @@ public class Start {
     public Object indexInfo(HttpServletRequest request) {
         Map<String, Object> result = new HashMap<>(5);
         result.put("cataLogList", cataLogService.listIsUse());
-        result.put("user", RequestUtil.getUserInformation(request));
+        result.put("user", getUserInfo(request));
         return ResponseReturnUtil.returnSuccessWithData(result);
     }
 
@@ -81,7 +81,7 @@ public class Start {
         if( !RequestUtil.isLogin(request) ) {
             return ResponseReturnUtil.returnErrorWithMsg("请登录后评论!");
         }
-        User user = RequestUtil.getUserInformation(request);
+        User user = getUserInfo(request);
         String context = request.getParameter("context");
         Map<String, Object> param = new HashMap<>(2);
         param.put("user", user);
