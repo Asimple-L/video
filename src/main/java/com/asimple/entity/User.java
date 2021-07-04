@@ -6,9 +6,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
+ * @author Asimple
  * @ProjectName video
  * @description 用户实体类
- * @author Asimple
  */
 @Data
 public class User implements Serializable {

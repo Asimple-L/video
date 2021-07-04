@@ -15,6 +15,7 @@ import java.util.List;
 public interface RatyMapper extends IBaseDao<Raty> {
     /**
      * 获取影片评分人数
+     *
      * @param filmId 影片id
      * @return 评分人数
      */
@@ -22,6 +23,7 @@ public interface RatyMapper extends IBaseDao<Raty> {
 
     /**
      * 获取评分列表
+     *
      * @param filmId 影片id
      * @return 评分列表
      */
@@ -29,6 +31,7 @@ public interface RatyMapper extends IBaseDao<Raty> {
 
     /**
      * 删除评分
+     *
      * @param filmId 影片id
      * @return 删除成功返回1
      */

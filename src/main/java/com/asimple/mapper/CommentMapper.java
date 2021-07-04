@@ -17,7 +17,8 @@ public interface CommentMapper extends IBaseDao<Comment> {
 
     /**
      * 分页获取评论信息
-     * @param uid 用户id
+     *
+     * @param uid   用户id
      * @param start 开始条数
      * @param count 结束条数
      * @return 评论列表
@@ -26,6 +27,7 @@ public interface CommentMapper extends IBaseDao<Comment> {
 
     /**
      * 获取评论总数
+     *
      * @param uid 用户id
      * @return 评论数
      */

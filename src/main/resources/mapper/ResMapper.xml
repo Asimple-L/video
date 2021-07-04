@@ -15,7 +15,7 @@
         <result column="updateTime" property="updateTime"></result>
         <association column="film_id" property="film" select="selectFilm"></association>
     </resultMap>
-     <select id="selectFilm" resultType="com.asimple.entity.Film">
+    <select id="selectFilm" resultType="com.asimple.entity.Film">
         SELECT * FROM `t_film` WHERE id=#{film_id}
     </select>
 

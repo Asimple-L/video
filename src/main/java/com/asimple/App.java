@@ -5,10 +5,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
+ * @author Asimple
  * @version 2.0
  * @ProjectName video
  * @description SpringBoot启动类
- * @author Asimple
  * @date 2019/8/30 21:05
  */
 @SpringBootApplication

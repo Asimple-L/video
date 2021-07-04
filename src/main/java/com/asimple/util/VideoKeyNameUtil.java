@@ -1,8 +1,8 @@
 package com.asimple.util;
 
 /**
- * @description 关键字类
  * @author Asimple
+ * @description 关键字类
  * @date 2019/9/23 20:10
  */
 public class VideoKeyNameUtil {
@@ -39,5 +39,20 @@ public class VideoKeyNameUtil {
      * 失败编码
      */
     static final String ERROR_CODE = "111111";
+
+    /**
+     * 二级分类
+     */
+    public static final String SUB_CLASS = "subClass";
+
+    /**
+     * 一级分类
+     */
+    public static final String CATALOG = "catalog";
+
+    /**
+     * 类型
+     */
+    public static final String TYPE = "type";
 
 }

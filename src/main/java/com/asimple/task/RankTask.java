@@ -13,9 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * @author Asimple
  * @ProjectName video
  * @description 排行榜每日更新任务
- * @author Asimple
  */
 @Component
 @Configuration
@@ -38,17 +38,17 @@ public class RankTask {
 
         // 查询用户菜单列表
         List<CataLog> logList = cataLogService.listIsUse();
-        LogUtil.info("用户菜单列表："+logList.size());
+        LogUtil.info("用户菜单列表：" + logList.size());
 
         // 查询推荐电影
-        List<Object> list =  new ArrayList<>();
+        List<Object> list = new ArrayList<>();
         for (CataLog aLogList : logList) {
             List<Film> films = filmService.listByCataLogId(aLogList.getId(), 12);
             if (films.size() != 0) {
                 list.add(films);
             }
         }
-        LogUtil.info("推荐电影列表："+list.size());
+        LogUtil.info("推荐电影列表：" + list.size());
 
         // 电影排行榜
         List<Object> list1 = new ArrayList<>();
@@ -58,10 +58,10 @@ public class RankTask {
                 list1.add(films);
             }
         }
-        LogUtil.info("电影排行榜信息："+list1.size());
+        LogUtil.info("电影排行榜信息：" + list1.size());
 
         long endTime = System.currentTimeMillis();
-        LogUtil.info("commendRank update end! run time = " + (endTime - startTime)/1000 + "s");
+        LogUtil.info("commendRank update end! run time = " + (endTime - startTime) / 1000 + "s");
     }
 
 }

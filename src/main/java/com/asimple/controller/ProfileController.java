@@ -19,9 +19,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * @author Asimple
  * @ProjectName video
  * @description 个人中心
- * @author Asimple
  */
 @RestController
 @RequestMapping("/profile")
@@ -50,11 +50,11 @@ public class ProfileController extends CommonController {
     @RequestMapping(value = "/profilePage", produces = "application/json;charset=UTF-8")
     public Object profile(HttpServletRequest request) {
         Map<String, Object> result = new HashMap<>(16);
-        if( !RequestUtil.isLogin(request) ) {
-            return ResponseReturnUtil.returnErrorWithMsg("未登录，请登录后重试!");
+        if (!RequestUtil.isLogin(request)) {
+            return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.LOGIN_FIRST);
         }
-        if( RequestUtil.isNotSelfLogin(request) ) {
-            return ResponseReturnUtil.returnErrorWithMsg("参数错误，请登录后重试!");
+        if (RequestUtil.isNotSelfLogin(request)) {
+            return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.PARAMETER_ERROR);
         }
         User user = getUserInfo(request);
         Map<String, Object> param = new HashMap<>(4);
@@ -69,27 +69,27 @@ public class ProfileController extends CommonController {
      **/
     @RequestMapping(value = "/share", produces = "application/json;charset=UTF-8")
     public Object shareVideo(HttpServletRequest request) {
-        if ( !RequestUtil.isLogin(request) ) {
-            return ResponseReturnUtil.returnErrorWithMsg("请先登录");
+        if (!RequestUtil.isLogin(request)) {
+            return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.LOGIN_FIRST);
         }
         User user = getUserInfo(request);
         Map<String, Object> result = new HashMap<>(8);
         String filmId = request.getParameter("filmId");
         Film film = filmService.load(filmId);
-        if( film!=null && user.getId().equals(film.getUid()) ) {
+        if (film != null && user.getId().equals(film.getUid())) {
             result.put("film", film);
             List<Res> list = resService.getListByFilmId(filmId);
             result.put("res", list);
             return ResponseReturnUtil.returnSuccessWithData(result);
         }
-        return ResponseReturnUtil.returnErrorWithMsg("权限不足!");
+        return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.PERMISSION_DENIED);
     }
 
     /**
      * @author Asimple
      * @description 添加影片
      **/
-    @RequestMapping( value = "/addFilm", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/addFilm", produces = "application/json;charset=UTF-8")
     public Object addFilm(@RequestBody Film film, HttpServletRequest request) {
         Map<String, Object> map = new HashMap<>(1);
         User user = getUserInfo(request);
@@ -104,13 +104,13 @@ public class ProfileController extends CommonController {
      * @author Asimple
      * @description 删除影片
      **/
-    @RequestMapping( value = "/delFilm", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/delFilm", produces = "application/json;charset=UTF-8")
     public Object delFilm(String filmId) {
-        if ( filmService.deleteById(filmId) ) {
+        if (filmService.deleteById(filmId)) {
             this.updateRedis("1");
             return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
         }
-        return ResponseReturnUtil.returnErrorWithMsg("系统繁忙，请稍后重试!");
+        return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.OPERATION_ERROR);
     }
 
     /**
@@ -119,12 +119,13 @@ public class ProfileController extends CommonController {
      **/
     @RequestMapping(value = "/addRes", produces = "application/json;charset=UTF-8")
     public Object addRes(HttpServletRequest request) {
-        String resString  = request.getParameter("res");
-        String filmId  = request.getParameter("filmId");
-        if( StringUtils.isBlank(filmId) || StringUtils.isBlank(resString) ) {
-            return ResponseReturnUtil.returnErrorWithMsg("参数错误");
+        String resString = request.getParameter("res");
+        String filmId = request.getParameter("filmId");
+        if (StringUtils.isBlank(filmId) || StringUtils.isBlank(resString)) {
+            return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.PARAMETER_ERROR);
         }
-        Res res = JSONObject.parseObject(resString, new TypeReference<Res>(){});
+        Res res = JSONObject.parseObject(resString, new TypeReference<Res>() {
+        });
         Map<String, Object> result = new HashMap<>(1);
         result.put("id", resService.addRes(res, filmId));
         return ResponseReturnUtil.returnSuccessWithData(result);
@@ -134,32 +135,32 @@ public class ProfileController extends CommonController {
      * @author Asimple
      * @description 删除资源
      **/
-    @RequestMapping( value = "/delRes", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/delRes", produces = "application/json;charset=UTF-8")
     public Object delRes(String resId) {
-        if( resService.delete(resId) ) {
+        if (resService.delete(resId)) {
             return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
         }
-        return ResponseReturnUtil.returnErrorWithMsg("删除失败，请稍后重试!");
+        return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.OPERATION_ERROR);
     }
 
     /**
      * @author Asimple
      * @description 更改在离线状态
      **/
-    @RequestMapping( value = "/updateIsUse", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/updateIsUse", produces = "application/json;charset=UTF-8")
     public Object updateIsUse(String resId) {
-        if( resService.updateIsUse(resId) ) {
+        if (resService.updateIsUse(resId)) {
             this.updateRedis("1");
             return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
         }
-        return ResponseReturnUtil.returnErrorWithMsg("更新失败，请稍后重试!");
+        return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.OPERATION_ERROR);
     }
 
     /**
      * @author Asimple
      * @description 更新影片信息
      **/
-    @RequestMapping( value = "/updateFilmInfo", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/updateFilmInfo", produces = "application/json;charset=UTF-8")
     public Object updateFilmInfo(String filmId, String val, String key, HttpSession session) {
         Map<String, Object> param = new HashMap<>(8);
         Film film = filmService.load(filmId);
@@ -167,11 +168,11 @@ public class ProfileController extends CommonController {
         param.put("key", key);
         param.put("filePath", session.getServletContext().getRealPath(film.getImage()));
         param.put("film", film);
-        if( commonService.updateFilmInfo(param) ) {
+        if (commonService.updateFilmInfo(param)) {
             this.updateRedis("1");
             return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
         }
-        return ResponseReturnUtil.returnErrorWithMsg("更新失败，请稍后重试!");
+        return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.OPERATION_ERROR);
     }
 
     /**
@@ -207,18 +208,18 @@ public class ProfileController extends CommonController {
      * @description 返回我的视频
      **/
     @RequestMapping(value = "/getFilmAjax", produces = "application/json;charset=UTF-8")
-    public Object getFilm(HttpSession session,@RequestParam(required = false) String pc, String type) {
+    public Object getFilm(HttpSession session, @RequestParam(required = false) String pc, String type) {
         User user = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
         Map<String, Object> result = new HashMap<>(8);
         Map<String, Object> param = new HashMap<>(4);
-        if( StringUtils.isEmpty(pc) ) {
+        if (StringUtils.isEmpty(pc)) {
             pc = "1";
         }
         param.put("uid", user.getId());
         param.put("page", String.valueOf(pc));
         param.put("type", type);
         result.putAll(userService.getProfileInfoByType(param));
-        return  ResponseReturnUtil.returnSuccessWithData(result);
+        return ResponseReturnUtil.returnSuccessWithData(result);
     }
 
     /**
@@ -229,11 +230,11 @@ public class ProfileController extends CommonController {
     public Object getMyComments(HttpServletRequest request) {
         Map<String, Object> result = new HashMap<>(4);
         Map<String, Object> params = new HashMap<>(4);
-        if ( RequestUtil.isNotSelfLogin(request) ) {
-            return ResponseReturnUtil.returnErrorWithMsg("请登录!");
+        if (RequestUtil.isNotSelfLogin(request)) {
+            return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.LOGIN_FIRST);
         }
         String pc = request.getParameter("pc");
-        if( StringUtils.isEmpty(pc) ) {
+        if (StringUtils.isEmpty(pc)) {
             pc = "1";
         }
         User user = getUserInfo(request);
@@ -246,7 +247,7 @@ public class ProfileController extends CommonController {
     }
 
     private void updateRedis(String id) {
-        if( !"0".equals(id) ) {
+        if (!"0".equals(id)) {
             rankTask.commendRank();
         }
     }
@@ -255,7 +256,7 @@ public class ProfileController extends CommonController {
      * @author Asimple
      * @description 查询所有目录
      **/
-    @RequestMapping( value = {"/getCatalog"}, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = {"/getCatalog"}, produces = "application/json;charset=UTF-8")
     public Object catalog() {
         Map<String, Object> result = new HashMap<>(8);
         result.putAll(commonService.getCatalog());

@@ -8,9 +8,9 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
+ * @author Asimple
  * @ProjectName video
  * @description web配置
- * @author Asimple
  * @date 2019/8/31 14:39
  */
 @Configuration
@@ -31,7 +31,7 @@ public class MyWebAppConfigurer extends WebMvcConfigurerAdapter {
         registry.addMapping("/**")
                 .allowedOrigins("*")
                 .allowCredentials(true)
-                .allowedMethods("GET", "POST", "DELETE", "PUT","PATCH")
+                .allowedMethods("GET", "POST", "DELETE", "PUT", "PATCH")
                 .maxAge(3600);
     }
 }

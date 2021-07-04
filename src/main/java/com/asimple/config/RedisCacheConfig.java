@@ -13,9 +13,9 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
- * @ProjectName video
- * @description  redis 缓存配置
  * @author Asimple
+ * @ProjectName video
+ * @description redis 缓存配置
  * @date 2019/9/1 14:44
  */
 @Configuration
@@ -40,7 +40,7 @@ public class RedisCacheConfig extends CachingConfigurerSupport {
     }
 
     @Bean
-    public CacheManager cacheManager(RedisTemplate<?,?> redisTemplate) {
+    public CacheManager cacheManager(RedisTemplate<?, ?> redisTemplate) {
         return new RedisCacheManager(redisTemplate);
     }
 

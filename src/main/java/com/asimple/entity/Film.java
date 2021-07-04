@@ -8,9 +8,9 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * @author Asimple
  * @ProjectName video
  * @description 电影实体
- * @author Asimple
  */
 @Data
 public class Film implements Serializable {
@@ -102,7 +102,7 @@ public class Film implements Serializable {
     /**
      * 评分
      */
-    private double  evaluation;
+    private double evaluation;
     /**
      * 下载列表
      */

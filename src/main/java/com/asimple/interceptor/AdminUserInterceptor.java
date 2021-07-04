@@ -17,20 +17,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * @author Asimple
  * @ProjectName video
  * @description 后台拦截器
- * @author Asimple
  */
 public class AdminUserInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //如果是登录login则放行
-        if (request.getRequestURL().indexOf("/login")>0 ) {
+        if (request.getRequestURL().indexOf("/login") > 0) {
             return true;
         }
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute(VideoKeyNameUtil.ADMIN_USER_KEY);
-        if( user!=null && user.getIsManager()==1 ) {
+        if (user != null && user.getIsManager() == 1) {
             return true;
         }
         JSONObject jsonObject = ResponseReturnUtil.returnErrorWithMsg("请登录管理员账号!");

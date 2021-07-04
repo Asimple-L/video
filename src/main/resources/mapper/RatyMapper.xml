@@ -9,7 +9,7 @@
             SELECT replace(uuid(), '-', '')
         </selectKey>
         INSERT INTO t_raty(`id`, `film_id`, `enTime`, `score`)
-            VALUES (#{id}, #{film_id},#{enTime},#{score})
+        VALUES (#{id}, #{film_id},#{enTime},#{score})
     </insert>
 
     <select id="getCountByFilmId" resultType="Integer">

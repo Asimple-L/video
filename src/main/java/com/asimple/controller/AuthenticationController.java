@@ -19,9 +19,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * @author Asimple
  * @ProjectName video
  * @description 用户登录注册以及等级验证、个人中心
- * @author Asimple
  */
 
 @RestController
@@ -40,11 +40,11 @@ public class AuthenticationController extends CommonController {
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public Object register(User user, HttpSession session) {
         User userDb = userService.register(user);
-        if( null == userDb ) {
-            return ResponseReturnUtil.returnErrorWithMsg("注册失败！邮箱或者用户名已存在!");
+        if (null == userDb) {
+            return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.USER_REGISTER_ERROR);
         }
         session.setAttribute(VideoKeyNameUtil.USER_KEY, userDb);
-        return ResponseReturnUtil.returnSuccessMsgAndData("注册成功,已自动登录!", user);
+        return ResponseReturnUtil.returnSuccessMsgAndData(ResponseReturnUtil.USER_REGISTER_SUC, user);
     }
 
     /**
@@ -52,23 +52,23 @@ public class AuthenticationController extends CommonController {
      * @description 用户登录
      **/
     @RequestMapping(value = "/login", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
-    public Object login(String account,String password, HttpSession session) {
+    public Object login(String account, String password, HttpSession session) {
         User user = commonService.checkUser(account, password);
-        if( null != user ) {
+        if (null != user) {
             session.setAttribute(VideoKeyNameUtil.USER_KEY, user);
             session.setAttribute(VideoKeyNameUtil.ADMIN_USER_KEY, user);
             Map<String, Object> result = new HashMap<>(1);
             result.put("user", user);
             return ResponseReturnUtil.returnSuccessWithData(result);
         }
-        return ResponseReturnUtil.returnErrorWithMsg("登录失败，用户不存在或密码错误！");
+        return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.USER_LOGIN_ERROR);
     }
 
     /**
      * @author Asimple
      * @description 登出
      **/
-    @RequestMapping( value = "/logout")
+    @RequestMapping(value = "/logout")
     public Object logout(HttpServletRequest request) {
         RequestUtil.logout(request);
         return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
@@ -80,82 +80,82 @@ public class AuthenticationController extends CommonController {
      **/
     @RequestMapping(value = "/updatePassword", produces = "application/json;charset=UTF-8")
     public Object updatePassword(HttpServletRequest request) {
-        if( RequestUtil.isNotSelfLogin(request) ) {
-            return ResponseReturnUtil.returnErrorWithMsg("请先登录!");
+        if (RequestUtil.isNotSelfLogin(request)) {
+            return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.LOGIN_FIRST);
         }
         User user = getUserInfo(request);
         String oldPwd = request.getParameter("oldPwd");
         String newPwd = request.getParameter("newPwd");
-        if( userService.checkPassword(user.getUserPasswd(), oldPwd) ) {
+        if (userService.checkPassword(user.getUserPasswd(), oldPwd)) {
             Map<String, Object> param = new HashMap<>(1);
             param.put("user", user);
             param.put("newPwd", newPwd);
             userService.update(param);
             RequestUtil.logout(request);
-            return ResponseReturnUtil.returnSuccessWithMsg("修改成功,请重新登录!");
+            return ResponseReturnUtil.returnSuccessWithMsg(ResponseReturnUtil.UPDATE_SUC_NEED_LOGIN);
         }
-        return ResponseReturnUtil.returnErrorWithMsg("旧密码输入错误!");
+        return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.PASSWORD_ERROR);
     }
 
     /**
      * @author Asimple
      * @description 使用VIP卡号
      **/
-    @RequestMapping( value = "/vipCodeVerification")
+    @RequestMapping(value = "/vipCodeVerification")
     public Object vipCodeVerification(String vipCode, HttpServletRequest request) {
         User userTemp = getUserInfo(request);
         HttpSession session = request.getSession();
         VipCode code = vipCodeService.findByVipCode(vipCode);
         User user = userService.load(userTemp.getId());
-        if( null != code && null!=user ) {
+        if (null != code && null != user) {
             Map<String, Object> param = new HashMap<>(1);
             param.put("user", user);
             param.put("vipCode", code);
-            if( vipCodeService.useCode(param) ) {
+            if (vipCodeService.useCode(param)) {
                 session.setAttribute(VideoKeyNameUtil.USER_KEY, user);
                 return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
             }
-            return ResponseReturnUtil.returnErrorWithMsg("加油失败，请稍后重试!");
+            return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.USE_VIP_CARD_FAIL);
         }
-        return ResponseReturnUtil.returnErrorWithMsg("VIP加油卡号不存在!");
+        return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.VIP_CARD_NOT_FOUND);
     }
 
     /**
      * @author Asimple
      * @description 初始化验证码
      **/
-    @RequestMapping( value = "/initCaptcha")
+    @RequestMapping(value = "/initCaptcha")
     public void startCaptcha(HttpServletRequest request, HttpServletResponse response) {
-       try {
-           GeetestLib gtSdk = new GeetestLib(GeetestConfig.getGeetest_id(), GeetestConfig.getGeetest_key(),
-                   GeetestConfig.isnewfailback());
-           String resStr;
-           //自定义参数,可选择添加
-           HashMap<String, String> param = new HashMap<>(16);
-           param.put("user_id", "Asimple");
-           param.put("client_type", "web");
-           param.put("ip_address", "127.0.0.1");
+        try {
+            GeetestLib gtSdk = new GeetestLib(GeetestConfig.getGeetest_id(), GeetestConfig.getGeetest_key(),
+                    GeetestConfig.isnewfailback());
+            String resStr;
+            //自定义参数,可选择添加
+            HashMap<String, String> param = new HashMap<>(16);
+            param.put("user_id", "Asimple");
+            param.put("client_type", "web");
+            param.put("ip_address", "127.0.0.1");
 
-           //进行验证预处理
-           int gtServerStatus = gtSdk.preProcess(param);
-           //将服务器状态设置到session中
-           request.getSession().setAttribute(gtSdk.gtServerStatusSessionKey, gtServerStatus);
-           //将userid设置到session中
-           request.getSession().setAttribute("userid", "Asimple");
-           resStr = gtSdk.getResponseStr();
-           PrintWriter out = response.getWriter();
-           out.println(resStr);
-       } catch (Exception e) {
-           LogUtil.error("验证码加载失败！");
-       }
+            //进行验证预处理
+            int gtServerStatus = gtSdk.preProcess(param);
+            //将服务器状态设置到session中
+            request.getSession().setAttribute(gtSdk.gtServerStatusSessionKey, gtServerStatus);
+            //将userid设置到session中
+            request.getSession().setAttribute("userid", "Asimple");
+            resStr = gtSdk.getResponseStr();
+            PrintWriter out = response.getWriter();
+            out.println(resStr);
+        } catch (Exception e) {
+            LogUtil.error("验证码加载失败！");
+        }
     }
 
     /**
      * @author Asimple
      * @description 二次验证校验
      **/
-    @RequestMapping( value = "/verifyLogin")
-    public void verifyLogin(HttpServletRequest request, HttpServletResponse response) throws Exception{
+    @RequestMapping(value = "/verifyLogin")
+    public void verifyLogin(HttpServletRequest request, HttpServletResponse response) throws Exception {
         GeetestLib gtSdk = new GeetestLib(GeetestConfig.getGeetest_id(), GeetestConfig.getGeetest_key(),
                 GeetestConfig.isnewfailback());
         String challenge = request.getParameter(GeetestLib.fn_geetest_challenge);
@@ -165,7 +165,7 @@ public class AuthenticationController extends CommonController {
         //从session中获取gt-server状态
         int gtServerStatusCode = (Integer) request.getSession().getAttribute(gtSdk.gtServerStatusSessionKey);
         //从session中获取userId
-        String userId = (String)request.getSession().getAttribute("userid");
+        String userId = (String) request.getSession().getAttribute("userid");
         //自定义参数,可选择添加
         HashMap<String, String> param = new HashMap<>(16);
         //网站用户id

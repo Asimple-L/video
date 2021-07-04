@@ -27,7 +27,7 @@
             SELECT replace(uuid(), '-', '')
         </selectKey>
         INSERT INTO t_user(`id`, `userName`,`createDate`, `expireDate`, `userEmail`, `userPasswd`)
-          VALUES (#{id}, #{userName}, #{createDate}, #{expireDate}, #{userEmail}, #{userPasswd})
+        VALUES (#{id}, #{userName}, #{createDate}, #{expireDate}, #{userEmail}, #{userPasswd})
     </insert>
 
     <select id="findByCondition" resultType="com.asimple.entity.User">
@@ -44,9 +44,9 @@
 
     <update id="update" parameterType="com.asimple.entity.User">
         UPDATE t_user SET `isVip`=#{isVip},`expireDate`=#{expireDate},`isManager`=#{isManager}
-            <if test="userPasswd != null">
-                , `userPasswd`=#{userPasswd}
-            </if>
+        <if test="userPasswd != null">
+            , `userPasswd`=#{userPasswd}
+        </if>
         WHERE id=#{id}
     </update>
 

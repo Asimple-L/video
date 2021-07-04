@@ -14,6 +14,7 @@ public class RequestUtil {
 
     /**
      * 登出 清除登录信息
+     *
      * @param request 请求
      */
     public static void logout(HttpServletRequest request) {
@@ -24,17 +25,19 @@ public class RequestUtil {
 
     /**
      * 入参鉴权：是否登录
+     *
      * @param request 请求
      * @return 有登录人返回true
      */
     public static boolean isLogin(HttpServletRequest request) {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
-        return user!=null;
+        return user != null;
     }
 
     /**
      * 不是本人登录
+     *
      * @param request 请求
      * @return 是本人登录返回false
      */
@@ -50,10 +53,10 @@ public class RequestUtil {
      * @param request 请求信息
      * @return 当前登录用户是管理返回true
      */
-    public static boolean  isAdminLogin(HttpServletRequest request) {
+    public static boolean isNotAdminLogin(HttpServletRequest request) {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute(VideoKeyNameUtil.ADMIN_USER_KEY);
-        return user!=null && user.getIsManager()==1;
+        return user == null || user.getIsManager() != 1;
     }
 
 }

@@ -26,7 +26,7 @@ public class PageBean<T> {
 
     private List<T> beanList;
     /**
-     *  用来保存条件
+     * 用来保存条件
      */
     private String url;
 
@@ -49,12 +49,13 @@ public class PageBean<T> {
 
     /**
      * 记录总页数
+     *
      * @return
      */
     public int getTp() {
         //通过总记录数和每页记录数来计算总页数
         int tp = tr / ps;
-        return tr%ps==0 ? tp:tp+1;
+        return tr % ps == 0 ? tp : tp + 1;
     }
 
     public int getTr() {

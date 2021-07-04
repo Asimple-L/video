@@ -15,6 +15,7 @@ import java.util.List;
 public interface ResMapper extends IBaseDao<Res> {
     /**
      * 根据影片id获取资源列表
+     *
      * @param filmId 影片id
      * @return 资源列表
      */
@@ -22,6 +23,7 @@ public interface ResMapper extends IBaseDao<Res> {
 
     /**
      * 根据影片id删除资源
+     *
      * @param filmId 影片id
      * @return 返回删除成功的行数
      */

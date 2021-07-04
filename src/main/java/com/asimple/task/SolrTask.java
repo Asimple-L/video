@@ -13,9 +13,9 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
+ * @author Asimple
  * @ProjectName video
  * @description solr数据导入
- * @author Asimple
  */
 @Component
 @Configuration
@@ -36,7 +36,7 @@ public class SolrTask {
         solrTemplate.saveBeans(list);
         solrTemplate.commit();
         Long endTime = System.currentTimeMillis();
-        LogUtil.info(SolrTask.class, "pushSolr end, And run time = " + (endTime - startTime)/1000 + "s");
+        LogUtil.info(SolrTask.class, "pushSolr end, And run time = " + (endTime - startTime) / 1000 + "s");
     }
 
 }

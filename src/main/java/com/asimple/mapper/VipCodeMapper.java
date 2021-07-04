@@ -16,6 +16,7 @@ import java.util.List;
 public interface VipCodeMapper extends IBaseDao<VipCode> {
     /**
      * 根据卡号查找vipCode信息
+     *
      * @param vipCode 卡号
      * @return VIPCODE实体
      */
@@ -23,6 +24,7 @@ public interface VipCodeMapper extends IBaseDao<VipCode> {
 
     /**
      * 分页查找可用的VIP卡列表
+     *
      * @param start 开始位置
      * @param count 查询的大小
      * @return VIP卡列表
@@ -31,6 +33,7 @@ public interface VipCodeMapper extends IBaseDao<VipCode> {
 
     /**
      * 可用总数
+     *
      * @return 可用总数
      */
     int getTotalIsUse();

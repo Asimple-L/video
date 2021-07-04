@@ -14,9 +14,9 @@ import javax.servlet.http.HttpSession;
 import java.util.*;
 
 /**
+ * @author Asimple
  * @ProjectName video
  * @description 查询首页
- * @author Asimple
  */
 
 @RestController
@@ -71,28 +71,28 @@ public class SearchController extends CommonController {
     @RequestMapping("/detail")
     public Object detail(HttpServletRequest request, HttpSession session) {
         String filmId = request.getParameter("filmId");
-        if (StringUtils.isEmpty(filmId) ) {
-            return ResponseReturnUtil.returnErrorWithMsg("查看错误，请重试!");
+        if (StringUtils.isEmpty(filmId)) {
+            return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.PARAMETER_ERROR);
         }
         Map<String, Object> map = new HashMap<>(16);
         String src = request.getParameter("src");
         String j = request.getParameter("j");
-        User user =(User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
+        User user = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
 
         // 鉴权
         Film film = filmService.load(filmId);
         film.setResList(resService.getListByFilmId(filmId));
         // VIP资源校验
         if (film.getIsVip() == 1) {
-            if( user == null || user.getIsVip() == 0 ) {
-                return ResponseReturnUtil.returnErrorWithMsg("请登录VIP账号后查看!");
+            if (user == null || user.getIsVip() == 0) {
+                return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.PERMISSION_DENIED);
             }
         }
 
         if (Tools.notEmpty(src)) {
             map.put("src", src);
         }
-        if (Tools.notEmpty(j)){
+        if (Tools.notEmpty(j)) {
             map.put("j", j);
         }
         Map<String, Object> param = new HashMap<>(8);
@@ -101,7 +101,7 @@ public class SearchController extends CommonController {
         map.putAll(filmService.getFilmDetailInfo(param));
 
         // 添加浏览记录
-        if( user!=null ) {
+        if (user != null) {
             filmService.addViewHistory(film.getId(), user.getId());
         }
 
@@ -116,10 +116,10 @@ public class SearchController extends CommonController {
     public Object addRaty(Raty raty) {
         raty.setEnTime(DateUtil.getTime());
         double evaluation = ratyService.add(raty);
-        if ( evaluation!=-1 ) {
+        if (evaluation != -1) {
             return ResponseReturnUtil.returnSuccessWithData(evaluation);
         }
-        return ResponseReturnUtil.returnErrorWithMsg("添加失败!请稍后重试!");
+        return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.OPERATION_ERROR);
     }
 
     /**
@@ -131,9 +131,9 @@ public class SearchController extends CommonController {
         StringBuilder stringBuilder = new StringBuilder("[");
         List<Bullet> list = filmService.getBulletByFilmId(filmId);
         int length = list.size();
-        for(int i=0; i<length; i++) {
+        for (int i = 0; i < length; i++) {
             Bullet bullet = list.get(i);
-            if ( i!=0 ) {
+            if (i != 0) {
                 stringBuilder.append(",");
             }
             stringBuilder.append("'").append(bullet.toString()).append("'");
@@ -149,9 +149,9 @@ public class SearchController extends CommonController {
     @RequestMapping(value = "/saveBullet")
     public String saveBullet(String filmId, String danmu) {
         Map map = JSONObject.parseObject(danmu, Map.class);
-        Bullet bullet = new Bullet(null, (String) map.get("text"), (String) map.get("color"), (String) map.get("position"), (String) map.get("size"), (Integer)map.get("time"), filmId);
+        Bullet bullet = new Bullet(null, (String) map.get("text"), (String) map.get("color"), (String) map.get("position"), (String) map.get("size"), (Integer) map.get("time"), filmId);
         boolean result = filmService.saveBullet(bullet);
-        if( !result ) {
+        if (!result) {
             LogUtil.error("保存弹幕失败哟~ 失败弹幕信息：" + bullet);
         }
         return "callback";

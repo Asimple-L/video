@@ -15,6 +15,7 @@ import java.util.List;
 public interface SubClassMapper extends IBaseDao<SubClass> {
     /**
      * 查询一级分类下所有可用的二级分类
+     *
      * @param id 一级分类id
      * @return 二级分类列表
      */

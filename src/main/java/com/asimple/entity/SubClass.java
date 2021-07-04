@@ -6,9 +6,9 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * @author Asimple
  * @ProjectName video
  * @description 二级子类目录
- * @author Asimple
  */
 @Data
 public class SubClass implements Serializable {

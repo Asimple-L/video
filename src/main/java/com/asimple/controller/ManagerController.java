@@ -16,9 +16,9 @@ import javax.servlet.http.HttpSession;
 import java.util.*;
 
 /**
+ * @author Asimple
  * @ProjectName video
  * @description 后台管理
- * @author Asimple
  */
 @RestController
 @RequestMapping("/admin")
@@ -55,17 +55,17 @@ public class ManagerController extends CommonController {
      * @description 管理员登录
      * @deprecated
      **/
-    @RequestMapping(value = "/login", method = { RequestMethod.POST })
+    @RequestMapping(value = "/login", method = {RequestMethod.POST})
     public Object adminLogin(String username, String password, HttpSession session) {
         // 用户名或者邮箱登录
         User user = commonService.checkUser(username, password);
         // 登录成功重定向到后台首页
-        if ( null != user ) {
+        if (null != user) {
             session.setAttribute(VideoKeyNameUtil.ADMIN_USER_KEY, user);
             session.setAttribute(VideoKeyNameUtil.USER_KEY, user);
-            return ResponseReturnUtil.returnSuccessWithMsg("登录成功!");
+            return ResponseReturnUtil.returnSuccessWithMsg(ResponseReturnUtil.LOGIN_SUC);
         }
-        return ResponseReturnUtil.returnErrorWithMsg("请登录正确的管理员账号或密码!");
+        return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.USER_LOGIN_ERROR);
     }
 
     /**
@@ -74,21 +74,20 @@ public class ManagerController extends CommonController {
      **/
     @RequestMapping(value = "/film", produces = "application/json;charset=UTF-8")
     public Object film(HttpServletRequest request) {
-        if( RequestUtil.isAdminLogin(request) ) {
-            Map<String, Object> result = new HashMap<>(4);
-            String filmId = request.getParameter("filmId");
-            // 如果有id，则是编辑
-            if ( StringUtils.isNotEmpty(filmId) ) {
-                // 获取电影信息
-                result.put("film", filmService.load(filmId));
-                // 获取资源信息
-                List<Res> list = resService.getListByFilmId(filmId);
-                result.put("res", list);
-            }
-            return ResponseReturnUtil.returnSuccessWithData(result);
-
+        if (RequestUtil.isNotAdminLogin(request)) {
+            return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.LOGIN_FIRST);
         }
-        return ResponseReturnUtil.returnErrorWithMsg("请重新登录后重试!");
+        Map<String, Object> result = new HashMap<>(4);
+        String filmId = request.getParameter("filmId");
+        // 如果有id，则是编辑
+        if (StringUtils.isNotEmpty(filmId)) {
+            // 获取电影信息
+            result.put("film", filmService.load(filmId));
+            // 获取资源信息
+            List<Res> list = resService.getListByFilmId(filmId);
+            result.put("res", list);
+        }
+        return ResponseReturnUtil.returnSuccessWithData(result);
     }
 
     /**
@@ -97,8 +96,8 @@ public class ManagerController extends CommonController {
      **/
     @RequestMapping(value = "/list", produces = "application/json;charset=UTF-8")
     public Object filmList(HttpServletRequest request) {
-        if( !RequestUtil.isAdminLogin(request) ) {
-            return ResponseReturnUtil.returnErrorWithMsg("请重新登录后重试!");
+        if (RequestUtil.isNotAdminLogin(request)) {
+            return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.LOGIN_FIRST);
         }
         Map<String, Object> result = new HashMap<>(8);
         Map<String, Object> param = new HashMap<>(4);
@@ -114,7 +113,7 @@ public class ManagerController extends CommonController {
      * @author Asimple
      * @description 用户管理
      **/
-    @RequestMapping( value = "/userList", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/userList", produces = "application/json;charset=UTF-8")
     public Object userList(HttpServletRequest request) {
         Map<String, Object> result = new HashMap<>(2);
         Map<String, Object> param = new HashMap<>(2);
@@ -129,26 +128,29 @@ public class ManagerController extends CommonController {
      * @author Asimple
      * @description 更新用户信息
      **/
-    @RequestMapping( value = "/updateUser", method = RequestMethod.POST)
-    public Object updateUser(String uid, String key) {
+    @RequestMapping(value = "/updateUser", method = RequestMethod.POST)
+    public Object updateUser(HttpServletRequest request, String uid, String key) {
+        if (RequestUtil.isNotAdminLogin(request)) {
+            return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.LOGIN_FIRST);
+        }
         Map<String, Object> param = new HashMap<>(4);
         User user = userService.load(uid);
         param.put("user", user);
         param.put("key", key);
-        if( userService.update(param) ) {
+        if (userService.update(param)) {
             return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
         }
-        return ResponseReturnUtil.returnErrorWithMsg("更新失败!");
+        return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.UPDATE_FAIL);
     }
 
     /**
      * @author Asimple
      * @description 目录管理 目录查看与修改
      **/
-    @RequestMapping( value = {"/catalog", "/editCatalog"}, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = {"/catalog", "/editCatalog"}, produces = "application/json;charset=UTF-8")
     public Object catalog(HttpServletRequest request) {
-        if( !RequestUtil.isAdminLogin(request) ) {
-            return ResponseReturnUtil.returnErrorWithMsg("登录超时,请重新登录!");
+        if (RequestUtil.isNotAdminLogin(request)) {
+            return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.LOGIN_FIRST);
         }
         Map<String, Object> result = new HashMap<>(8);
         result.putAll(commonService.getCatalog());
@@ -159,36 +161,36 @@ public class ManagerController extends CommonController {
      * @author Asimple
      * @description 添加年列表
      **/
-    @RequestMapping( value = "/addDecade", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/addDecade", produces = "application/json;charset=UTF-8")
     public Object addDecade(Decade decade) {
-        if( decadeService.add(decade) ) {
-            return ResponseReturnUtil.returnSuccessWithMsg("操作成功!");
+        if (decadeService.add(decade)) {
+            return ResponseReturnUtil.returnSuccessWithMsg(ResponseReturnUtil.OPERATION_SUC);
         }
-        return ResponseReturnUtil.returnErrorWithMsg("参数错误，请重试!");
+        return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.OPERATION_ERROR);
     }
 
     /**
      * @author Asimple
      * @description 添加级别
      **/
-    @RequestMapping( value = "/addLevel", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/addLevel", produces = "application/json;charset=UTF-8")
     public Object addLevel(Level level) {
-        if( levelService.add(level) ) {
-            return ResponseReturnUtil.returnSuccessWithMsg("操作成功!");
+        if (levelService.add(level)) {
+            return ResponseReturnUtil.returnSuccessWithMsg(ResponseReturnUtil.OPERATION_SUC);
         }
-        return ResponseReturnUtil.returnErrorWithMsg("参数错误，请重试!");
+        return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.OPERATION_ERROR);
     }
 
     /**
      * @author Asimple
      * @description 添加地区
      **/
-    @RequestMapping( value = "/addLoc", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/addLoc", produces = "application/json;charset=UTF-8")
     public Object addLoc(Loc loc) {
-        if( locService.add(loc) ) {
-            return ResponseReturnUtil.returnSuccessWithMsg("操作成功!");
+        if (locService.add(loc)) {
+            return ResponseReturnUtil.returnSuccessWithMsg(ResponseReturnUtil.OPERATION_SUC);
         }
-        return ResponseReturnUtil.returnErrorWithMsg("参数错误，请重试!");
+        return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.OPERATION_ERROR);
     }
 
     /**
@@ -197,11 +199,11 @@ public class ManagerController extends CommonController {
      **/
     @RequestMapping(value = "/addCataLog", produces = "application/json;charset=UTF-8")
     public Object addCataLog(CataLog cataLog) {
-        if ( cataLogService.add(cataLog) ) {
+        if (cataLogService.add(cataLog)) {
             cataLogService.listIsUse();
-            return ResponseReturnUtil.returnSuccessWithMsg("操作成功!");
+            return ResponseReturnUtil.returnSuccessWithMsg(ResponseReturnUtil.OPERATION_SUC);
         }
-        return ResponseReturnUtil.returnErrorWithMsg("添加失败，请稍后重试!");
+        return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.OPERATION_ERROR);
     }
 
     /**
@@ -210,11 +212,11 @@ public class ManagerController extends CommonController {
      **/
     @RequestMapping(value = "/addSubClass", produces = "application/json;charset=UTF-8")
     public Object addSubClass(SubClass subClass, String cataLogId) {
-        if( subClassService.add(subClass, cataLogId) ) {
+        if (subClassService.add(subClass, cataLogId)) {
             cataLogService.listIsUse();
-            return ResponseReturnUtil.returnSuccessWithMsg("操作成功!");
+            return ResponseReturnUtil.returnSuccessWithMsg(ResponseReturnUtil.OPERATION_SUC);
         }
-        return ResponseReturnUtil.returnErrorWithMsg("参数错误，请重试!");
+        return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.OPERATION_ERROR);
     }
 
     /**
@@ -222,13 +224,12 @@ public class ManagerController extends CommonController {
      * @description 添加类型
      **/
     @RequestMapping(value = "/addType", produces = "application/json;charset=UTF-8")
-    public Object addType(Type type,String subClassId) {
-        Map<String, Object> result = new HashMap<>(1);
-        if( typeService.add(type, subClassId) ) {
+    public Object addType(Type type, String subClassId) {
+        if (typeService.add(type, subClassId)) {
             cataLogService.listIsUse();
-            return ResponseReturnUtil.returnSuccessWithMsg("操作成功!");
+            return ResponseReturnUtil.returnSuccessWithMsg(ResponseReturnUtil.OPERATION_SUC);
         }
-        return ResponseReturnUtil.returnErrorWithMsg("参数错误，请重试!");
+        return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.OPERATION_ERROR);
     }
 
     /**
@@ -236,7 +237,7 @@ public class ManagerController extends CommonController {
      * @description VIP管理
      **/
     @RequestMapping(value = "/vipCode", produces = "application/json;charset=UTF-8")
-    public Object vipCode(@RequestParam(required = false, defaultValue = "1")int page, @RequestParam(required = false, defaultValue = "10") int pageSize) {
+    public Object vipCode(@RequestParam(required = false, defaultValue = "1") int page, @RequestParam(required = false, defaultValue = "10") int pageSize) {
         PageBean<VipCode> pageBean = vipCodeService.listIsUse(page, pageSize);
         return ResponseReturnUtil.returnSuccessWithData(pageBean);
     }
@@ -248,16 +249,16 @@ public class ManagerController extends CommonController {
     @RequestMapping(value = "/createVipCode", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     public Object createVipCode(String num) {
         Map<String, Object> result = new HashMap<>(1);
-        if ( StringUtils.isEmpty(num) ) {
+        if (StringUtils.isEmpty(num)) {
             num = "5";
         }
         int n = Integer.parseInt(num);
         List<VipCode> vipCodes = vipCodeService.addVipCodes(n);
-        if( vipCodes.size() == n ) {
+        if (vipCodes.size() == n) {
             result.put("data", vipCodes);
             return ResponseReturnUtil.returnSuccessWithData(result);
         }
-        return ResponseReturnUtil.returnErrorWithMsg("添加失败!请稍后重试!");
+        return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.OPERATION_ERROR);
     }
 
     /**
@@ -267,8 +268,8 @@ public class ManagerController extends CommonController {
     @RequestMapping(value = "/loadIn", produces = "application/json;charset=UTF-8")
     public Object loadInSolr() {
         boolean openSwitch = propertiesUtil.isOn("asimple.solr.manager.switch", "on");
-        if( !openSwitch ) {
-            return ResponseReturnUtil.returnSuccessWithMsg("功能暂未开放!");
+        if (!openSwitch) {
+            return ResponseReturnUtil.returnSuccessWithMsg(ResponseReturnUtil.FUNCTION_NOT_OPEN);
         }
         solrTask.pushToSolr();
         return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
@@ -282,24 +283,24 @@ public class ManagerController extends CommonController {
     public Object deleteCatalog(HttpServletRequest request) {
         String type = request.getParameter("type");
         String id = request.getParameter("id");
-        if( StringUtils.isEmpty(id) || StringUtils.isEmpty(type) ) {
-            return ResponseReturnUtil.returnErrorWithMsg("参数错误，请重试!");
+        if (StringUtils.isEmpty(id) || StringUtils.isEmpty(type)) {
+            return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.PARAMETER_ERROR);
         }
         boolean flag = false;
-        if ( "catalog".equals(type) ) {
+        if (VideoKeyNameUtil.CATALOG.equals(type)) {
             flag = cataLogService.deleteById(id);
         }
-        if( "subClass".equals(type) ) {
+        if (VideoKeyNameUtil.SUB_CLASS.equals(type)) {
             flag = subClassService.deleteById(id);
         }
-        if( "type".equals(type) ) {
+        if (VideoKeyNameUtil.TYPE.equals(type)) {
             flag = typeService.deleteById(id);
         }
-        if ( !flag ) {
-            return ResponseReturnUtil.returnErrorWithMsg("删除失败!");
+        if (!flag) {
+            return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.OPERATION_ERROR);
         }
         cataLogService.listIsUse();
-        return ResponseReturnUtil.returnSuccessWithMsg("操作成功!");
+        return ResponseReturnUtil.returnSuccessWithMsg(ResponseReturnUtil.OPERATION_SUC);
     }
 
 }

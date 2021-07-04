@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * @author Asimple
  * @ProjectName video
  * @description 用户Service实现类
- * @author Asimple
  */
 @Service
 public class UserService {
@@ -32,6 +32,7 @@ public class UserService {
 
     /**
      * 有条件查询用户
+     *
      * @param user 用户实体
      * @return 相关用户列表
      */
@@ -41,12 +42,13 @@ public class UserService {
 
     /**
      * 添加用户
+     *
      * @param user 用户实体
      * @return 添加成功返回user实体，否则返回null
      */
     public User add(User user) {
         int f = userMapper.add(user);
-        if( f == 1 ) {
+        if (f == 1) {
             return user;
         }
         return null;
@@ -54,41 +56,43 @@ public class UserService {
 
     /**
      * 更新用户信息
+     *
      * @param param 参数必须包含user
      * @return 是否修改成功 true 成功
      */
     public boolean update(Map<String, Object> param) {
         User userDb = (User) param.get("user");
-        if( null == userDb || StringUtils.isEmpty(userDb.getId()) ) {
+        if (null == userDb || StringUtils.isEmpty(userDb.getId())) {
             return false;
         }
         String newPwd = (String) param.get("newPwd");
-        if(StringUtils.isNotEmpty(newPwd) ) {
-            userDb.setUserPasswd(MD5Auth.MD5Encode(newPwd+VideoKeyNameUtil.PASSWORD_KEY, VideoKeyNameUtil.ENCODE));
+        if (StringUtils.isNotEmpty(newPwd)) {
+            userDb.setUserPasswd(MD5Auth.MD5Encode(newPwd + VideoKeyNameUtil.PASSWORD_KEY, VideoKeyNameUtil.ENCODE));
         }
 
         String key = null;
-        if( null != param.get("key") ) {
+        if (null != param.get("key")) {
             key = (String) param.get("key");
         }
-        if( StringUtils.equalsIgnoreCase("manager", key) ) {
+        if (StringUtils.equalsIgnoreCase("manager", key)) {
             int isManager = userDb.getIsManager();
-            userDb.setIsManager(1-isManager);
-        } else if( StringUtils.equalsIgnoreCase("vip", key)) {
+            userDb.setIsManager(1 - isManager);
+        } else if (StringUtils.equalsIgnoreCase("vip", key)) {
             long isVip = userDb.getIsVip();
-            userDb.setIsVip(1L-isVip);
-        } else if( StringUtils.equalsIgnoreCase("both", key) ) {
+            userDb.setIsVip(1L - isVip);
+        } else if (StringUtils.equalsIgnoreCase("both", key)) {
             int isManager = userDb.getIsManager();
-            userDb.setIsManager(1-isManager);
+            userDb.setIsManager(1 - isManager);
             long isVip = userDb.getIsVip();
-            userDb.setIsVip(1L-isVip);
+            userDb.setIsVip(1L - isVip);
         }
 
-        return userMapper.update(userDb)==1;
+        return userMapper.update(userDb) == 1;
     }
 
     /**
      * 加载用户
+     *
      * @param id 用户id
      * @return 用户实体
      */
@@ -98,22 +102,23 @@ public class UserService {
 
     /**
      * 带分页查询所有用户
+     *
      * @param param 参数
      * @return 用户分页列表
      */
     public PageBean<User> getPage(Map<String, Object> param) {
         User user = null;
-        if( null != param.get("user") ) {
+        if (null != param.get("user")) {
             user = (User) param.get("user");
         }
         String page;
-        if( null == param.get("page") || StringUtils.isEmpty((String) param.get("page")) ) {
+        if (null == param.get("page") || StringUtils.isEmpty((String) param.get("page"))) {
             page = "1";
         } else {
             page = (String) param.get("page");
         }
         String pageSize;
-        if( null == param.get("pageSize") || StringUtils.isEmpty((String) param.get("pageSize")) ) {
+        if (null == param.get("pageSize") || StringUtils.isEmpty((String) param.get("pageSize"))) {
             pageSize = "10";
         } else {
             pageSize = (String) param.get("pageSize");
@@ -127,12 +132,13 @@ public class UserService {
         // 设置总数
         pageBean.setTr(userMapper.getTotalCount(user));
         // 最开始的条数
-        pageBean.setBeanList(userMapper.getPage(user, (pc-1)*ps, ps));
+        pageBean.setBeanList(userMapper.getPage(user, (pc - 1) * ps, ps));
         return pageBean;
     }
 
     /**
      * 用户注册
+     *
      * @param user 注册的用户信息
      * @return 注册成功返回用户信息，失败返回null
      */
@@ -140,14 +146,14 @@ public class UserService {
         User userCondition = new User();
         userCondition.setUserEmail(user.getUserEmail());
         List<User> users = findByCondition(userCondition);
-        if( users == null || users.isEmpty() ) {
+        if (users == null || users.isEmpty()) {
             userCondition = new User();
             userCondition.setUserName(user.getUserName());
             users = findByCondition(user);
-            if( users == null || users.isEmpty() ) {
+            if (users == null || users.isEmpty()) {
                 user.setCreateDate(new Date());
                 user.setExpireDate(new Date());
-                user.setUserPasswd(MD5Auth.MD5Encode(user.getUserPasswd()+ VideoKeyNameUtil.PASSWORD_KEY, VideoKeyNameUtil.ENCODE));
+                user.setUserPasswd(MD5Auth.MD5Encode(user.getUserPasswd() + VideoKeyNameUtil.PASSWORD_KEY, VideoKeyNameUtil.ENCODE));
                 return add(user);
             }
         }
@@ -156,16 +162,18 @@ public class UserService {
 
     /**
      * 检查两个密码是否相同
+     *
      * @param userPwd 用户密码
-     * @param oldPwd 输入密码
+     * @param oldPwd  输入密码
      * @return 是否一致 true 一致
      */
     public boolean checkPassword(String userPwd, String oldPwd) {
-        return MD5Auth.validatePassword(userPwd, oldPwd+VideoKeyNameUtil.PASSWORD_KEY, VideoKeyNameUtil.ENCODE);
+        return MD5Auth.validatePassword(userPwd, oldPwd + VideoKeyNameUtil.PASSWORD_KEY, VideoKeyNameUtil.ENCODE);
     }
 
     /**
      * 获取用户个人中心内容
+     *
      * @param params 参数列表 必须包含uid
      * @return 个人中心内容
      */
@@ -181,7 +189,7 @@ public class UserService {
         int commentNumber = commentService.getCommentsTotal(uid);
         // 总点赞数量
         long totalLike = 0;
-        for (Comment comment: commentList) {
+        for (Comment comment : commentList) {
             totalLike += comment.getLikeNum();
         }
 
@@ -195,6 +203,7 @@ public class UserService {
 
     /**
      * 获取我的视频或者浏览历史
+     *
      * @param param 参数列表
      * @return 视频分页相关信息
      */
@@ -202,7 +211,7 @@ public class UserService {
         Map<String, Object> result = new HashMap<>(8);
         String type = (String) param.get("type");
         String uid = (String) param.get("uid");
-        if( VideoKeyNameUtil.PROFILE_TYPE.equalsIgnoreCase(type) ) {
+        if (VideoKeyNameUtil.PROFILE_TYPE.equalsIgnoreCase(type)) {
             int total = filmService.countListByUser(uid);
             result.put("total", total);
             result.put("films", filmService.listByUser(param));

@@ -6,9 +6,9 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * @author Asimple
  * @ProjectName video
  * @description 一级分类实体类
- * @author Asimple
  */
 @Data
 public class CataLog implements Serializable {
@@ -33,7 +33,7 @@ public class CataLog implements Serializable {
      */
     private int isVip;
     /**
-     *  二级分类
+     * 二级分类
      */
     private List<SubClass> subClassList;
 

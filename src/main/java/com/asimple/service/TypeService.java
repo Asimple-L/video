@@ -11,9 +11,9 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
+ * @author Asimple
  * @ProjectName video
  * @description 类型服务实现类
- * @author Asimple
  */
 @Service
 public class TypeService {
@@ -25,6 +25,7 @@ public class TypeService {
 
     /**
      * 查找二级分类下的所有类型
+     *
      * @param subClassId 二级分类id
      * @return 类型列表
      */
@@ -34,6 +35,7 @@ public class TypeService {
 
     /**
      * 根据id查询Type
+     *
      * @param id 类型id
      * @return 类型实体
      */
@@ -43,33 +45,35 @@ public class TypeService {
 
     /**
      * 添加type并返回id
-     * @param type 类型对象
+     *
+     * @param type       类型对象
      * @param subClassId 对应的二级分类id
      * @return 添加成功返回true，否则返回false
      */
     @CacheEvict(value = "redis_cataLogList", allEntries = true)
     public boolean add(Type type, String subClassId) {
         SubClass subClass = subClassService.load(subClassId);
-        if( subClass == null ) {
+        if (subClass == null) {
             return false;
         }
         type.setSubClass(subClass);
-        if(Tools.isEmpty(type.getId()) ) {
+        if (Tools.isEmpty(type.getId())) {
             type.setId(Tools.UUID());
             type.setIsUse(1);
-            return typeMapper.add(type)==1;
+            return typeMapper.add(type) == 1;
         }
-        return typeMapper.update(type)==1;
+        return typeMapper.update(type) == 1;
     }
 
     /**
      * 根据id删除类型
+     *
      * @param id 类型id
      * @return boolean 是否删除成功
      */
-    @CacheEvict( value = "redis_cataLogList", allEntries = true)
+    @CacheEvict(value = "redis_cataLogList", allEntries = true)
     public boolean deleteById(String id) {
-        return typeMapper.deleteById(id)==1;
+        return typeMapper.deleteById(id) == 1;
     }
 
 }

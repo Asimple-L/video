@@ -12,9 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
+ * @author Asimple
  * @ProjectName video
  * @description 个人中心拦截器
- * @author Asimple
  */
 public class ProfileInterceptor implements HandlerInterceptor {
     @Override
@@ -24,17 +24,17 @@ public class ProfileInterceptor implements HandlerInterceptor {
         // 当请求的地址写在了上面，此项必须为true
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
-        response.setHeader("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+        response.setHeader("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
         //如果是获取类型则放行
-        if (request.getRequestURL().indexOf("/getType")>0 || request.getRequestURL().indexOf("getSubClass")>0 ) {
+        if (request.getRequestURL().indexOf("/getType") > 0 || request.getRequestURL().indexOf("getSubClass") > 0) {
             return true;
         }
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute(VideoKeyNameUtil.USER_KEY);
-        if( user!=null ) {
+        if (user != null) {
             return true;
         }
-        JSONObject jsonObject = ResponseReturnUtil.returnErrorWithMsg("请先登录!");
+        JSONObject jsonObject = ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.LOGIN_FIRST);
         ResponseReturnUtil.returnJson(response, jsonObject.toJSONString());
         return false;
     }

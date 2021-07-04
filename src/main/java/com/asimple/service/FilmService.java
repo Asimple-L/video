@@ -22,9 +22,9 @@ import javax.annotation.Resource;
 import java.util.*;
 
 /**
+ * @author Asimple
  * @ProjectName video
  * @description 电影service实现类
- * @author Asimple
  */
 
 @Service
@@ -47,6 +47,7 @@ public class FilmService {
 
     /**
      * 查询所有影片信息
+     *
      * @return 影片列表
      */
     public List<Film> findAll() {
@@ -55,6 +56,7 @@ public class FilmService {
 
     /**
      * 通过类型查找电影
+     *
      * @param typeId 类型id
      * @return 影片列表
      */
@@ -64,8 +66,9 @@ public class FilmService {
 
     /**
      * 通过类型查找电影TOP榜
+     *
      * @param typeId 类型id
-     * @param top 前top
+     * @param top    前top
      * @return 影片列表
      */
     public List<Film> listByTypeId(String typeId, int top) {
@@ -74,6 +77,7 @@ public class FilmService {
 
     /**
      * 通过分类查找电影列表
+     *
      * @param id 分类id
      * @return 影片列表
      */
@@ -83,7 +87,8 @@ public class FilmService {
 
     /**
      * 通过分类查找前top的电影
-     * @param id 分类id
+     *
+     * @param id  分类id
      * @param top 查看前多少
      * @return 影片列表
      */
@@ -94,6 +99,7 @@ public class FilmService {
 
     /**
      * 查找评分排行电影
+     *
      * @param id 影片id
      * @return 影片列表
      */
@@ -103,17 +109,19 @@ public class FilmService {
 
     /**
      * 查找评分排行前top的电影
-     * @param id 分类id
+     *
+     * @param id  分类id
      * @param top 前top
      * @return 影片列表
      */
-    @Cacheable( value = "index_filmPaiHang")
+    @Cacheable(value = "index_filmPaiHang")
     public List<Film> listByEvaluation(String id, int top) {
         return filmMapper.listByEvaluation(id, top);
     }
 
     /**
      * 分页查询电影
+     *
      * @param ob 影片信息
      * @param pc 开始条数
      * @param ps 结束条数
@@ -125,12 +133,13 @@ public class FilmService {
         pb.setPs(ps);
         // 设置总数
         pb.setTr(filmMapper.getTotalCount(ob));
-        pb.setBeanList(filmMapper.getPage(ob, (pc-1)*ps, ps));
+        pb.setBeanList(filmMapper.getPage(ob, (pc - 1) * ps, ps));
         return pb;
     }
 
     /**
      * 通过id获取Film对象
+     *
      * @param filmId 根据id记载影片对象
      * @return 影片对象
      */
@@ -140,16 +149,18 @@ public class FilmService {
 
     /**
      * 更新Film信息
+     *
      * @param film 影片实体
      * @return 更新成功返回true
      */
     @CacheEvict(value = {"index_filmTuijian", "index_filmPaiHang"}, allEntries = true)
     public boolean update(Film film) {
-        return filmMapper.update(film)==1;
+        return filmMapper.update(film) == 1;
     }
 
     /**
      * 保存Film对象
+     *
      * @param film 电影对象
      * @return 保存成功返回id
      */
@@ -168,11 +179,12 @@ public class FilmService {
         film.setCataLog_id(type.getSubClass().getCataLog().getId());
         film.setCataLogName(type.getSubClass().getCataLog().getName());
 
-        return filmMapper.add(film)!=0?film.getId():"0";
+        return filmMapper.add(film) != 0 ? film.getId() : "0";
     }
 
     /**
      * 删除电影
+     *
      * @param filmId 电影id
      * @return 删除成功返回true
      */
@@ -198,37 +210,40 @@ public class FilmService {
 
     /**
      * 保存弹幕
+     *
      * @param bullet 弹幕对象
      * @return 保存成功返回true
      */
     public boolean saveBullet(Bullet bullet) {
         bullet.setId(Tools.UUID());
-        return filmMapper.saveBullet(bullet)!=0;
+        return filmMapper.saveBullet(bullet) != 0;
     }
 
     /**
      * 查找用户上传的视频
+     *
      * @param params 参数列表 必须要有uid
      * @return 用户上传的视频
      */
-    public List<Film> listByUser(Map<String, Object> params){
+    public List<Film> listByUser(Map<String, Object> params) {
         String uid = (String) params.get("uid");
         String page = (String) params.get("page");
         String pageSize = (String) params.get("pageSize");
-        if(StringUtils.isEmpty(page) ) {
+        if (StringUtils.isEmpty(page)) {
             page = "1";
         }
-        if( StringUtils.isEmpty(pageSize) ) {
+        if (StringUtils.isEmpty(pageSize)) {
             pageSize = "5";
         }
         int pc = Integer.valueOf(page);
         int ps = Integer.valueOf(pageSize);
-        int start = (pc-1)*ps;
+        int start = (pc - 1) * ps;
         return filmMapper.listByUser(uid, start, ps);
     }
 
     /**
      * 统计用户上传的视频
+     *
      * @param uid 用户id
      * @return 用户上传的视频数
      */
@@ -238,43 +253,45 @@ public class FilmService {
 
     /**
      * 添加用户浏览记录
+     *
      * @param filmId 影片id
-     * @param uid 用户id
+     * @param uid    用户id
      */
-    public void addViewHistory(String filmId, String uid){
+    public void addViewHistory(String filmId, String uid) {
         Map<String, Object> map = new HashMap<>(4);
         map.put("film_id", filmId);
         map.put("uid", uid);
         map.put("view_date", new Date());
         int num;
-        if( filmMapper.countViewHistory(map)>0 ) {
+        if (filmMapper.countViewHistory(map) > 0) {
             num = filmMapper.updateViewHistory(map);
         } else {
             num = filmMapper.addViewHistory(map);
         }
-        if( num == 0 ) {
+        if (num == 0) {
             LogUtil.error("浏览记录添加失败！");
         }
     }
 
     /**
      * 获取用户浏览记录
+     *
      * @param params 参数
      * @return 用户浏览历史列表
      */
-    public List<Map> getViewHistory(Map<String, Object> params){
+    public List<Map> getViewHistory(Map<String, Object> params) {
         String uid = (String) params.get("uid");
         String page = (String) params.get("page");
         String pageSize = (String) params.get("pageSize");
-        if(StringUtils.isEmpty(page) ) {
+        if (StringUtils.isEmpty(page)) {
             page = "1";
         }
-        if( StringUtils.isEmpty(pageSize) ) {
+        if (StringUtils.isEmpty(pageSize)) {
             pageSize = "5";
         }
         int pc = Integer.valueOf(page);
         int ps = Integer.valueOf(pageSize);
-        List<Map> temp = filmMapper.getViewHistory(uid, (pc-1)*ps, ps);
+        List<Map> temp = filmMapper.getViewHistory(uid, (pc - 1) * ps, ps);
         List<Map> res = new ArrayList<>();
         for (Map item : temp) {
             Film film = load((String) item.get("film_id"));
@@ -286,6 +303,7 @@ public class FilmService {
 
     /**
      * 统计用户浏览历史数目
+     *
      * @param uid 用户id
      * @return 用户浏览数
      */
@@ -304,21 +322,21 @@ public class FilmService {
         Map<String, Object> result = new HashMap<>(8);
         PageBean<Film> pageBean = new PageBean<>();
         String name = (String) params.get("name");
-        if( !Tools.isEmpty(name) ) {
+        if (!Tools.isEmpty(name)) {
             result.put("name", name);
         }
         // 待改进
         String url = (String) params.get("url");
-        if( url != null ) {
+        if (url != null) {
             int index = url.indexOf("&pc=");
-            if( index != -1 ) {
+            if (index != -1) {
                 url = url.substring(0, index);
             }
         }
         // 当前页面数
         String value = (String) params.get("pc");
         int pc = 1;
-        if( Tools.notEmpty(value) ) {
+        if (Tools.notEmpty(value)) {
             pc = Integer.parseInt(value);
         }
         pageBean.setPc(pc);
@@ -330,13 +348,13 @@ public class FilmService {
         pageBean.setUrl(url);
 
         HighlightQuery query = new SimpleHighlightQuery(new SimpleStringCriteria("*:*"));
-        if( Tools.notEmpty(name) ) {
-            Criteria filterCriteria = new Criteria("video_film_name").is("\"*"+name+"*\"");
+        if (Tools.notEmpty(name)) {
+            Criteria filterCriteria = new Criteria("video_film_name").is("\"*" + name + "*\"");
             FilterQuery filterQuery = new SimpleFilterQuery(filterCriteria);
             query.addFilterQuery(filterQuery);
         }
         //开始索引（默认0）
-        query.setOffset((pc-1)*ps);
+        query.setOffset((pc - 1) * ps);
         //每页记录数(默认10)
         query.setRows(ps);
 
@@ -355,21 +373,25 @@ public class FilmService {
 
         //***********************设置高亮结果***********************
         List<HighlightEntry<Film>> highlighted = page.getHighlighted();
-        for (HighlightEntry<Film> h : highlighted) {//循环高亮入口集合
-            Film item = h.getEntity();//获取原实体类
+        //循环高亮入口集合
+        for (HighlightEntry<Film> h : highlighted) {
+            //获取原实体类
+            Film item = h.getEntity();
             if (h.getHighlights().size() > 0 && h.getHighlights().get(0).getSnipplets().size() > 0) {
-                item.setName(h.getHighlights().get(0).getSnipplets().get(0));//设置高亮的结果
+                //设置高亮的结果
+                item.setName(h.getHighlights().get(0).getSnipplets().get(0));
             }
         }
         System.err.println(page.getContent());
         pageBean.setBeanList(page.getContent());
-        pageBean.setTr((int)page.getTotalElements());
+        pageBean.setTr((int) page.getTotalElements());
         result.put("pb", pageBean);
         return result;
     }
 
     /**
      * 获取影片信息
+     *
      * @param params 参数列表
      * @return 影片列表信息
      */
@@ -377,7 +399,7 @@ public class FilmService {
         Map<String, Object> map = new HashMap<>(16);
         String name = (String) params.get("name");
         if (Tools.notEmpty(name)) {
-            map.put("name", name );
+            map.put("name", name);
         }
 
         // 获取当前页数，默认为1
@@ -403,6 +425,7 @@ public class FilmService {
 
     /**
      * 获取影片详细信息
+     *
      * @param params 参数列表
      * @return 影片详情信息
      */
@@ -459,12 +482,13 @@ public class FilmService {
 
     /**
      * 首页信息获取
+     *
      * @return 首页显示信息
      */
     public Map<String, Object> getIndexInfo() {
         Map<String, Object> result = new HashMap<>(4);
         // 查询用户菜单列表
-        List<CataLog> logList =  cataLogService.listIsUse();
+        List<CataLog> logList = cataLogService.listIsUse();
         result.put("cataLogList", logList);
 
         // 查询推荐电影

@@ -6,9 +6,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
+ * @author Asimple
  * @ProjectName video
  * @description VIP码
- * @author Asimple
  */
 @Data
 public class VipCode implements Serializable {
@@ -17,7 +17,7 @@ public class VipCode implements Serializable {
      */
     private String id;
     /**
-     *  VIP卡码
+     * VIP卡码
      */
     private String code;
     /**
@@ -26,7 +26,7 @@ public class VipCode implements Serializable {
     private int isUse;
     /**
      * 创建时间
-      */
+     */
     private Date create_time;
     /**
      * 到期时间

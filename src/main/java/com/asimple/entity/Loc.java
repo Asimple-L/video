@@ -5,9 +5,9 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
+ * @author Asimple
  * @ProjectName video
  * @description 地区分类实体
- * @author Asimple
  */
 @Data
 public class Loc implements Serializable {

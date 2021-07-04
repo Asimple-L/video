@@ -11,9 +11,9 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
+ * @author Asimple
  * @ProjectName video
  * @description 等级服务实现类
- * @author Asimple
  */
 @Service
 public class LevelService {
@@ -22,25 +22,27 @@ public class LevelService {
 
     /**
      * 查询所有在使用的等级
+     *
      * @return 等级列表
      */
-    @Cacheable( value = "redis_levelList")
+    @Cacheable(value = "redis_levelList")
     public List<Level> listIsUse() {
         return levelMapper.findByIsUse();
     }
 
     /**
      * 添加一个等级信息并返回id
+     *
      * @param level 等级对象
      * @return 添加成功返回true，否则返回 false
      */
-    @CacheEvict( value = "redis_levelList", allEntries = true)
+    @CacheEvict(value = "redis_levelList", allEntries = true)
     public boolean add(Level level) {
-        if(Tools.isEmpty(level.getId()) ) {
+        if (Tools.isEmpty(level.getId())) {
             level.setId(Tools.UUID());
             level.setIsUse(1);
-            return levelMapper.add(level)==1;
+            return levelMapper.add(level) == 1;
         }
-        return levelMapper.update(level)==1;
+        return levelMapper.update(level) == 1;
     }
 }

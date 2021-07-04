@@ -7,9 +7,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.solr.core.SolrTemplate;
 
 /**
+ * @author Asimple
  * @ProjectName video
  * @description Solr 配置
- * @author Asimple
  * @date 2019/8/31 22:24
  */
 @Configuration
@@ -19,7 +19,7 @@ public class MySolrConfig {
     SolrClient solrClient;
 
     @Bean
-    public SolrTemplate getSolrTemplate(){
-        return  new SolrTemplate(solrClient);
+    public SolrTemplate getSolrTemplate() {
+        return new SolrTemplate(solrClient);
     }
 }

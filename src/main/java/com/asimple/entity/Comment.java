@@ -6,9 +6,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
+ * @author Asimple
  * @ProjectName video
  * @description 评论
- * @author Asimple
  */
 @Data
 public class Comment implements Serializable {

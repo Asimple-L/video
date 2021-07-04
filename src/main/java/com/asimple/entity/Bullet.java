@@ -5,9 +5,9 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
+ * @author Asimple
  * @ProjectName video
  * @description 弹幕实体类
- * @author Asimple
  */
 @Data
 public class Bullet implements Serializable {

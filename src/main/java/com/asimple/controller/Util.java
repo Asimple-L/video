@@ -20,9 +20,9 @@ import java.io.InputStream;
 import java.util.*;
 
 /**
+ * @author Asimple
  * @ProjectName video
  * @description 工具访问，文件上传，邮件发送等等
- * @author Asimple
  */
 @RestController
 public class Util implements ServletContextAware {
@@ -38,8 +38,8 @@ public class Util implements ServletContextAware {
      * @description 文件上传(多文件上传处理)
      **/
     @RequestMapping(value = "/upload", produces = "application/json;charset=UTF-8")
-    public String upload(String childPath, HttpServletRequest request) throws IOException{
-        if( StringUtils.isBlank(childPath) ) {
+    public String upload(String childPath, HttpServletRequest request) throws IOException {
+        if (StringUtils.isBlank(childPath)) {
             return ResponseReturnUtil.returnErrorWithMsg("参数错误").toString();
         }
         // 文件上传处理
@@ -56,46 +56,46 @@ public class Util implements ServletContextAware {
         // 初始化返回对象
         List<Map<String, String>> list = new ArrayList<>();
         // 判断request是否有文件上传(多部分请求)
-        if ( multipartResolver.isMultipart(request) ) {
+        if (multipartResolver.isMultipart(request)) {
             // 将请求转化成多部分request请求
             MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
             // 获取request中的所有文件名
             Iterator<String> iter = multiRequest.getFileNames();
 
             // 文件保存路径
-            String desPath = File.separator+childPath;
-            String path = this.servletContext.getRealPath(pro.getProperty("upload")+desPath);
+            String desPath = File.separator + childPath;
+            String path = this.servletContext.getRealPath(pro.getProperty("upload") + desPath);
             // 记录文件上传数目
             int count = 1;
-            while ( iter.hasNext() ) {
+            while (iter.hasNext()) {
                 // 记录上传过程起始时间，用来计算上传时间
-                int pre = (int)System.currentTimeMillis();
+                int pre = (int) System.currentTimeMillis();
                 // 获取上传文件
                 MultipartFile file = multiRequest.getFile(iter.next());
-                if( file != null ) {
+                if (file != null) {
                     // 获得当前上传文件的文件名称
                     String myFileName = file.getOriginalFilename();
                     // 打印文件大小
                     System.err.println("文件大小：" + file.getSize());
                     // 如果文件名不为空，说明文件存在
-                    if( myFileName!=null && !"".equals(myFileName.trim()) ) {
+                    if (myFileName != null && !"".equals(myFileName.trim())) {
                         System.err.println("上传文件" + count + ": " + myFileName + "用时：");
                         // 重命名上传后的文件名
                         String fileName = file.getOriginalFilename();
                         String fileType = fileName.substring(fileName.lastIndexOf("."));
-                            // 文件后缀名
-                        String fileSuffix = fileName.substring(fileName.lastIndexOf(".")+1, fileName.length());
-                            // 文件名（除后缀）
+                        // 文件后缀名
+                        String fileSuffix = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
+                        // 文件名（除后缀）
                         String fileNameSuffix = fileName.substring(0, fileName.lastIndexOf("."));
-                            // 防止上传无后缀名的文件，所以不用 "."+fileSuffix
+                        // 防止上传无后缀名的文件，所以不用 "."+fileSuffix
                         String newFileName = System.currentTimeMillis() + fileType;
                         // 新建一个文件
                         File file2 = new File(path, newFileName);
-                        if( !file2.exists() ) {
+                        if (!file2.exists()) {
                             file2.createNewFile();
                         }
                         file.transferTo(file2);
-                        count ++;
+                        count++;
 
                         // 设置返回数据
                         Map<String, String> map = new HashMap<>(4);
@@ -103,13 +103,13 @@ public class Util implements ServletContextAware {
                         map.put("fileName", fileName);
                         map.put("name", fileNameSuffix);
                         // 文件路径
-                        map.put("filePath", pro.getProperty("upload")+childPath+"/"+newFileName);
+                        map.put("filePath", pro.getProperty("upload") + childPath + "/" + newFileName);
                         list.add(map);
                     }
                 }
                 // 记录上传该文件后的时间
                 int finaltime = (int) System.currentTimeMillis();
-                System.err.println((finaltime-pre) + "ms");
+                System.err.println((finaltime - pre) + "ms");
             }
         }
         return JSONUtil.toJSONString(list);
@@ -121,15 +121,14 @@ public class Util implements ServletContextAware {
      **/
     @RequestMapping(value = "/delFile", produces = "application/json;charset=UTF-8")
     public Object delFile(String picsPath) {
-        if( picsPath.startsWith("/video/") ) {
-            picsPath = picsPath.substring(picsPath.lastIndexOf("/video/")+"/video/".length());
+        if (picsPath.startsWith("/video/")) {
+            picsPath = picsPath.substring(picsPath.lastIndexOf("/video/") + "/video/".length());
         }
-        if(FileOperate.delFile(this.servletContext.getRealPath("/"+picsPath))) {
+        if (FileOperate.delFile(this.servletContext.getRealPath("/" + picsPath))) {
             return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
         }
-        return ResponseReturnUtil.returnErrorWithMsg("删除失败,请稍后重试!");
+        return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.OPERATION_ERROR);
     }
-
 
 
 }

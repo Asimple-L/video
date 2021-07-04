@@ -19,6 +19,7 @@ public interface FilmMapper extends IBaseDao<Film> {
 
     /**
      * 根据类型查找影片列表
+     *
      * @param typeId 类型id
      * @return 影片列表
      */
@@ -26,14 +27,16 @@ public interface FilmMapper extends IBaseDao<Film> {
 
     /**
      * 根据类型查找影片列表
+     *
      * @param typeId 类型id
-     * @param top 前top
+     * @param top    前top
      * @return 影片列表
      */
     List<Film> listByTypeId(String typeId, int top);
 
     /**
      * 根据分类查找影片列表
+     *
      * @param id 分类id
      * @return 影片列表
      */
@@ -41,7 +44,8 @@ public interface FilmMapper extends IBaseDao<Film> {
 
     /**
      * 根据分类查找影片列表
-     * @param id 分类id
+     *
+     * @param id  分类id
      * @param top 前top
      * @return 影片列表
      */
@@ -49,6 +53,7 @@ public interface FilmMapper extends IBaseDao<Film> {
 
     /**
      * 有条件查询列表
+     *
      * @param id 影片id
      * @return 影片列表
      */
@@ -56,7 +61,8 @@ public interface FilmMapper extends IBaseDao<Film> {
 
     /**
      * 有条件查询列表
-     * @param id 影片id
+     *
+     * @param id  影片id
      * @param top 前top
      * @return 影片列表
      */
@@ -64,7 +70,8 @@ public interface FilmMapper extends IBaseDao<Film> {
 
     /**
      * 查询用户创建的影片列表
-     * @param uid 用户id
+     *
+     * @param uid   用户id
      * @param start 开始条数
      * @param count 结束条数
      * @return 影片列表
@@ -73,6 +80,7 @@ public interface FilmMapper extends IBaseDao<Film> {
 
     /**
      * 统计用户创建的影片数
+     *
      * @param uid 用户id
      * @return 用户创建的影片数
      */
@@ -80,6 +88,7 @@ public interface FilmMapper extends IBaseDao<Film> {
 
     /**
      * 添加访问历史记录
+     *
      * @param map 参数
      * @return 添加成功返回1
      */
@@ -87,7 +96,8 @@ public interface FilmMapper extends IBaseDao<Film> {
 
     /**
      * 分页获取浏览记录
-     * @param uid 用户id
+     *
+     * @param uid   用户id
      * @param start 开始条数
      * @param count 结束条数
      * @return 影片列表
@@ -96,6 +106,7 @@ public interface FilmMapper extends IBaseDao<Film> {
 
     /**
      * 统计浏览记录总数
+     *
      * @param map 参数
      * @return 浏览记录总数
      */
@@ -103,6 +114,7 @@ public interface FilmMapper extends IBaseDao<Film> {
 
     /**
      * 更新浏览记录
+     *
      * @param map 参数
      * @return 更新成功返回1
      */
@@ -110,6 +122,7 @@ public interface FilmMapper extends IBaseDao<Film> {
 
     /**
      * 查询影片弹幕列表
+     *
      * @param filmId 影片id
      * @return 弹幕列表
      */
@@ -117,6 +130,7 @@ public interface FilmMapper extends IBaseDao<Film> {
 
     /**
      * 保存弹幕
+     *
      * @param bullet 弹幕实体类
      * @return 添加成功返回1
      */

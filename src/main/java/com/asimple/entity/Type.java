@@ -6,9 +6,9 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
+ * @author Asimple
  * @ProjectName video
  * @description 类型实体
- * @author Asimple
  */
 @Data
 public class Type implements Serializable {

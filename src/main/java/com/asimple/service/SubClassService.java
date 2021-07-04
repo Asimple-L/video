@@ -11,9 +11,9 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
+ * @author Asimple
  * @ProjectName video
  * @description 子类服务实现类
- * @author Asimple
  */
 @Service
 public class SubClassService {
@@ -25,6 +25,7 @@ public class SubClassService {
 
     /**
      * 查询一级分类下所有可使用的二级分类
+     *
      * @param id 一级分类id
      * @return 二级分类列表
      */
@@ -34,27 +35,29 @@ public class SubClassService {
 
     /**
      * 添加二级分类
-     * @param subClass 二级分类对象
+     *
+     * @param subClass  二级分类对象
      * @param cataLogId 对应的一级分类id
      * @return 添加成功返回true，否则返回false
      */
     @CacheEvict(value = "redis_cataLogList", allEntries = true)
     public boolean add(SubClass subClass, String cataLogId) {
         CataLog cataLog = cataLogService.load(cataLogId);
-        if( cataLog == null ) {
+        if (cataLog == null) {
             return false;
         }
         subClass.setCataLog(cataLog);
-        if(Tools.isEmpty(subClass.getId()) ) {
+        if (Tools.isEmpty(subClass.getId())) {
             subClass.setId(Tools.UUID());
             subClass.setIsUse(1);
-            return subClassMapper.add(subClass)==1;
+            return subClassMapper.add(subClass) == 1;
         }
-        return subClassMapper.update(subClass)==1;
+        return subClassMapper.update(subClass) == 1;
     }
 
     /**
      * 根据id加载二级分类
+     *
      * @param subClassId 二级分类id
      * @return 二级分类实体
      */
@@ -64,11 +67,12 @@ public class SubClassService {
 
     /**
      * 根据id删除二级分类
+     *
      * @param subClassId 二级分类id
      * @return boolean 是否删除成功，删除成功返回true，否则返回false
      */
-    @CacheEvict( value = "redis_cataLogList", allEntries = true)
+    @CacheEvict(value = "redis_cataLogList", allEntries = true)
     public boolean deleteById(String subClassId) {
-        return subClassMapper.deleteById(subClassId)==1;
+        return subClassMapper.deleteById(subClassId) == 1;
     }
 }

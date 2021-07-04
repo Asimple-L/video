@@ -15,9 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
+ * @author Asimple
  * @ProjectName video
  * @description 系统开始
- * @author Asimple
  */
 @RestController
 public class StartController extends CommonController {
@@ -32,7 +32,7 @@ public class StartController extends CommonController {
      * @author Asimple
      * @description 首页访问
      **/
-    @RequestMapping(value = { "/index", "/"})
+    @RequestMapping(value = {"/index", "/"})
     public Object index() {
         Map<String, Object> result = filmService.getIndexInfo();
         return ResponseReturnUtil.returnSuccessWithData(result);
@@ -42,7 +42,7 @@ public class StartController extends CommonController {
      * @author Asimple
      * @description 导航栏信息返回
      **/
-    @RequestMapping( value = "/getHeaderInfo")
+    @RequestMapping(value = "/getHeaderInfo")
     public Object indexInfo(HttpServletRequest request) {
         Map<String, Object> result = new HashMap<>(5);
         result.put("cataLogList", cataLogService.listIsUse());
@@ -60,10 +60,10 @@ public class StartController extends CommonController {
         String pageNo = request.getParameter("pageNo");
         int ps = 6;
         int pc = 1;
-        if(StringUtils.isNotBlank(pageSize) ) {
+        if (StringUtils.isNotBlank(pageSize)) {
             ps = Integer.valueOf(pageSize);
         }
-        if( StringUtils.isNotBlank(pageNo) ) {
+        if (StringUtils.isNotBlank(pageNo)) {
             pc = Integer.valueOf(pageNo);
         }
         Map<String, Object> map = new HashMap<>(2);
@@ -78,8 +78,8 @@ public class StartController extends CommonController {
      **/
     @RequestMapping(value = "/saveComment", produces = "application/json;charset=UTF-8")
     public Object addComment(HttpServletRequest request) {
-        if( !RequestUtil.isLogin(request) ) {
-            return ResponseReturnUtil.returnErrorWithMsg("请登录后评论!");
+        if (!RequestUtil.isLogin(request)) {
+            return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.LOGIN_FIRST);
         }
         User user = getUserInfo(request);
         String context = request.getParameter("context");
@@ -87,10 +87,10 @@ public class StartController extends CommonController {
         param.put("user", user);
         param.put("context", context);
 
-        if( commentService.save(param) ) {
-            return ResponseReturnUtil.returnSuccessWithMsg("发布成功!");
+        if (commentService.save(param)) {
+            return ResponseReturnUtil.returnSuccessWithMsg(ResponseReturnUtil.OPERATION_SUC);
         }
-        return ResponseReturnUtil.returnErrorWithMsg("发布评论失败!请稍后重试!");
+        return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.OPERATION_ERROR);
     }
 
     /**
@@ -99,18 +99,18 @@ public class StartController extends CommonController {
      **/
     @RequestMapping(value = "/changeLikeNum", produces = "application/json;charset=UTF-8")
     public Object changeLikeNum(HttpServletRequest request) {
-        if ( !RequestUtil.isLogin(request) ) {
-            return ResponseReturnUtil.returnErrorWithMsg("请先登录!");
+        if (!RequestUtil.isLogin(request)) {
+            return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.LOGIN_FIRST);
         }
         String type = request.getParameter("type");
         String id = request.getParameter("id");
-        if( StringUtils.isEmpty(type) || StringUtils.isEmpty(id) ) {
-            return ResponseReturnUtil.returnErrorWithMsg("参数错误,请重试!");
+        if (StringUtils.isEmpty(type) || StringUtils.isEmpty(id)) {
+            return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.PARAMETER_ERROR);
         }
-        if( commentService.update(id, type) ) {
-            return ResponseReturnUtil.returnSuccessWithMsg("成功!");
+        if (commentService.update(id, type)) {
+            return ResponseReturnUtil.returnSuccessWithMsg(ResponseReturnUtil.OPERATION_SUC);
         }
-        return ResponseReturnUtil.returnErrorWithMsg("操作失败,请稍后重试!");
+        return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.OPERATION_ERROR);
     }
 
 }

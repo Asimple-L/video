@@ -19,7 +19,7 @@ public class FileOperate implements ServletContextAware {
         this.servletContext = servletContext;
     }
 
-    public static void writeFile(String filePath, String sets){
+    public static void writeFile(String filePath, String sets) {
         FileWriter fw = null;
         try {
             fw = new FileWriter(filePath);
@@ -34,22 +34,22 @@ public class FileOperate implements ServletContextAware {
 
     }
 
-    public static String ReadJsonFile(String Path){
+    public static String ReadJsonFile(String Path) {
         BufferedReader reader = null;
         String laststr = "";
-        try{
+        try {
             FileInputStream fileInputStream = new FileInputStream(Path);
             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
             reader = new BufferedReader(inputStreamReader);
             String tempString = null;
-            while((tempString = reader.readLine()) != null){
+            while ((tempString = reader.readLine()) != null) {
                 laststr += tempString;
             }
             reader.close();
-        }catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
-        }finally{
-            if(reader != null){
+        } finally {
+            if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException e) {
@@ -61,13 +61,13 @@ public class FileOperate implements ServletContextAware {
     }
 
 
-    public static boolean delFile(String path){
-        if(path!=null&&!"".equals(path)){
+    public static boolean delFile(String path) {
+        if (path != null && !"".equals(path)) {
             File file = new File(path);
 
-            if (file.exists()){
-                if(file.delete()){
-                   return true;
+            if (file.exists()) {
+                if (file.delete()) {
+                    return true;
                 }
             }
         }

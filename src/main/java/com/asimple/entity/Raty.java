@@ -5,9 +5,9 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
+ * @author Asimple
  * @ProjectName video
  * @description 评分实体类
- * @author Asimple
  */
 @Data
 public class Raty implements Serializable {
