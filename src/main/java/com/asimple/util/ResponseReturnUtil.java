@@ -44,6 +44,8 @@ public class ResponseReturnUtil {
 
     public static final String PERMISSION_DENIED = "权限不足!";
 
+    public static final String PARAM_MISS = "缺少必要参数!";
+
     private static JSONObject returnData(String code, String msg, Object data) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("code", code);

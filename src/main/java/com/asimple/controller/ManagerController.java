@@ -267,7 +267,7 @@ public class ManagerController extends CommonController {
      **/
     @RequestMapping(value = "/loadIn", produces = "application/json;charset=UTF-8")
     public Object loadInSolr() {
-        boolean openSwitch = propertiesUtil.isOn("asimple.solr.manager.switch", "on");
+        boolean openSwitch = propertiesUtil.isOn("asimple.solr.manager.switch");
         if (!openSwitch) {
             return ResponseReturnUtil.returnSuccessWithMsg(ResponseReturnUtil.FUNCTION_NOT_OPEN);
         }

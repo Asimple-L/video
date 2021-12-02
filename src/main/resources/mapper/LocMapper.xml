@@ -16,4 +16,8 @@
         update `t_loc` set `isUse`=#{isUse}, `name`=#{name} where id=#{id}
     </update>
 
+    <select id="load" parameterType="string" resultType="com.asimple.entity.Loc">
+        select * from t_loc where id = #{id}
+    </select>
+
 </mapper>

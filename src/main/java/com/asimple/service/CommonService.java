@@ -34,59 +34,10 @@ public class CommonService {
     /**
      * 更新影片信息
      *
-     * @param params 参数
+     * @param film 影视
      * @return 是否更新成功
      */
-    public boolean updateFilmInfo(Map params) {
-        String key = (String) params.get("key");
-        String val = (String) params.get("val");
-        String filePath = (String) params.get("filePath");
-        Film film = (Film) params.get("film");
-        LogUtil.info(CommonService.class, "key = " + key + "   val = " + val);
-        switch (key) {
-            case "name":
-                film.setName(val);
-                break;
-            case "image":
-                FileOperate.delFile(filePath);
-                film.setImage(val);
-                break;
-            case "onDecade":
-                film.setOnDecade(val);
-                break;
-            case "status":
-                film.setStatus(val);
-                break;
-            case "resolution":
-                film.setResolution(val);
-                break;
-            case "typeName":
-                film.setTypeName(val);
-                break;
-            case "type_id":
-                film.setType_id(val);
-                Type type = typeService.load(val);
-                LogUtil.info(CommonService.class, "type = " + type);
-                film.setSubClass_id(type.getSubClass().getId());
-                film.setSubClassName(type.getSubClass().getName());
-                film.setCataLog_id(type.getSubClass().getCataLog().getId());
-                film.setCataLogName(type.getSubClass().getCataLog().getName());
-                break;
-            case "actor":
-                film.setActor(val);
-                break;
-            case "loc_id":
-                film.setLoc_id(val);
-                break;
-            case "plot":
-                film.setPlot(val);
-                break;
-            case "isVip":
-                film.setIsVip(Integer.valueOf(val));
-                break;
-            default:
-                break;
-        }
+    public boolean updateFilmInfo(FilmUpdateInfo film) {
         LogUtil.info(CommonService.class, "film = " + film);
         return filmService.update(film);
     }

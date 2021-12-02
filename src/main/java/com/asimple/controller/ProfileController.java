@@ -161,14 +161,11 @@ public class ProfileController extends CommonController {
      * @description 更新影片信息
      **/
     @RequestMapping(value = "/updateFilmInfo", produces = "application/json;charset=UTF-8")
-    public Object updateFilmInfo(String filmId, String val, String key, HttpSession session) {
-        Map<String, Object> param = new HashMap<>(8);
-        Film film = filmService.load(filmId);
-        param.put("val", val);
-        param.put("key", key);
-        param.put("filePath", session.getServletContext().getRealPath(film.getImage()));
-        param.put("film", film);
-        if (commonService.updateFilmInfo(param)) {
+    public Object updateFilmInfo(FilmUpdateInfo filmUpdateInfo, HttpServletRequest request) {
+        if( filmUpdateInfo==null ) {
+            return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.PARAM_MISS);
+        }
+        if (commonService.updateFilmInfo(filmUpdateInfo)) {
             this.updateRedis("1");
             return ResponseReturnUtil.returnSuccessWithoutMsgAndData();
         }

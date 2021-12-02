@@ -66,9 +66,30 @@ public class PropertiesUtil {
      * @param openSwitch 预想值
      * @return 是否相等
      */
-    public boolean isOn(String key, String openSwitch) {
+    public boolean isEqual(String key, String openSwitch) {
         String switchKey = getProperties(key);
         return switchKey != null && switchKey.equals(openSwitch);
+    }
+
+    /**
+     * 判断是否为on
+     *
+     * @param key 配置项
+     * @return 是否为on
+     */
+    public boolean isOn(String key) {
+        return isEqual(key, "on");
+    }
+
+    /**
+     * 获取整型类型的配置项，如果没有配置，默认返回0
+     *
+     * @param key 配置项
+     * @return 配置项对应的值
+     */
+    public int getIntegerProperties(String key) {
+        String value = getProperties(key, "0");
+        return Integer.parseInt(value);
     }
 
 }

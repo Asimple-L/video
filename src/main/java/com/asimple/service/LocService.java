@@ -45,4 +45,15 @@ public class LocService {
         }
         return locMapper.update(loc) == 1;
     }
+
+    /**
+     * 根据id查询出对应的地区信息
+     *
+     * @param locId id
+     * @return 地区信息
+     */
+    public Loc load(String locId) {
+        return locMapper.load(locId);
+    }
+
 }

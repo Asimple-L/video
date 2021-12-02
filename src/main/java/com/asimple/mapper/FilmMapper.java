@@ -2,6 +2,7 @@ package com.asimple.mapper;
 
 import com.asimple.entity.Bullet;
 import com.asimple.entity.Film;
+import com.asimple.entity.FilmUpdateInfo;
 import com.asimple.util.IBaseDao;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -135,5 +136,21 @@ public interface FilmMapper extends IBaseDao<Film> {
      * @return 添加成功返回1
      */
     int saveBullet(Bullet bullet);
+
+    /**
+     * 删除影片弹幕
+     *
+     * @param filmId 影片ID
+     * @return 删除成功返回1
+     */
+    int deleteBullet(String filmId);
+
+    /**
+     * 更新影片信息
+     *
+     * @param film 影片信息
+     * @return 更新成功返回1
+     */
+    int updateFilm(FilmUpdateInfo film);
 
 }

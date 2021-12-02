@@ -146,4 +146,23 @@ public class Film implements Serializable {
         this.uid = uid;
     }
 
+    public Film(String id, String name, String image, String onDecade, String status, String resolution, String type_id, String actor, String locName, String loc_id, String updateTime, int isUse, String cataLog_id, String subClass_id, Integer isVip, String plot) {
+        this.id = id;
+        this.name = name;
+        this.image = image;
+        this.onDecade = onDecade;
+        this.status = status;
+        this.resolution = resolution;
+        this.type_id = type_id;
+        this.actor = actor;
+        this.locName = locName;
+        this.loc_id = loc_id;
+        this.updateTime = updateTime;
+        this.isUse = isUse;
+        this.cataLog_id = cataLog_id;
+        this.subClass_id = subClass_id;
+        this.isVip = isVip;
+        this.plot = plot;
+    }
+
 }

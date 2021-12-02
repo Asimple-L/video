@@ -5,10 +5,7 @@ import com.asimple.mapper.FilmMapper;
 import com.asimple.mapper.RatyMapper;
 import com.asimple.mapper.ResMapper;
 import com.asimple.mapper.TypeMapper;
-import com.asimple.util.DateUtil;
-import com.asimple.util.LogUtil;
-import com.asimple.util.PageBean;
-import com.asimple.util.Tools;
+import com.asimple.util.*;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -44,6 +41,10 @@ public class FilmService {
     private CataLogService cataLogService;
     @Resource
     private RatyService ratyService;
+    @Resource
+    private PropertiesUtil propertiesUtil;
+    @Resource
+    private LocService locService;
 
     /**
      * 查询所有影片信息
@@ -154,6 +155,23 @@ public class FilmService {
      * @return 更新成功返回true
      */
     @CacheEvict(value = {"index_filmTuijian", "index_filmPaiHang"}, allEntries = true)
+    public boolean update(FilmUpdateInfo film) {
+        // 查询出类型
+        Type type = typeMapper.load(film.getType_id());
+        film.setSubClass_id(type.getSubClass().getId());
+        film.setSubClassName(type.getSubClass().getName());
+        film.setCataLog_id(type.getSubClass().getCataLog().getId());
+        film.setCataLogName(type.getSubClass().getCataLog().getName());
+        return filmMapper.updateFilm(film) == 1;
+    }
+
+    /**
+     * 更新Film信息
+     *
+     * @param film 影片实体
+     * @return 更新成功返回true
+     */
+    @CacheEvict(value = {"index_filmTuijian", "index_filmPaiHang"}, allEntries = true)
     public boolean update(Film film) {
         return filmMapper.update(film) == 1;
     }
@@ -195,7 +213,9 @@ public class FilmService {
         int sum = ratyMapper.deleteByFilmId(filmId);
         // 2、删除资源信息
         sum += resMapper.deleteByFilmId(filmId);
-        // 3、删除电影本身
+        // 3、删除影片弹幕消息
+        sum += filmMapper.deleteBullet(filmId);
+        // 4、删除电影本身
         sum += filmMapper.deleteById(filmId);
         return sum != 0;
     }
@@ -486,6 +506,8 @@ public class FilmService {
      * @return 首页显示信息
      */
     public Map<String, Object> getIndexInfo() {
+        int phPageSize = propertiesUtil.getIntegerProperties("video.index.paihang.pageSize");
+        int tjPageSize = propertiesUtil.getIntegerProperties("video.index.tuijian.pageSize");
         Map<String, Object> result = new HashMap<>(4);
         // 查询用户菜单列表
         List<CataLog> logList = cataLogService.listIsUse();
@@ -494,7 +516,7 @@ public class FilmService {
         // 查询推荐电影
         List<Object> list = new ArrayList<>();
         for (CataLog aLogList : logList) {
-            List<Film> films = listByCataLogId(aLogList.getId(), 12);
+            List<Film> films = listByCataLogId(aLogList.getId(), tjPageSize);
             if (films.size() != 0) {
                 list.add(films);
             }
@@ -504,7 +526,7 @@ public class FilmService {
         // 电影排行榜
         List<Object> list1 = new ArrayList<>();
         for (CataLog aLogList : logList) {
-            List<Film> films = listByEvaluation(aLogList.getId(), 12);
+            List<Film> films = listByEvaluation(aLogList.getId(), phPageSize);
             if (films.size() != 0) {
                 list1.add(films);
             }

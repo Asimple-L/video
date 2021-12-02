@@ -76,6 +76,15 @@
         </if>
     </select>
 
+    <update id="updateFilm" parameterType="com.asimple.entity.FilmUpdateInfo">
+        UPDATE t_film SET `actor`=#{actor},`cataLogName`=#{cataLogName}, `cataLog_id`=#{cataLog_id},
+                          `image`=#{image},`isUse`=#{isUse},`locName`=#{locName},
+                          `loc_id`=#{loc_id},`name`=#{name},`onDecade`=#{onDecade},`plot`=#{plot},`resolution`=#{resolution},
+                          `status`=#{status},`subClassName`=#{subClassName},`subClass_id`=#{subClass_id},`typeName`=#{typeName},
+                          `type_id`=#{type_id},`updateTime`=#{updateTime},`isVip`=#{isVip}
+                          WHERE id=#{id}
+    </update>
+
     <update id="update" parameterType="com.asimple.entity.Film">
         UPDATE t_film SET `actor`=#{actor},`cataLogName`=#{cataLogName}, `cataLog_id`=#{cataLog_id},
                           `evaluation`=#{evaluation},`image`=#{image},`isUse`=#{isUse},`locName`=#{locName},
@@ -100,7 +109,7 @@
         DELETE FROM `t_film` WHERE `id`=#{id}
     </delete>
 
-    <select id="getBulletByFilmId" resultType="com.asimple.entity.Bullet" parameterType="String">
+    <select id="getBulletByFilmId" resultType="com.asimple.entity.Bullet" parameterType="string">
         SELECT * FROM `t_bullet` WHERE `filmId`=#{filmId}
     </select>
 
@@ -108,6 +117,10 @@
         INSERT INTO `t_bullet` (`id`, `text`, `position`, `size`, `color`, `time`, `filmId`)
             VALUES (#{id}, #{text}, #{position}, #{size}, #{color}, #{time}, #{filmId})
     </insert>
+
+    <delete id="deleteBullet" parameterType="string">
+        delete from `t_bullet` where `filmId` = #{filmId}
+    </delete>
 
     <select id="listByUser" resultType="com.asimple.entity.Film">
         SELECT * FROM t_film WHERE `uid`=#{param1} LIMIT #{start},#{count}
