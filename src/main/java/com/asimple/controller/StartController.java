@@ -105,7 +105,7 @@ public class StartController extends CommonController {
         String type = request.getParameter("type");
         String id = request.getParameter("id");
         if (StringUtils.isEmpty(type) || StringUtils.isEmpty(id)) {
-            return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.PARAMETER_ERROR);
+            return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.PARAM_MISS);
         }
         if (commentService.update(id, type)) {
             return ResponseReturnUtil.returnSuccessWithMsg(ResponseReturnUtil.OPERATION_SUC);

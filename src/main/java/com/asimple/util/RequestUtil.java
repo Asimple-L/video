@@ -49,9 +49,9 @@ public class RequestUtil {
     }
 
     /**
-     * 是否管理员登录
+     * 判断当前登录用户不是管理员
      * @param request 请求信息
-     * @return 当前登录用户是管理返回true
+     * @return 当前登录用户是管理返回false
      */
     public static boolean isNotAdminLogin(HttpServletRequest request) {
         HttpSession session = request.getSession();

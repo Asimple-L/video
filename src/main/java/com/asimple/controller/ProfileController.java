@@ -54,7 +54,7 @@ public class ProfileController extends CommonController {
             return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.LOGIN_FIRST);
         }
         if (RequestUtil.isNotSelfLogin(request)) {
-            return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.PARAMETER_ERROR);
+            return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.PARAM_MISS);
         }
         User user = getUserInfo(request);
         Map<String, Object> param = new HashMap<>(4);
@@ -122,7 +122,7 @@ public class ProfileController extends CommonController {
         String resString = request.getParameter("res");
         String filmId = request.getParameter("filmId");
         if (StringUtils.isBlank(filmId) || StringUtils.isBlank(resString)) {
-            return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.PARAMETER_ERROR);
+            return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.PARAM_MISS);
         }
         Res res = JSONObject.parseObject(resString, new TypeReference<Res>() {
         });
@@ -162,8 +162,11 @@ public class ProfileController extends CommonController {
      **/
     @RequestMapping(value = "/updateFilmInfo", produces = "application/json;charset=UTF-8")
     public Object updateFilmInfo(FilmUpdateInfo filmUpdateInfo, HttpServletRequest request) {
-        if( filmUpdateInfo==null ) {
-            return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.PARAM_MISS);
+        // 鉴权
+        User user = getUserInfo(request);
+        Film film = filmService.load(filmUpdateInfo.getId());
+        if (!user.getId().equalsIgnoreCase(film.getUid()) && RequestUtil.isNotAdminLogin(request)) {
+            return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.PERMISSION_DENIED);
         }
         if (commonService.updateFilmInfo(filmUpdateInfo)) {
             this.updateRedis("1");

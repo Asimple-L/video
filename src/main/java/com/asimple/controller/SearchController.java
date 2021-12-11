@@ -72,7 +72,7 @@ public class SearchController extends CommonController {
     public Object detail(HttpServletRequest request, HttpSession session) {
         String filmId = request.getParameter("filmId");
         if (StringUtils.isEmpty(filmId)) {
-            return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.PARAMETER_ERROR);
+            return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.PARAM_MISS);
         }
         Map<String, Object> map = new HashMap<>(16);
         String src = request.getParameter("src");

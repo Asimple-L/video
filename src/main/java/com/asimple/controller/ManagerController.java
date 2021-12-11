@@ -284,7 +284,7 @@ public class ManagerController extends CommonController {
         String type = request.getParameter("type");
         String id = request.getParameter("id");
         if (StringUtils.isEmpty(id) || StringUtils.isEmpty(type)) {
-            return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.PARAMETER_ERROR);
+            return ResponseReturnUtil.returnErrorWithMsg(ResponseReturnUtil.PARAM_MISS);
         }
         boolean flag = false;
         if (VideoKeyNameUtil.CATALOG.equals(type)) {

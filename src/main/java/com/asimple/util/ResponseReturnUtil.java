@@ -40,8 +40,6 @@ public class ResponseReturnUtil {
 
     public static final String FUNCTION_NOT_OPEN = "功能暂未开放!";
 
-    public static final String PARAMETER_ERROR = "参数错误，请重试!";
-
     public static final String PERMISSION_DENIED = "权限不足!";
 
     public static final String PARAM_MISS = "缺少必要参数!";
