@@ -75,6 +75,9 @@ public class ProfileController extends CommonController {
         User user = getUserInfo(request);
         Map<String, Object> result = new HashMap<>(8);
         String filmId = request.getParameter("filmId");
+        if (StringUtils.isBlank(filmId)) {
+            return ResponseReturnUtil.returnSuccessWithData(result);
+        }
         Film film = filmService.load(filmId);
         if (film != null && user.getId().equals(film.getUid())) {
             result.put("film", film);
