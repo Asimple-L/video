@@ -62,7 +62,7 @@
         LIMIT #{start},#{count}
     </select>
 
-    <select id="getTotalCount" resultType="Integer">
+    <select id="getTotalCount" resultType="java.lang.Integer">
         SELECT COUNT(*) FROM `t_user`
     </select>
 
