@@ -34,3 +34,6 @@ gen
 target
 src/main/webapp/public/static/upload/filmFile/
 src/main/webapp/public/static/upload/filmPic/
+
+# Worktrees
+.worktrees/
