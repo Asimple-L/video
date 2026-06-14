@@ -18,12 +18,22 @@ public interface FilmMapper extends IBaseDao<Film> {
 
 ```java
 public interface IBaseDao<T> {
-    Integer add(T t);            // 新增
-    Integer delete(Object id);   // 按ID删除
-    Integer edit(T t);           // 编辑
-    T getById(Object id);        // 按ID查询
+    int add(T t);                       // 新增
+    int delete(T t);                    // 按实体删除
+    int deleteById(String id);          // 按ID删除
+    int update(T t);                    // 更新（注意方法名为 update 非 edit）
+    T load(String id);                  // 按ID加载（注意方法名为 load 非 getById）
+    List<T> getAll();                   // 查询全部
+    List<T> findByCondition(T t);       // 按条件查询
+    List<T> findByIsUse();              // 查询启用的记录（isUse=1）
+    int getTotalCount(@Param("obj") T t);     // 查询总数
+    List<T> getPage(@Param("obj") T t,
+                    @Param("start") int start,
+                    @Param("count") int count); // 分页查询
 }
 ```
+
+> 注意：实际 `IBaseDao` 接口方法与常见命名不同，编码时请直接查看该接口确认。
 
 ### 3. 自定义方法
 
@@ -45,6 +55,17 @@ List<Film> getFilmList(@Param("start") int start, @Param("count") int count);
 
 // 或使用 Map 统一传参（项目常用方式）
 List<Film> getFilmList(Map<String, Object> param);
+```
+
+XML 中引用 `param1`/`param2` 的示例：
+
+```xml
+<select id="listByCataLogId" resultType="com.asimple.entity.Film">
+    SELECT * FROM `t_film` WHERE `cataLog_id` = #{param1}
+    <if test="param2 != null">
+        LIMIT 0, #{param2}
+    </if>
+</select>
 ```
 
 ## 二、XML 映射文件
@@ -104,31 +125,58 @@ SELECT <include refid="filmColumn"/> FROM `t_film`
 </select>
 ```
 
-### 6. resultMap 级联映射
+当返回无对应实体的统计数据时，可使用 `java.util.HashMap`：
 
-当实体包含关联对象时，使用 `resultMap` 实现级联查询：
+```xml
+<select id="getViewHistory" resultType="java.util.HashMap">
+    SELECT * FROM `t_view_history` WHERE `film_id` = #{filmId}
+</select>
+```
+
+### 6. resultMap 关联映射
+
+#### 6.1 association（一对一关联）
+
+当实体包含关联对象时，使用 `<association>` + `<resultMap>` 实现 JOIN 查询：
 
 ```xml
 <resultMap id="filmMap" type="com.asimple.entity.Film">
     <id property="id" column="id"/>
     <result property="name" column="name"/>
-    <!-- 关联分类 -->
     <association property="cataLog" javaType="com.asimple.entity.CataLog">
         <id property="id" column="cid"/>
         <result property="name" column="cname"/>
     </association>
-    <!-- 关联子分类 -->
     <association property="subClass" javaType="com.asimple.entity.SubClass">
         <id property="id" column="sid"/>
         <result property="name" column="sname"/>
     </association>
-    <!-- 关联类型 -->
     <association property="type" javaType="com.asimple.entity.Type">
         <id property="id" column="tid"/>
         <result property="name" column="tname"/>
     </association>
 </resultMap>
 ```
+
+#### 6.2 collection（一对多关联 + 嵌套 select）
+
+使用 `<collection>` + `select` 属性实现递归子查询：
+
+```xml
+<resultMap id="myCataLog" type="com.asimple.entity.CataLog">
+    <id property="id" column="id"/>
+    <result property="name" column="name"/>
+    <collection property="subClassList" column="id" select="selectSubclass"/>
+</resultMap>
+
+<resultMap id="mySubClass" type="com.asimple.entity.SubClass">
+    <id property="id" column="id"/>
+    <result property="name" column="name"/>
+    <collection property="types" column="id" select="selectType"/>
+</resultMap>
+```
+
+支持多层级联（Type → SubClass → CataLog）。
 
 ### 7. 动态 SQL
 
@@ -150,7 +198,44 @@ SELECT <include refid="filmColumn"/> FROM `t_film`
 </select>
 ```
 
-### 8. 新增返回主键
+### 8. selectKey 使用 UUID 先于 Insert
+
+部分 Mapper 使用 `<selectKey>` 在 insert 前生成 UUID，替代 Java 端的 `Tools.UUID()`：
+
+```xml
+<insert id="add" parameterType="com.asimple.entity.User">
+    <selectKey keyProperty="id" resultType="String" order="BEFORE">
+        SELECT replace(uuid(), '-', '')
+    </selectKey>
+    INSERT INTO `t_user` (`id`, `username`, `password`)
+    VALUES (#{id}, #{username}, #{password})
+</insert>
+```
+
+### 9. 多参数引用（param1/param2）
+
+当接口方法不使用 `@Param` 且有多个参数时，XML 中使用 `#{param1}`、`#{param2}` 按位置引用：
+
+```xml
+<select id="listByCataLogId" resultType="com.asimple.entity.Film">
+    SELECT * FROM `t_film` WHERE `cataLog_id` = #{param1}
+    <if test="param2 != null">
+        LIMIT 0, #{param2}
+    </if>
+</select>
+```
+
+### 10. HashMap 返回类型
+
+对于非实体的键值对查询，使用 `java.util.HashMap` 作为 resultType：
+
+```xml
+<select id="getViewHistory" resultType="java.util.HashMap">
+    SELECT * FROM `t_view_history` WHERE `film_id` = #{filmId}
+</select>
+```
+
+### 11. 新增（无 selectKey）
 
 ```xml
 <insert id="add" parameterType="com.asimple.entity.Film">
@@ -159,7 +244,7 @@ SELECT <include refid="filmColumn"/> FROM `t_film`
 </insert>
 ```
 
-### 9. 完整示例
+### 12. 完整示例
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>

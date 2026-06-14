@@ -213,7 +213,7 @@ Service 层手动计算偏移量：`offset = (pc - 1) * ps`
 ## 常见反模式（避免）
 
 1. 不要在控制器中使用 `System.out.println()`，使用 `LogUtil`
-2. 不要使用 `e.printStackTrace()`，使用 `LogUtil.error()` + 异常对象（现有 `DateUtil` 和 `Tools.str2Date` 有遗留，新代码禁止使用）
+2. 不要使用 `e.printStackTrace()`，使用 `LogUtil.error()` + 异常对象（新代码禁止使用）
 3. 不要混用多个 JSON 库，统一使用 Fastjson（`com.alibaba.fastjson`）
 4. 不要添加服务接口层，项目约定服务为具体类
 5. 不要使用 `@Autowired`，统一使用 `@Resource`
@@ -221,6 +221,8 @@ Service 层手动计算偏移量：`offset = (pc - 1) * ps`
 7. 不要硬编码 CORS 配置，使用 `MyWebAppConfigurer` 统一管理
 8. 不要使用 `StringBuffer`，使用 `StringBuilder`（非线程安全场景）
 9. 不要在测试中使用 `System.out.println` 断言结果，使用 JUnit `Assert`
+
+> 注意：项目中部分旧代码存在违反上述规范的情况（如使用 `e.printStackTrace()`、混用 `net.sf.json`、使用 `@Autowired` 等），**新增代码必须遵守规范**，不要模仿旧代码中的反模式。
 
 ## 依赖库
 
